@@ -1,0 +1,10 @@
+---------------< Gestion des employés >-----------------
+Employés actuels: #nbEmployes
+
+1 > Recruter un employé                  (-300$/semaine)
+2 > Virer un employé                        (+300$/mois)
+3 > Sous payer un nouvel employé            (-100$/mois)
+4 > Baisser les salaires                 (-100$/employé)
+
+5 > Retour
+--------------------------------------------------------

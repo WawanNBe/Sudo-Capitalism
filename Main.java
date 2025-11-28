@@ -1,9 +1,14 @@
-import extensions.CSVFile;
+import extensions.CSVFile; // import des CSV
+import extensions.File; // import des txt
+
 class Main extends Program{
 
-    CSVFile config = loadCSV("./extensions/config.csv");
+    CSVFile config = loadCSV("./extensions/config.csv"); // fichier config du jeu
 
-    int objectifFinancier = 1000000; // objectif financier par défaut A EXTERNALISER
+    File accueil = newFile("./extensions/accueil.txt"); // les menus du jeu
+    File employes = newFile("./extensions/employes.txt"); // les menus du jeu
+    File production = newFile("./extensions/production.txt"); // les menus du jeu
+
 
     // conditions de fin de jeu (défaite et victoire)
     boolean finAnnee = false; // la partie s'arrête si l'année se termine (sert à limiter le jeu à 52 tours)
@@ -26,6 +31,8 @@ class Main extends Program{
         String nbTest = "123";
 
         assertEquals(123, stringToInt("123"));
+        assertEquals(0, stringToInt("0"));
+        assertEquals(1, stringToInt("1"));
     }
 
 
@@ -63,11 +70,11 @@ class Main extends Program{
 
 
     // implémentation de la fonction newEntreprise
-    Entreprise newEntreprise(int budget, int salaire, int nbEmployes, int stocks, int prixDeVente, int niveauProduction){
+    Entreprise newEntreprise(int budget, int charges, int nbEmployes, int stocks, int prixDeVente, int niveauProduction){
         Entreprise entreprise = new Entreprise();
 
         entreprise.budget = budget;
-        entreprise.salaire = salaire;
+        entreprise.charges = charges;
         entreprise.nbEmployes = nbEmployes;
         entreprise.stocks = stocks;
         entreprise.prixDeVente = prixDeVente;
@@ -82,7 +89,7 @@ class Main extends Program{
         Entreprise entrepriseTest = newEntreprise(2000, 1500, 1, 10, 20, 1);
 
         assertEquals(2000, entrepriseTest.budget);
-        assertEquals(1500, entrepriseTest.salaire);
+        assertEquals(1500, entrepriseTest.charges);
         assertEquals(1, entrepriseTest.nbEmployes);
         assertEquals(10, entrepriseTest.stocks);
         assertEquals(20, entrepriseTest.prixDeVente);
@@ -123,22 +130,16 @@ class Main extends Program{
     }
 
 
-    void initVariables(){
-        // à implémenter
-    }
-
-
-    void afficheMenu(Date date, Entreprise entreprise){
-        println(rgb(128, 128, 128, true) + "------< Date: " + dateToString(date) + " >------" + RESET);
-        print(rgb(128, 128, 128, true) + "Objectif: 1M$       CA: " + RESET); println(rgb(0, 128, 0, true) + entreprise.budget + '$' + RESET);
-        println("");
-        println(rgb(128, 128, 128, true) + "> Gestion des employés (1)" + '\n' +
-                                           "> Gestion des produits (2)" + '\n' +
-                                           "> Valider les choix pour cette semaine (3)" + '\n' +
-                                           "------------------------------------" + RESET);
+    void afficheMenu(Date date, Entreprise entreprise, File file){
+        while (ready(file)){
+            println(readLine(file));
+        }
     }
 
     void algorithm(){
+        // initialisation des variables
+        int choix;
+
         // initialisation des variables du jeu via le CSV
         Date date = newDate(1,1);
         Entreprise entreprise = newEntreprise(stringToInt(getCell(config, 1, 0)),
@@ -147,5 +148,12 @@ class Main extends Program{
                                               stringToInt(getCell(config, 1, 3)),
                                               stringToInt(getCell(config, 1, 4)),
                                               stringToInt(getCell(config, 1, 5)));
+
+        // boucle principale du jeu
+        while (!finAnnee && !faillite && !objectifAtteint){
+            afficheMenu(date, entreprise, accueil);
+            afficheMenu(date, entreprise, employes);
+            afficheMenu(date, entreprise, production);
+        }
     }
 }

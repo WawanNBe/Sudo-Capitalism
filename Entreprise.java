@@ -1,6 +1,6 @@
 class Entreprise{
     int budget;
-    int salaire; // salaire des employés
+    int charges; // charges par employés
     int nbEmployes; // nb d'employés
     int stocks; // stocks
     int prixDeVente; // prix de vente

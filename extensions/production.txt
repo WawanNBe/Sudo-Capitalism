@@ -1,0 +1,11 @@
+--------------------< Production >----------------------
+Stocks: #stocks
+Production journalière: #produitsVendusParJour unités
+
+1 > Améliorer la quelité de la production   (-100$/mois)
+2 > Acheter de nouvelles machines                (-300$)
+3 > Acheter des contrefaçons en chine             (-50$)
+4 > Passer les employés sous coke                (-450$)
+
+> Retour (3)
+--------------------------------------------------------
