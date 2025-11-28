@@ -1,27 +1,15 @@
+import extensions.CSVFile;
 class Main extends Program{
 
-    // déclaration des variables globales en dur mais à définir dans un fichier externe ensuite
+    CSVFile config = loadCSV("./extensions/config.csv");
 
-    // variables liées à l'argent
-    int budget = 2000; // budget initial
-    int objectifFinancier = 1000000; // objectif financier par défaut
-
-    // variables liées au employés
-    int salaire = 1500; // salaire initial des employés
-    int nbEmployes = 2; // par défaut il y a deux employés dans la boite (le joueur et un employé)
-
-    // variables liées à la production
-    int stocks = 10; // stocks initiaux
-    int prixDeVente = 20; // prix de vente initial
-    int niveauProduction = 1; // par défaut la production est au niveau 1 et peut etre améliorée jusqu'au niveau 10
-    int produitsVendusParJour = (nbEmployes -1) * 3; // nombre de produits vendus par jour (3 par employés par défaut)
+    int objectifFinancier = 1000000; // objectif financier par défaut A EXTERNALISER
 
     // conditions de fin de jeu (défaite et victoire)
     boolean finAnnee = false; // la partie s'arrête si l'année se termine (sert à limiter le jeu à 52 tours)
     boolean faillite = false; // si le joueur fait faillite, la partie s'arrête
     boolean objectifAtteint = false; // si le joueur atteint l'objectif financier, la partie est gagnée
 
-    // LES VARIABLES SONT À AJUSTER PAR EXEMPLE INITIALISER CERTAINES VIA DES FONCTIONS POUR RENDRE LE JEU PLUS SIMPLE À GERER
 
     // implémentation de la fonction newDate
     Date newDate(int jour, int mois){
@@ -29,16 +17,45 @@ class Main extends Program{
 
         date.jour = jour;
         date.mois = mois;
+
         return date;
     }
 
     // tests de la fonction newDate
     void test_newDate(){
-        // test de la création d'une date
         Date premierJanvier = newDate(1,1);
 
         assertEquals(1, premierJanvier.jour);
         assertEquals(1, premierJanvier.mois);
+    }
+
+
+    // implémentation de la fonction newEntreprise
+    Entreprise newEntreprise(int budget, int salaire, int nbEmployes, int stocks, int prixDeVente, int niveauProduction){
+        Entreprise entreprise = new Entreprise();
+
+        entreprise.budget = budget;
+        entreprise.salaire = salaire;
+        entreprise.nbEmployes = nbEmployes;
+        entreprise.stocks = stocks;
+        entreprise.prixDeVente = prixDeVente;
+        entreprise.niveauProduction = niveauProduction;
+        entreprise.produitsVendusParJour = nbEmployes * (3 + niveauProduction);
+
+        return entreprise;
+    }
+
+    // tests de l afonction newEntreprise
+    void test_newEntreprise(){
+        Entreprise entrepriseTest = newEntreprise(2000, 1500, 1, 10, 20, 1);
+
+        assertEquals(2000, entrepriseTest.budget);
+        assertEquals(1500, entrepriseTest.salaire);
+        assertEquals(1, entrepriseTest.nbEmployes);
+        assertEquals(10, entrepriseTest.stocks);
+        assertEquals(20, entrepriseTest.prixDeVente);
+        assertEquals(1, entrepriseTest.niveauProduction);
+        assertEquals(4, entrepriseTest.produitsVendusParJour);
     }
 
 
@@ -86,6 +103,11 @@ class Main extends Program{
 
         assertEquals(1, changementMois.jour);
         assertEquals(2, changementMois.mois);
+    }
+
+
+    void initVariables(){
+        // à implémenter
     }
 
 
