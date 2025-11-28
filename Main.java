@@ -45,7 +45,7 @@ class Main extends Program{
         return entreprise;
     }
 
-    // tests de l afonction newEntreprise
+    // tests de la fonction newEntreprise
     void test_newEntreprise(){
         Entreprise entrepriseTest = newEntreprise(2000, 1500, 1, 10, 20, 1);
 
@@ -122,9 +122,8 @@ class Main extends Program{
     }
 
     void algorithm(){
+        // initialisation des variables du jeu via le CSV
         Date date = newDate(1,1);
-        // while (!finAnnee && !faillite && !objectifAtteint){
-            afficheMenu(date, budget);
-        // }
+        Entreprise entreprise = newEntreprise()
     }
 }
