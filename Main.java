@@ -11,6 +11,24 @@ class Main extends Program{
     boolean objectifAtteint = false; // si le joueur atteint l'objectif financier, la partie est gagnée
 
 
+    // implémentation de la fonction stringToInt
+    int stringToInt(String string){
+        int nombre = 0;
+        
+        for (int idx = 0; idx<length(string); idx++){
+            nombre = nombre * 10 + (charAt(string, idx) - '0');
+        }
+        return nombre;
+    }
+
+    // tests de la fonction stringToInt
+    void test_stringToInt(){
+        String nbTest = "123";
+
+        assertEquals(123, stringToInt("123"));
+    }
+
+
     // implémentation de la fonction newDate
     Date newDate(int jour, int mois){
         Date date = new Date();
@@ -27,6 +45,20 @@ class Main extends Program{
 
         assertEquals(1, premierJanvier.jour);
         assertEquals(1, premierJanvier.mois);
+    }
+
+    // implémentation de la fonction qui affiche la date
+    String dateToString(Date date){
+        String[] mois = new String[] {"Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Decembre"};
+
+        return date.jour + " " + mois[date.mois -1];
+    }
+
+    // implémentation des tests pour la fonction d'affichage de date
+    void test_dateToString(){
+        Date premierJanvier = newDate(1,1);
+
+        assertEquals("1 Janvier", dateToString(premierJanvier));
     }
 
 
@@ -56,21 +88,6 @@ class Main extends Program{
         assertEquals(20, entrepriseTest.prixDeVente);
         assertEquals(1, entrepriseTest.niveauProduction);
         assertEquals(4, entrepriseTest.produitsVendusParJour);
-    }
-
-
-    // implémentation de la fonction qui affiche la date
-    String dateToString(Date date){
-        String[] mois = new String[] {"Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Decembre"};
-
-        return date.jour + " " + mois[date.mois -1];
-    }
-
-    // implémentation des tests pour la fonction d'affichage de date
-    void test_dateToString(){
-        Date premierJanvier = newDate(1,1);
-
-        assertEquals("1 Janvier", dateToString(premierJanvier));
     }
 
 
@@ -111,9 +128,9 @@ class Main extends Program{
     }
 
 
-    void afficheMenu(Date date, int chiffreAffaire){
+    void afficheMenu(Date date, Entreprise entreprise){
         println(rgb(128, 128, 128, true) + "------< Date: " + dateToString(date) + " >------" + RESET);
-        print(rgb(128, 128, 128, true) + "Objectif: 1M$       CA: " + RESET); println(rgb(0, 128, 0, true) + budget + '$' + RESET);
+        print(rgb(128, 128, 128, true) + "Objectif: 1M$       CA: " + RESET); println(rgb(0, 128, 0, true) + entreprise.budget + '$' + RESET);
         println("");
         println(rgb(128, 128, 128, true) + "> Gestion des employés (1)" + '\n' +
                                            "> Gestion des produits (2)" + '\n' +
@@ -124,6 +141,11 @@ class Main extends Program{
     void algorithm(){
         // initialisation des variables du jeu via le CSV
         Date date = newDate(1,1);
-        Entreprise entreprise = newEntreprise()
+        Entreprise entreprise = newEntreprise(stringToInt(getCell(config, 1, 0)),
+                                              stringToInt(getCell(config, 1, 1)),
+                                              stringToInt(getCell(config, 1, 2)),
+                                              stringToInt(getCell(config, 1, 3)),
+                                              stringToInt(getCell(config, 1, 4)),
+                                              stringToInt(getCell(config, 1, 5)));
     }
 }
