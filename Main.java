@@ -3,11 +3,12 @@ import extensions.File; // import des txt
 
 class Main extends Program{
 
-    CSVFile config = loadCSV("./extensions/config.csv"); // fichier config du jeu
+    CSVFile config = loadCSV("./extensions/config/config.csv"); // fichier config du jeu
+    CSVFile save = loadCSV("./extensions/config/save.csv"); // fichier sauvegarde du jeu
 
-    File accueil = newFile("./extensions/accueil.txt"); // les menus du jeu
-    File employes = newFile("./extensions/employes.txt"); // les menus du jeu
-    File production = newFile("./extensions/production.txt"); // les menus du jeu
+    File accueil = newFile("./extensions/tui/accueil.txt"); // les menus du jeu
+    File employes = newFile("./extensions/tui/employes.txt"); // les menus du jeu
+    File production = newFile("./extensions/tui/production.txt"); // les menus du jeu
 
 
     // conditions de fin de jeu (défaite et victoire)
