@@ -11,12 +11,14 @@ class Main extends Program{
     String pathTabDeBord = "./extensions/tui/tabDeBord.txt"; // les menus du jeu
     String pathEmployes = "./extensions/tui/employes.txt"; // les menus du jeu
     String pathProduction = "./extensions/tui/production.txt"; // les menus du jeu
+    String pathResultats = "./extensions/tui/resultats.txt"; // le tui des resulstats hebdomadaires
 
     // conditions de fin de jeu (défaite et victoire)
     boolean finAnnee = false; // la partie s'arrête si l'année se termine (sert à limiter le jeu à 52 tours)
     boolean faillite = false; // si le joueur fait faillite, la partie s'arrête
     boolean objectifAtteint = false; // si le joueur atteint l'objectif financier, la partie est gagnée
 
+    int objectif = 1000000; // A INTEGRER DANS LA CONFIG DU JEU, EN DUR POUR TEST
 
     // implémentation de la fonction stringToInt
     int stringToInt(String string){
@@ -88,17 +90,135 @@ class Main extends Program{
 
     // tests de la fonction newEntreprise
     void test_newEntreprise(){
-        Entreprise entrepriseTest = newEntreprise(2000, 1500, 1, 10, 20, 1);
+        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1);
 
-        assertEquals(2000, entrepriseTest.budget);
-        assertEquals(1500, entrepriseTest.charges);
-        assertEquals(1, entrepriseTest.nbEmployes);
-        assertEquals(10, entrepriseTest.stocks);
-        assertEquals(20, entrepriseTest.prixDeVente);
-        assertEquals(1, entrepriseTest.niveauProduction);
-        assertEquals(4, entrepriseTest.produitsVendusParJour);
+        assertEquals(2000, entreprise.budget);
+        assertEquals(1500, entreprise.charges);
+        assertEquals(1, entreprise.nbEmployes);
+        assertEquals(10, entreprise.stocks);
+        assertEquals(20, entreprise.prixDeVente);
+        assertEquals(1, entreprise.niveauProduction);
+        assertEquals(4, entreprise.produitsVendusParJour);
     }
 
+    // implémentation de la fonction updateEntreprise
+    void updateEntreprise(Entreprise entreprise){
+        // calcul sur la semaine et mise à jour
+        entreprise.produitsVendusParJour = entreprise.nbEmployes * (3 + entreprise.niveauProduction); // on met à jour le nombre de produits vendus par jours
+        
+        if ((entreprise.produitsVendusParJour * 5) > entreprise.stocks){ // si pas assez de stocks
+            entreprise.budget += (entreprise.stocks * entreprise.prixDeVente); // on ne vend que les stocks dispos 
+            entreprise.stocks = 0; // on soustrait les produits vendus au stock
+        }else{ // sinon on applique la formule normale
+            entreprise.budget += (entreprise.produitsVendusParJour * entreprise.prixDeVente) * 5; // on calcule les revenus sur 5 jours (lundi -> vendredi)
+            entreprise.stocks -= entreprise.produitsVendusParJour * 5; // on soustrait les produits vendus de la semaine au stock
+        }
+        entreprise.budget -= entreprise.charges; // on soustrait les charges au chiffre d'affaire
+
+        // on cherche si une condition (financière) d'arrêt du jeu est présente
+        if (entreprise.budget <= 0){
+            faillite = !faillite;
+        } else if (entreprise.budget >= objectif){
+            objectifAtteint = !objectifAtteint;
+        }
+    }
+
+    // tests de la fonction updateEntreprise
+    void test_updateEntreprise(){
+        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise par défaut
+
+        // simulation d'un tour de jeu
+        entreprise.nbEmployes ++; // ajout employé
+        entreprise.charges = entreprise.charges - (100 * entreprise.nbEmployes); // baisse salaires
+        entreprise.budget -= 300; entreprise.niveauProduction ++; // amélioration de la production
+
+        updateEntreprise(entreprise);
+
+        assertEquals(600, entreprise.budget);
+        assertEquals(1300, entreprise.charges);
+        assertEquals(2, entreprise.nbEmployes);
+        assertEquals(0, entreprise.stocks);
+        assertEquals(20, entreprise.prixDeVente);
+        assertEquals(2, entreprise.niveauProduction);
+        assertEquals(10, entreprise.produitsVendusParJour);
+    }
+
+    // implémentation de la fonction recruterEmploye
+    void recruterEmploye(Entreprise entreprise){
+        println("< Vous avez recruté un employé ! >");
+        entreprise.nbEmployes ++;
+        entreprise.charges += 300;
+    }
+
+    // tests de la fonction recruterEmploye
+    void test_recruterEmploye(){
+        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise par défaut
+
+        recruterEmploye(entreprise);
+
+        assertEquals(2, entreprise.nbEmployes);
+        assertEquals(1800, entreprise.charges);
+    }
+
+    // implémentation de la fonction virerEmploye
+    void virerEmploye(Entreprise entreprise){
+        if (entreprise.nbEmployes == 1){
+            println("< Vous ne pouvez pas virer d'employer car vous n'en avez qu'un ! >");
+        } else {
+            println("< Vous avez viré un employé ! >");
+            entreprise.nbEmployes --;
+            entreprise.charges -= 300;
+        }
+    }
+
+    // tests de la fonction virerEmploye
+    void test_virerEmploye(){
+        Entreprise entreprise1 = newEntreprise(2000, 1500, 2, 10, 20, 1); // création d'une entreprise par défaut
+
+        virerEmploye(entreprise1);
+
+        assertEquals(1, entreprise1.nbEmployes);
+        assertEquals(1200, entreprise1.charges);
+
+        Entreprise entreprise2 = newEntreprise(2000, 1500, 1, 10, 20, 1); // cas où on ne peut pas virer d'employe
+
+        virerEmploye(entreprise2);
+
+        assertEquals(1, entreprise2.nbEmployes);
+        assertEquals(1500, entreprise2.charges);
+    }
+
+    // implémentation de la fonction exploiterEmploye
+    void exploiterEmploye(Entreprise entreprise){
+        println("< Vous avez commencé à exploiter un employé ! >");
+        entreprise.nbEmployes ++;
+        entreprise.charges += 100;
+    }
+
+    // tests de la fonction exploiterEmploye
+    void test_exploiterEmploye(){
+        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise par défaut
+
+        exploiterEmploye(entreprise);
+
+        assertEquals(2, entreprise.nbEmployes);
+        assertEquals(1600, entreprise.charges);
+    }
+
+    // implémentation de la fonction baisserSalaires
+    void baisserSalaires(Entreprise entreprise){
+        println("< Vous avez baissé les salaires de vos employés ! >");
+        entreprise.charges = entreprise.charges - (100 * entreprise.nbEmployes);
+    }
+
+    // tests de la fonction baisserSalaires
+    void test_baisserSalaires(){
+        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise par défaut
+
+        baisserSalaires(entreprise);
+
+        assertEquals(1400, entreprise.charges);
+    }
 
     // implémentation de la fonction qui gère la date (incrémente le jour/mois lorsqu'elle est appelée)
     void gestionDate(Date date){
@@ -130,6 +250,7 @@ class Main extends Program{
         assertEquals(1, changementMois.jour);
         assertEquals(2, changementMois.mois);
     }
+
 
     // implémentation de la fonction tuiToString A CORRIGER SELON LA SUITE
     String tuiToString(Date date, Entreprise entreprise, String pathTui){
@@ -173,16 +294,16 @@ class Main extends Program{
                             choix = readInt();
 
                             if (choix == 1){
-                                println("< Vous avez recruté un employé ! >");
+                                recruterEmploye(entreprise);
 
                             }else if (choix == 2){
-                                println("< Vous avez viré un employé ! >");
+                                virerEmploye(entreprise);
 
                             }else if (choix == 3){
-                                println("< Vous avez commencé à exploiter un employé ! >");
+                                exploiterEmploye(entreprise);
                                 
                             }else if (choix == 4){
-                                println("< Vous avez baissé les salaires de vos employés ! >");
+                                baisserSalaires(entreprise);
                                 
                             }
                 
@@ -210,7 +331,7 @@ class Main extends Program{
                         }
 
                     }choix = -1;
-                }// ajouter le calcul de la semaine ici
+                }// calcul des resultats sur la semaine
 
             } else if (choix == 2){ // on affiche les règles du jeu
             
