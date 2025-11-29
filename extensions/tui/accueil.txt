@@ -1,10 +1,8 @@
----------------------< Accueil >-----------------------
-Date: #date
-Objectif: 1M$
-CA: #CA
+----------------------< Accueil >-----------------------
+Bienvenue dans ~$ sudo capitalism !
 
-1 > Gestion des employés
-2 > Gestion des produits
+1 > Jouer
+2 > But du jeu
 
-3 > Valider les choix pour cette semaine
+3 > Quitter
 --------------------------------------------------------

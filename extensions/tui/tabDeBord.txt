@@ -1,0 +1,10 @@
+-----------------< Tableau de bord >--------------------
+Date: #date
+Objectif: 1M$
+CA: #CA
+
+1 > Gestion des employés
+2 > Gestion des produits
+
+3 > Valider les choix pour cette semaine
+--------------------------------------------------------

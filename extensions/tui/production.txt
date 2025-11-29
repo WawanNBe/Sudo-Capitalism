@@ -7,5 +7,5 @@ Production journalière: #produitsVendusParJour unités
 3 > Acheter des contrefaçons en chine             (-50$)
 4 > Passer les employés sous coke                (-450$)
 
-> Retour (3)
+5 > Retour
 --------------------------------------------------------

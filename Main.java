@@ -6,10 +6,11 @@ class Main extends Program{
     CSVFile config = loadCSV("./extensions/config/config.csv"); // fichier config du jeu
     CSVFile save = loadCSV("./extensions/config/save.csv"); // fichier sauvegarde du jeu
 
-    File accueil = newFile("./extensions/tui/accueil.txt"); // les menus du jeu
-    File employes = newFile("./extensions/tui/employes.txt"); // les menus du jeu
-    File production = newFile("./extensions/tui/production.txt"); // les menus du jeu
-
+    String pathAccueil = "./extensions/tui/accueil.txt"; // accueil du jeu
+    String pathButDuJeu = "./extensions/tui/butDuJeu.txt"; // règles du jeu
+    String pathTabDeBord = "./extensions/tui/tabDeBord.txt"; // les menus du jeu
+    String pathEmployes = "./extensions/tui/employes.txt"; // les menus du jeu
+    String pathProduction = "./extensions/tui/production.txt"; // les menus du jeu
 
     // conditions de fin de jeu (défaite et victoire)
     boolean finAnnee = false; // la partie s'arrête si l'année se termine (sert à limiter le jeu à 52 tours)
@@ -130,12 +131,16 @@ class Main extends Program{
         assertEquals(2, changementMois.mois);
     }
 
-
-    void afficheMenu(Date date, Entreprise entreprise, File file){
-        while (ready(file)){
-            println(readLine(file));
+    // implémentation de la fonction tuiToString A CORRIGER SELON LA SUITE
+    String tuiToString(Date date, Entreprise entreprise, String pathTui){
+        File tui = new File(pathTui);
+        String affichage = "";
+        while (ready(tui)){
+            affichage = affichage + readLine(tui) + '\n';
         }
+        return affichage;
     }
+
 
     void algorithm(){
         // initialisation des variables
@@ -152,9 +157,71 @@ class Main extends Program{
 
         // boucle principale du jeu
         while (!finAnnee && !faillite && !objectifAtteint){
-            afficheMenu(date, entreprise, accueil);
-            afficheMenu(date, entreprise, employes);
-            afficheMenu(date, entreprise, production);
+            println(tuiToString(date, entreprise, pathAccueil)); // on affiche l'écran d'accueil
+            choix = readInt();
+
+            if (choix == 1){ // on lance la partie 
+
+                while (choix != 3){
+                    println(tuiToString(date, entreprise, pathTabDeBord));
+                    choix = readInt();
+
+                    if (choix == 1){ // on ouvre le menu employés
+
+                        while (choix != 5){
+                            println(tuiToString(date, entreprise, pathEmployes));
+                            choix = readInt();
+
+                            if (choix == 1){
+                                println("< Vous avez recruté un employé ! >");
+
+                            }else if (choix == 2){
+                                println("< Vous avez viré un employé ! >");
+
+                            }else if (choix == 3){
+                                println("< Vous avez commencé à exploiter un employé ! >");
+                                
+                            }else if (choix == 4){
+                                println("< Vous avez baissé les salaires de vos employés ! >");
+                                
+                            }
+                
+                        }choix = -1;
+
+                    } else if (choix == 2){ // on ouvre le menu production
+
+                        while (choix != 5){
+                            println(tuiToString(date, entreprise, pathProduction));
+                            choix = readInt();
+
+                            if (choix == 1){
+                                println("< Vous avez amélioré la qualité de la production ! >");
+
+                            }else if (choix == 2){
+                                println("< Vous avez acheté de nouvelles machines ! >");
+
+                            }else if (choix == 3){
+                                println("< Vous avez acheté des contrefaçons en chine ! >");
+                                
+                            }else if (choix == 4){
+                                println("< Vous avez fait sniffer de la coke à vos employés ! >");
+                                
+                            }
+                        }
+
+                    }choix = -1;
+                }// ajouter le calcul de la semaine ici
+
+            } else if (choix == 2){ // on affiche les règles du jeu
+            
+                while (choix != 1){
+                    println(tuiToString(date, entreprise, pathButDuJeu));
+                    choix = readInt();
+                }choix = -1;
+
+            } else {
+                objectifAtteint = !objectifAtteint;
+            }
         }
     }
 }
