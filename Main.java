@@ -72,6 +72,37 @@ class Main extends Program{
         assertEquals("1 Janvier", dateToString(premierJanvier));
     }
 
+    // implémentation de la fonction qui gère la date (incrémente le jour/mois lorsqu'elle est appelée)
+    void gestionDate(Date date){
+        int[] mois = new int[] {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}; // les nombres de jours pour chaque mois
+
+        if (date.mois == 12 && date.jour == 31){
+            finAnnee = true;
+        } else if (date.jour == mois[date.mois -1]){
+            date.jour = 1;
+            date.mois += 1;
+        } else {
+            date.jour += 1;
+        }
+    }
+
+    //tests de la fonction gestionDate
+    void test_gestionDate(){
+        // test du passage d'un jour normal
+        Date premierJanvier = newDate(1,1);
+        gestionDate(premierJanvier);
+
+        assertEquals(2, premierJanvier.jour);
+        assertEquals(1, premierJanvier.mois);
+
+        // test du passage au mois suivant
+        Date changementMois = newDate(31,1);
+        gestionDate(changementMois);
+
+        assertEquals(1, changementMois.jour);
+        assertEquals(2, changementMois.mois);
+    }
+
 
     // implémentation de la fonction newEntreprise
     Entreprise newEntreprise(int budget, int charges, int nbEmployes, int stocks, int prixDeVente, int niveauProduction){
@@ -218,37 +249,6 @@ class Main extends Program{
         baisserSalaires(entreprise);
 
         assertEquals(1400, entreprise.charges);
-    }
-
-    // implémentation de la fonction qui gère la date (incrémente le jour/mois lorsqu'elle est appelée)
-    void gestionDate(Date date){
-        int[] mois = new int[] {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}; // les nombres de jours pour chaque mois
-
-        if (date.mois == 12 && date.jour == 31){
-            finAnnee = true;
-        } else if (date.jour == mois[date.mois -1]){
-            date.jour = 1;
-            date.mois += 1;
-        } else {
-            date.jour += 1;
-        }
-    }
-
-    //tests de la fonction gestionDate
-    void test_gestionDate(){
-        // test du passage d'un jour normal
-        Date premierJanvier = newDate(1,1);
-        gestionDate(premierJanvier);
-
-        assertEquals(2, premierJanvier.jour);
-        assertEquals(1, premierJanvier.mois);
-
-        // test du passage au mois suivant
-        Date changementMois = newDate(31,1);
-        gestionDate(changementMois);
-
-        assertEquals(1, changementMois.jour);
-        assertEquals(2, changementMois.mois);
     }
 
 
