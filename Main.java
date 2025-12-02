@@ -132,6 +132,137 @@ class Main extends Program{
         assertEquals(4, entreprise.produitsVendusParJour);
     }
 
+
+    // implémentation de la fonction recruterEmploye
+    void recruterEmploye(Entreprise entreprise){
+        println(rgb(0, 200, 0, true) + "< Vous avez recruté un employé ! >" + RESET);
+        entreprise.nbEmployes ++;
+        entreprise.charges += 300;
+    }
+
+    // tests de la fonction recruterEmploye
+    void test_recruterEmploye(){
+        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise par défaut
+
+        recruterEmploye(entreprise);
+
+        assertEquals(2, entreprise.nbEmployes);
+        assertEquals(1800, entreprise.charges);
+    }
+
+    // implémentation de la fonction virerEmploye
+    void virerEmploye(Entreprise entreprise){
+        if (entreprise.nbEmployes <= 1){
+            println(rgb(200, 200, 0, true) + "< Vous ne pouvez pas virer d'employer car vous n'en avez qu'un ! >" + RESET);
+        } else {
+            println(rgb(200, 0, 0, true) + "< Vous avez viré un employé ! >" + RESET);
+            entreprise.nbEmployes --;
+            entreprise.charges -= 300;
+        }
+    }
+
+    // tests de la fonction virerEmploye
+    void test_virerEmploye(){
+        Entreprise entreprise1 = newEntreprise(2000, 1500, 2, 10, 20, 1); // création d'une entreprise par défaut
+
+        virerEmploye(entreprise1);
+
+        assertEquals(1, entreprise1.nbEmployes);
+        assertEquals(1200, entreprise1.charges);
+
+        Entreprise entreprise2 = newEntreprise(2000, 1500, 1, 10, 20, 1); // cas où on ne peut pas virer d'employe
+
+        virerEmploye(entreprise2);
+
+        assertEquals(1, entreprise2.nbEmployes);
+        assertEquals(1500, entreprise2.charges);
+    }
+
+    // implémentation de la fonction exploiterEmploye
+    void exploiterEmploye(Entreprise entreprise){
+        println(rgb(200, 0, 0, true) + "< Vous avez commencé à exploiter un employé ! >" + RESET);
+        entreprise.nbEmployes ++;
+        entreprise.charges += 100;
+    }
+
+    // tests de la fonction exploiterEmploye
+    void test_exploiterEmploye(){
+        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise par défaut
+
+        exploiterEmploye(entreprise);
+
+        assertEquals(2, entreprise.nbEmployes);
+        assertEquals(1600, entreprise.charges);
+    }
+
+    // implémentation de la fonction baisserSalaires
+    void baisserSalaires(Entreprise entreprise){
+        println(rgb(200, 200, 0, true) + "< Vous avez baissé les salaires de vos employés ! >" + RESET);
+        entreprise.charges = entreprise.charges - (100 * entreprise.nbEmployes);
+    }
+
+    // tests de la fonction baisserSalaires
+    void test_baisserSalaires(){
+        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise par défaut
+
+        baisserSalaires(entreprise);
+
+        assertEquals(1400, entreprise.charges);
+    }
+
+    
+    // implémentation de la fonction ameliorerProduction
+    void acheterMachine(Entreprise entreprise){
+        println(rgb(0, 200, 0, true) + "< Vous avez acheté une nouvelle machine ! >" + RESET);
+        entreprise.budget -= 1000;
+        entreprise.niveauProduction ++;
+    }
+
+    // tests de la fonction ameliorerProduction
+    void test_acheterMachine(){
+        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise par défaut
+
+        acheterMachine(entreprise);
+
+        assertEquals(1000, entreprise.budget);
+        assertEquals(2, entreprise.niveauProduction);
+    }
+
+    // implémentation de la fonction ameliorerProduction
+    void acheterContrefacon(Entreprise entreprise){
+        println(rgb(200, 200, 0, true) + "< Vous avez acheté des contrefaçons en chine ! >" + RESET);
+        entreprise.budget -= 50;
+        entreprise.stocks += 50;
+    }
+
+    // tests de la fonction ameliorerProduction
+    void test_acheterContrefacon(){
+        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise par défaut
+
+        acheterContrefacon(entreprise);
+
+        assertEquals(1950, entreprise.budget);
+        assertEquals(60, entreprise.stocks);
+    }
+
+    // implémentation de la fonction ameliorerProduction
+    void snifferCoke(Entreprise entreprise){
+        println(rgb(200, 0, 0, true) + "< Vous avez fait sniffer de la coke à vos employés ! >" + RESET);
+        entreprise.budget -= 450;
+        entreprise.niveauProduction += 1;
+    }
+
+    // tests de la fonction ameliorerProduction
+    void test_snifferCoke(){
+        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise par défaut
+
+        snifferCoke(entreprise);
+
+        assertEquals(1550, entreprise.budget);
+        assertEquals(2, entreprise.niveauProduction);
+    }
+
+
     // implémentation de la fonction updateEntreprise
     void updateEntreprise(Entreprise entreprise){
         // calcul sur la semaine et mise à jour
@@ -174,88 +305,28 @@ class Main extends Program{
         assertEquals(10, entreprise.produitsVendusParJour);
     }
 
-    // implémentation de la fonction recruterEmploye
-    void recruterEmploye(Entreprise entreprise){
-        println("< Vous avez recruté un employé ! >");
-        entreprise.nbEmployes ++;
-        entreprise.charges += 300;
-    }
 
-    // tests de la fonction recruterEmploye
-    void test_recruterEmploye(){
-        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise par défaut
+    // // implémentation de la fonction remplace
+    // void remplace(String string, int variable){
+        
+    // }
 
-        recruterEmploye(entreprise);
+    // // tests de la fonction replace
+    // void test_remplace(){
+    //     Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise par défaut
+    //     String string = "Nombre d'employés: nbEmployes";
 
-        assertEquals(2, entreprise.nbEmployes);
-        assertEquals(1800, entreprise.charges);
-    }
+    //     remplace(string, nbEmployes);
 
-    // implémentation de la fonction virerEmploye
-    void virerEmploye(Entreprise entreprise){
-        if (entreprise.nbEmployes == 1){
-            println("< Vous ne pouvez pas virer d'employer car vous n'en avez qu'un ! >");
-        } else {
-            println("< Vous avez viré un employé ! >");
-            entreprise.nbEmployes --;
-            entreprise.charges -= 300;
-        }
-    }
-
-    // tests de la fonction virerEmploye
-    void test_virerEmploye(){
-        Entreprise entreprise1 = newEntreprise(2000, 1500, 2, 10, 20, 1); // création d'une entreprise par défaut
-
-        virerEmploye(entreprise1);
-
-        assertEquals(1, entreprise1.nbEmployes);
-        assertEquals(1200, entreprise1.charges);
-
-        Entreprise entreprise2 = newEntreprise(2000, 1500, 1, 10, 20, 1); // cas où on ne peut pas virer d'employe
-
-        virerEmploye(entreprise2);
-
-        assertEquals(1, entreprise2.nbEmployes);
-        assertEquals(1500, entreprise2.charges);
-    }
-
-    // implémentation de la fonction exploiterEmploye
-    void exploiterEmploye(Entreprise entreprise){
-        println("< Vous avez commencé à exploiter un employé ! >");
-        entreprise.nbEmployes ++;
-        entreprise.charges += 100;
-    }
-
-    // tests de la fonction exploiterEmploye
-    void test_exploiterEmploye(){
-        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise par défaut
-
-        exploiterEmploye(entreprise);
-
-        assertEquals(2, entreprise.nbEmployes);
-        assertEquals(1600, entreprise.charges);
-    }
-
-    // implémentation de la fonction baisserSalaires
-    void baisserSalaires(Entreprise entreprise){
-        println("< Vous avez baissé les salaires de vos employés ! >");
-        entreprise.charges = entreprise.charges - (100 * entreprise.nbEmployes);
-    }
-
-    // tests de la fonction baisserSalaires
-    void test_baisserSalaires(){
-        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise par défaut
-
-        baisserSalaires(entreprise);
-
-        assertEquals(1400, entreprise.charges);
-    }
+    //     assertEquals("Nombre d'employés: 1", string);
+    // }
 
 
     // implémentation de la fonction tuiToString A CORRIGER SELON LA SUITE
     String tuiToString(Date date, Entreprise entreprise, String pathTui){
         File tui = new File(pathTui);
         String affichage = "";
+
         while (ready(tui)){
             affichage = affichage + readLine(tui) + '\n';
         }
@@ -268,8 +339,8 @@ class Main extends Program{
         int choix;
 
         // initialisation des variables du jeu via le CSV
-        Date date = newDate(1,1);
-        Entreprise entreprise = newEntreprise(stringToInt(getCell(config, 1, 0)),
+        Date d = newDate(1,1);
+        Entreprise e = newEntreprise(stringToInt(getCell(config, 1, 0)),
                                               stringToInt(getCell(config, 1, 1)),
                                               stringToInt(getCell(config, 1, 2)),
                                               stringToInt(getCell(config, 1, 3)),
@@ -278,32 +349,33 @@ class Main extends Program{
 
         // boucle principale du jeu
         while (!finAnnee && !faillite && !objectifAtteint){
-            println(tuiToString(date, entreprise, pathAccueil)); // on affiche l'écran d'accueil
+            println(tuiToString(d, e, pathAccueil)); // on affiche l'écran d'accueil
             choix = readInt();
 
             if (choix == 1){ // on lance la partie 
 
                 while (choix != 3){
-                    println(tuiToString(date, entreprise, pathTabDeBord));
+                    println(tuiToString(d, e, pathTabDeBord));
                     choix = readInt();
 
                     if (choix == 1){ // on ouvre le menu employés
 
                         while (choix != 5){
-                            println(tuiToString(date, entreprise, pathEmployes));
+                            println(tuiToString(d, e, pathEmployes));
+                            println(e.nbEmployes);
                             choix = readInt();
 
                             if (choix == 1){
-                                recruterEmploye(entreprise);
+                                recruterEmploye(e);
 
                             }else if (choix == 2){
-                                virerEmploye(entreprise);
+                                virerEmploye(e);
 
                             }else if (choix == 3){
-                                exploiterEmploye(entreprise);
+                                exploiterEmploye(e);
                                 
                             }else if (choix == 4){
-                                baisserSalaires(entreprise);
+                                baisserSalaires(e);
                                 
                             }
                 
@@ -311,32 +383,30 @@ class Main extends Program{
 
                     } else if (choix == 2){ // on ouvre le menu production
 
-                        while (choix != 5){
-                            println(tuiToString(date, entreprise, pathProduction));
+                        while (choix != 4){
+                            println(tuiToString(d, e, pathProduction));
                             choix = readInt();
 
                             if (choix == 1){
-                                println("< Vous avez amélioré la qualité de la production ! >");
+                                acheterMachine(e);
 
-                            }else if (choix == 2){
-                                println("< Vous avez acheté de nouvelles machines ! >");
-
-                            }else if (choix == 3){
-                                println("< Vous avez acheté des contrefaçons en chine ! >");
+                            } else if (choix == 2){
+                                acheterContrefacon(e);
                                 
-                            }else if (choix == 4){
-                                println("< Vous avez fait sniffer de la coke à vos employés ! >");
+                            } else if (choix == 3){
+                                snifferCoke(e);
                                 
                             }
                         }
+                        
 
                     }choix = -1;
-                }// calcul des resultats sur la semaine
+                } updateEntreprise(e);
 
             } else if (choix == 2){ // on affiche les règles du jeu
             
                 while (choix != 1){
-                    println(tuiToString(date, entreprise, pathButDuJeu));
+                    println(tuiToString(d, e, pathButDuJeu));
                     choix = readInt();
                 }choix = -1;
 

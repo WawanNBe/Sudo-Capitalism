@@ -1,7 +1,7 @@
 -----------------< Tableau de bord >--------------------
-Date: #date
+Date: 
 Objectif: 1M$
-CA: #CA
+CA: 
 
 1 > Gestion des employés
 2 > Gestion des produits

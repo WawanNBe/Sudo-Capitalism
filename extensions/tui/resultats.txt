@@ -1,5 +1,5 @@
 -------------< Résultats de la semaine >----------------
-#resultats
 
-1 > Ok !
+
+1 > Commencer une nouvelle semaine
 --------------------------------------------------------

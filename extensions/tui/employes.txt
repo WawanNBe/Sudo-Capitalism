@@ -1,5 +1,5 @@
 ---------------< Gestion des employés >-----------------
-Employés actuels: #nbEmployes
+Employés actuels: 
 
 1 > Recruter un employé                  (-300$/semaine)
 2 > Virer un employé                     (+300$/semaine)

@@ -1,0 +1,83 @@
+----------------------< Accueil >-----------------------
+Bienvenue dans ~$ sudo capitalism !
+
+1 > Jouer
+2 > But du jeu
+
+3 > Quitter
+--------------------------------------------------------
+
+-----------------< Tableau de bord >--------------------
+Date: #date
+Objectif: 1M$
+CA: #CA
+
+1 > Gestion des employés
+2 > Gestion des produits
+
+3 > Valider les choix pour cette semaine
+--------------------------------------------------------
+
+-------------------< But du jeu >-----------------------
+Bienvenue jeune entrepreneur !
+
+Dans sudo capitalism, le but est simple: faire un max
+d'argent.
+
+Pour parvenir à tes fins, tu peux utiliser des moyens
+légaux ou illégaux (comme certaines entreprises le
+font).
+Mais attention ! Cela impacte ton score d'éthique.
+À toi de voir quel boss tu veux être !
+
+La partie s'arrête si:
+    - ton entreprise fait faillite
+    - l'année se termine
+    - l'objectif financier est atteint
+
+
+Fonctionnement du jeu:
+
+Chaque lundi matin, tu peux prendre (ou non) des
+décisions au sujet de la gestion de tes employés ou
+de ta production.
+
+Une fois tes choix validés pour la semaine, tu
+obtiendras un récap des résultats de ton entreprise sur
+5 jours (lundi -> vendredi).
+
+Au lundi suivant, tu peux effectuer de nouveaux choix
+et ainsi de suite jusqu'à la fin du jeu.
+
+Bonne chance et joyeux capitalisme !
+
+1 > Ok !
+--------------------------------------------------------
+
+---------------< Gestion des employés >-----------------
+Employés actuels: #nbEmployes
+
+1 > Recruter un employé                  (-300$/semaine)
+2 > Virer un employé                     (+300$/semaine)
+3 > Sous payer un nouvel employé         (-100$/semaine)
+4 > Baisser les salaires         (-100$/employé/semaine)
+
+5 > Retour
+--------------------------------------------------------
+
+--------------------< Production >----------------------
+Stocks: #stocks
+Production journalière: #produitsVendusParJour unités
+
+1 > Acheter de nouvelles machines               (-1000$)
+2 > Acheter des contrefaçons en chine             (-50$)
+3 > Passer les employés sous coke                (-450$)
+
+4 > Retour
+--------------------------------------------------------
+
+-------------< Résultats de la semaine >----------------
+resultats
+
+1 > Commencer une nouvelle semaine
+--------------------------------------------------------
