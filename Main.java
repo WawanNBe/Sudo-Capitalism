@@ -121,7 +121,7 @@ class Main extends Program{
         entreprise.stocks = stocks;
         entreprise.prixDeVente = prixDeVente;
         entreprise.niveauProduction = niveauProduction;
-        entreprise.produitsVendusParJour = nbEmployes * (3 + niveauProduction);
+        entreprise.produitsVendusParJour = entreprise.nbEmployes * (25 + (25 * entreprise.niveauProduction));
 
         return entreprise;
     }
@@ -256,7 +256,7 @@ class Main extends Program{
 
         } else {
             println(rgb(200, 200, 0, true) + "< Vous avez acheté des contrefaçons en chine ! >" + RESET);
-            entreprise.budget -= 50;
+            entreprise.budget -= 200;
             entreprise.stocks += 50;
         }
     }
@@ -297,9 +297,9 @@ class Main extends Program{
     // -----------------------------------------------------------------< MISE À JOUR DES DONNÉES DE L'ENTREPRISE >------------------------------------------------------------------
 
     // implémentation de la fonction updateEntreprise
-    void updateEntreprise(Entreprise entreprise, boolean faillite, boolean objectifAtteint) {
+    void updateEntreprise(Date date, Entreprise entreprise, boolean faillite, boolean objectifAtteint) {
         // calcul sur la semaine et mise à jour
-        entreprise.produitsVendusParJour = entreprise.nbEmployes * (3 + entreprise.niveauProduction); // on met à jour le nombre de produits vendus par jours
+        entreprise.produitsVendusParJour = entreprise.nbEmployes * (25 + (25 * entreprise.niveauProduction)); // on met à jour le nombre de produits vendus par jours
         
         if ((entreprise.produitsVendusParJour * 5) > entreprise.stocks) { // si pas assez de stocks
             entreprise.budget += (entreprise.stocks * entreprise.prixDeVente); // on ne vend que les stocks dispos 
@@ -311,26 +311,28 @@ class Main extends Program{
         }
 
         entreprise.budget -= entreprise.charges; // on soustrait les charges au chiffre d'affaire
+        date.jour += 7;
 
         // on cherche si une condition (financière) d'arrêt du jeu est présente
         if (entreprise.budget <= 0) {
             faillite = true;
 
-        } else if (entreprise.budget >= objectif) {
-            objectifAtteint = true;
-        }
+        } // else if (entreprise.budget >= objectif) {
+        //     objectifAtteint = true;
+        // }
     }
 
     // tests de la fonction updateEntreprise
     void test_updateEntreprise() {
         Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise par défaut
+        Date date = newDate(1, 1); // création d'une nouvelle date
 
         // simulation d'un tour de jeu
         entreprise.nbEmployes ++; // ajout employé
         entreprise.charges = entreprise.charges - (100 * entreprise.nbEmployes); // baisse salaires
         entreprise.budget -= 300; entreprise.niveauProduction ++; // amélioration de la production
 
-        updateEntreprise(entreprise, faillite, objectifAtteint);
+        updateEntreprise(date, entreprise, faillite, objectifAtteint);
 
         assertEquals(600, entreprise.budget);
         assertEquals(1300, entreprise.charges);
@@ -397,7 +399,7 @@ class Main extends Program{
                                               stringToInt(getCell(config, 1, 4)), // prix de vente
                                               stringToInt(getCell(config, 1, 5))); // niveau de production
 
-        objectif = stringToInt(getCell(config, 1, 0));  // objectif financier à atteindre
+        int objectif = stringToInt(getCell(config, 1, 0));  // objectif financier à atteindre
 
         // boucle principale du jeu
         while (!finAnnee && !faillite && !objectifAtteint) { // tant que l'une des conditions d'arrêt n'est pas déclenchée
@@ -448,7 +450,7 @@ class Main extends Program{
                         }choix = -1;
 
                     } else if (choix == 3) {
-                        updateEntreprise(entreprise, faillite, objectifAtteint); // on met à jour les stats de l'entreprise
+                        updateEntreprise(date, entreprise, faillite, objectifAtteint); // on met à jour les stats de l'entreprise
 
                         while (choix != 1){
                             println(tuiToString(date, entreprise, pathResultats));

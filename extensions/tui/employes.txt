@@ -1,12 +1,12 @@
----------------< Gestion des employés >-----------------
+--------------------< Gestion des employés >----------------------
 Budget: %0$
 Employés actuels: %2
-Charges: %1/semaine
+Charges: %1$/semaine
 
-1 > Recruter un employé                  (-300$/semaine)
-2 > Virer un employé                     (+300$/semaine)
-3 > Sous payer un nouvel employé         (-100$/semaine)
-4 > Baisser les salaires         (-100$/employé/semaine)
+1 > Recruter un employé            (+7 produits/j | -300$/semaine)
+2 > Virer un employé               (-7 produits/j | -300$/semaine)
+3 > Sous payer un nouvel employé   (+7 produits/j | -100$/semaine)
+4 > Baisser les salaires                   (-100$/employé/semaine)
 
 5 > Retour
---------------------------------------------------------
+------------------------------------------------------------------

@@ -1,5 +1,5 @@
--------------< Résultats de la semaine >----------------
+------------------< Résultats de la semaine >---------------------
 Les résultats de la semaine ont été calculés !
 
 1 > Commencer une nouvelle semaine
---------------------------------------------------------
+------------------------------------------------------------------

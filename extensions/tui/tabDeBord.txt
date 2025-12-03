@@ -1,15 +1,15 @@
------------------< Tableau de bord >--------------------
+----------------------< Tableau de bord >-------------------------
 Date: %D
 Objectif: 1M$
 
 Budget: %0$
 Employés actuels: %2
-Charges: %1/semaine
-Stocks: %3
-Produits vendus par jour: %6
+Charges: %1$/semaine
+Stocks: %3 unités
+Produits vendus par jour: %6 à %4$ par unité
 
 1 > Gestion des employés
 2 > Gestion des produits
 
 3 > Valider les choix pour cette semaine
---------------------------------------------------------
+------------------------------------------------------------------
