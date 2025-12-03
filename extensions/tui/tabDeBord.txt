@@ -4,6 +4,7 @@ Objectif: 1M$
 
 Budget: %0$
 Employés actuels: %2
+Charges: %1/semaine
 Stocks: %3
 Produits vendus par jour: %6
 
