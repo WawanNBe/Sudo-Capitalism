@@ -46,6 +46,7 @@ Une fois tes choix validés pour la semaine, tu
 obtiendras un récap des résultats de ton entreprise sur
 5 jours (lundi -> vendredi).
 
+
 Au lundi suivant, tu peux effectuer de nouveaux choix
 et ainsi de suite jusqu'à la fin du jeu.
 

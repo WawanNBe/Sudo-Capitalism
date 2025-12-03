@@ -1,7 +1,11 @@
 -----------------< Tableau de bord >--------------------
-Date: 
+Date: %D
 Objectif: 1M$
-CA: 
+
+Budget: %0$
+Employés actuels: %2
+Stocks: %3
+Produits vendus par jour: %6
 
 1 > Gestion des employés
 2 > Gestion des produits

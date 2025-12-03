@@ -1,5 +1,6 @@
 ---------------< Gestion des employés >-----------------
-Employés actuels: 
+Budget: %0$
+Employés actuels: %2
 
 1 > Recruter un employé                  (-300$/semaine)
 2 > Virer un employé                     (+300$/semaine)

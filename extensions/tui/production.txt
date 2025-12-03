@@ -1,6 +1,7 @@
 --------------------< Production >----------------------
-Stocks: 
-Production journalière:  unités
+Budget: %0$
+Stocks: %3
+Produits vendus par jour: %6
 
 1 > Acheter de nouvelles machines               (-1000$)
 2 > Acheter des contrefaçons en chine             (-50$)
