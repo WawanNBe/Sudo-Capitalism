@@ -4,7 +4,7 @@ Stocks: %3 unités
 Produits vendus par jour: %6 à %4$ par unité
 
 1 > Acheter de nouvelles machines         (+5 produits/j | -1000$)
-2 > Acheter des contrefaçons en chine            (+50 stocks-200$)
+2 > Acheter des contrefaçons en chine         (+50 stocks | -200$)
 3 > Passer les employés sous coke          (+5 produits/j | -450$)
 
 4 > Retour

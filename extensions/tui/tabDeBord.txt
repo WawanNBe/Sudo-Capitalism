@@ -9,7 +9,7 @@ Stocks: %3 unités
 Produits vendus par jour: %6 à %4$ par unité
 
 1 > Gestion des employés
-2 > Gestion des produits
+2 > Gestion de la production
 
 3 > Valider les choix pour cette semaine
 ------------------------------------------------------------------

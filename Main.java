@@ -77,7 +77,7 @@ class Main extends Program{
             date.jour = 1;
             date.mois += 1;
         } else {
-            date.jour += 1;
+            date.jour += 7;
         }
     }
 
@@ -383,7 +383,7 @@ class Main extends Program{
 
     void algorithm() {
         // initialisation des variables
-        int choix;
+        String choix;
 
         // initialisation des variables du jeu via le CSV
         Date date = newDate(1,1);
@@ -399,66 +399,66 @@ class Main extends Program{
         // boucle principale du jeu
         while (!finAnnee && !faillite && !objectifAtteint) { // tant que l'une des conditions d'arrêt n'est pas déclenchée
             println(tuiToString(date, entreprise, pathAccueil)); // on affiche l'écran d'accueil
-            choix = readInt();
+            choix = readString();
 
-            if (choix == 1) { // on lance la partie 
-                while (choix != 4){
+            if (equals(choix, "1")) { // on lance la partie 
+                while (!equals(choix, "4")){
                     println(tuiToString(date, entreprise, pathTabDeBord));
-                    choix = readInt();
+                    choix = readString();
 
-                    if (choix == 1) { // on ouvre le menu employés
-                        while (choix != 5){
+                    if (equals(choix, "1")) { // on ouvre le menu employés
+                        while (!equals(choix, "5")){
                             println(tuiToString(date, entreprise, pathEmployes));
                             println(entreprise.nbEmployes);
-                            choix = readInt();
+                            choix = readString();
 
-                            if (choix == 1) {
+                            if (equals(choix, "1")) {
                                 recruterEmploye(entreprise);
 
-                            }else if (choix == 2) {
+                            }else if (equals(choix, "2")) {
                                 virerEmploye(entreprise);
 
-                            }else if (choix == 3) {
+                            }else if (equals(choix, "3")) {
                                 exploiterEmploye(entreprise);
                                 
-                            }else if (choix == 4) {
+                            }else if (equals(choix, "4")) {
                                 baisserSalaires(entreprise);
                                 
                             }
-                        }choix = -1;
+                        }choix = "-1";
 
-                    } else if (choix == 2) { // on ouvre le menu production      
-                        while (choix != 4) {
+                    } else if (equals(choix, "2")) { // on ouvre le menu production      
+                        while (!equals(choix, "4")) {
                             println(tuiToString(date, entreprise, pathProduction));
-                            choix = readInt();
+                            choix = readString();
 
-                            if (choix == 1) {
+                            if (equals(choix, "1")) {
                                 acheterMachine(entreprise);
 
-                            } else if (choix == 2) {
+                            } else if (equals(choix, "2")) {
                                 acheterContrefacon(entreprise);
                                 
-                            } else if (choix == 3) {
+                            } else if (equals(choix, "3")) {
                                 snifferCoke(entreprise);
 
                             }
-                        }choix = -1;
+                        }choix = "-1";
 
-                    } else if (choix == 3) {
+                    } else if (equals(choix, "3")) {
                         updateEntreprise(date, entreprise, faillite, objectifAtteint); // on met à jour les stats de l'entreprise
 
-                        while (choix != 1){
+                        while (!equals(choix, "1")){
                             println(tuiToString(date, entreprise, pathResultats));
-                            choix = readInt();
-                        }choix = 1;
+                            choix = readString();
+                        }choix = "1";
                     }
                 }
 
-            } else if (choix == 2) { // on affiche les règles du jeu        
-                while (choix != 1) {
+            } else if (equals(choix, "2")) { // on affiche les règles du jeu        
+                while (!equals(choix, "1")) {
                     println(tuiToString(date, entreprise, pathButDuJeu));
-                    choix = readInt();
-                }choix = -1;
+                    choix = readString();
+                }choix = "-1";
 
             } else {
                 objectifAtteint = !objectifAtteint; // on change l'état d'une des variables d'arrêt pour stopper le jeu si le joueur sélectionne "Quitter"
