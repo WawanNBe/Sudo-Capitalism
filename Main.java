@@ -23,16 +23,6 @@ class Main extends Program{
 
     // ------------------------------------------------< IMPLEMENTATION DES FONCTIONS SUIVIES DE LEURS TESTS RESPECTIFS >------------------------------------------------------------------
 
-    // implémentation de la fonction stringToInt
-    int stringToInt(String string) {
-        int nombre = 0;
-        
-        for (int idx = 0; idx<length(string); idx++) {
-            nombre = nombre * 10 + (charAt(string, idx) - '0');
-        }
-        return nombre;
-    }
-
     // tests de la fonction stringToInt
     void test_stringToInt() {
         String nbTest = "123";
@@ -213,8 +203,13 @@ class Main extends Program{
 
     // implémentation de la fonction baisserSalaires
     void baisserSalaires(Entreprise entreprise) {
-        println(rgb(200, 200, 0, true) + "< Vous avez baissé les salaires de vos employés ! >" + RESET);
-        entreprise.charges = entreprise.charges - (100 * entreprise.nbEmployes);
+        if (entreprise.charges <= 0){
+            entreprise.charges = 0;
+            println(rgb(200, 200, 0, true) + "< Vous ne payez déjà pas vos employés ! >" + RESET);
+        } else {
+            println(rgb(200, 200, 0, true) + "< Vous avez baissé les salaires de vos employés ! >" + RESET);
+            entreprise.charges = entreprise.charges - (100 * entreprise.nbEmployes);
+        }
     }
 
     // tests de la fonction baisserSalaires
