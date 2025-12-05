@@ -77,7 +77,7 @@ class Main extends Program{
             date.jour = 1;
             date.mois += 1;
         } else {
-            date.jour += 7;
+            date.jour += 1;
         }
     }
 
@@ -306,7 +306,9 @@ class Main extends Program{
         }
 
         entreprise.budget -= entreprise.charges; // on soustrait les charges au chiffre d'affaire
-        date.jour += 7;
+        for (int jour = 0; jour < 7; jour++){
+            gestionDate(date);
+        }
 
         // on cherche si une condition (financière) d'arrêt du jeu est présente
         if (entreprise.budget <= 0) {
