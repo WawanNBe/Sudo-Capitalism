@@ -1,5 +1,10 @@
-------------------< Résultats de la semaine >---------------------
-Les résultats de la semaine ont été calculés !
+██████████████████████████  RESULTATS DE LA SEMAINE  ██████████████████████████
 
-1 > Commencer une nouvelle semaine
-------------------------------------------------------------------
+
+───────────────────────────── DONNEES FINANCIERES ─────────────────────────────
+
+
+───────────────────────────── DONNEES OPERATIONNELLES ─────────────────────────
+
+
+[1] Ok !

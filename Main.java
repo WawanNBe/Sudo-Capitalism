@@ -1,7 +1,10 @@
+// -----------------------------------------------------------------< Imports des extensions >------------------------------------------------------------------
+
 import extensions.CSVFile; // import des CSV
 import extensions.File; // import des txt
 
 class Main extends Program{
+
 
     // -----------------------------------------------------------------< VARIABLES GLOBALES >------------------------------------------------------------------
 
@@ -21,6 +24,7 @@ class Main extends Program{
     boolean objectifAtteint = false; // si le joueur atteint l'objectif financier, la partie est gagnée
 
 
+
     // ------------------------------------------------< IMPLEMENTATION DES FONCTIONS SUIVIES DE LEURS TESTS RESPECTIFS >------------------------------------------------------------------
 
     // tests de la fonction stringToInt
@@ -31,6 +35,7 @@ class Main extends Program{
         assertEquals(0, stringToInt("0"));
         assertEquals(1, stringToInt("1"));
     }
+
 
 
     // -----------------------------------------------------------------< GESTION DE LA DATE >------------------------------------------------------------------
@@ -99,6 +104,7 @@ class Main extends Program{
     }
 
 
+
     // -----------------------------------------------------------------< GESTION DE L'ENTREPRISE >------------------------------------------------------------------
 
     // implémentation de la fonction newEntreprise
@@ -128,6 +134,7 @@ class Main extends Program{
         assertEquals(1, entreprise.niveauProduction);
         assertEquals(4, entreprise.produitsVendusParJour);
     }
+
 
 
     // -----------------------------------------------------------------< GESTION DU JEU >------------------------------------------------------------------
@@ -289,10 +296,11 @@ class Main extends Program{
     }
 
 
+
     // -----------------------------------------------------------------< MISE À JOUR DES DONNÉES DE L'ENTREPRISE >------------------------------------------------------------------
 
     // implémentation de la fonction updateEntreprise
-    void updateEntreprise(Date date, Entreprise entreprise, boolean faillite, boolean objectifAtteint) {
+    void updateEntreprise(Date date, Entreprise entreprise) {
         // calcul sur la semaine et mise à jour
         entreprise.produitsVendusParJour = entreprise.nbEmployes * (25 + (25 * entreprise.niveauProduction)); // on met à jour le nombre de produits vendus par jours
         
@@ -341,6 +349,7 @@ class Main extends Program{
     }
 
 
+
     // -----------------------------------------------------------------< GESTION DE L'AFFICHAGE  >------------------------------------------------------------------
 
     // implémentation de la fonction tuiToString
@@ -381,6 +390,11 @@ class Main extends Program{
     }
 
 
+    void clear(){
+        // print("\033[H\033[2J");
+        print("\033[H\033[2J\033[3J");
+    }
+
     // -----------------------------------------------------------------< ALGORITHME PRINCIPAL >------------------------------------------------------------------
 
     void algorithm() {
@@ -400,16 +414,19 @@ class Main extends Program{
 
         // boucle principale du jeu
         while (!finAnnee && !faillite && !objectifAtteint) { // tant que l'une des conditions d'arrêt n'est pas déclenchée
+            clear(); // Nettoyer le terminal
             println(tuiToString(date, entreprise, pathAccueil)); // on affiche l'écran d'accueil
             choix = readString();
 
             if (equals(choix, "1")) { // on lance la partie 
                 while (!equals(choix, "4")){
+                    clear();
                     println(tuiToString(date, entreprise, pathTabDeBord));
                     choix = readString();
 
                     if (equals(choix, "1")) { // on ouvre le menu employés
                         while (!equals(choix, "5")){
+                            clear();
                             println(tuiToString(date, entreprise, pathEmployes));
                             println(entreprise.nbEmployes);
                             choix = readString();
@@ -431,6 +448,7 @@ class Main extends Program{
 
                     } else if (equals(choix, "2")) { // on ouvre le menu production      
                         while (!equals(choix, "4")) {
+                            clear();
                             println(tuiToString(date, entreprise, pathProduction));
                             choix = readString();
 
@@ -450,6 +468,7 @@ class Main extends Program{
                         updateEntreprise(date, entreprise, faillite, objectifAtteint); // on met à jour les stats de l'entreprise
 
                         while (!equals(choix, "1")){
+                            clear();
                             println(tuiToString(date, entreprise, pathResultats));
                             choix = readString();
                         }choix = "1";
@@ -458,6 +477,7 @@ class Main extends Program{
 
             } else if (equals(choix, "2")) { // on affiche les règles du jeu        
                 while (!equals(choix, "1")) {
+                    clear();
                     println(tuiToString(date, entreprise, pathButDuJeu));
                     choix = readString();
                 }choix = "-1";

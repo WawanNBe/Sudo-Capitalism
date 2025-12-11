@@ -1,4 +1,5 @@
-------------------------< But du jeu >----------------------------
+██████████████████████████  BUT DU JEU ██████████████████████████
+
 Bienvenue jeune entrepreneur !
 
 Dans sudo capitalism, le but est simple: faire un max
@@ -32,4 +33,3 @@ et ainsi de suite jusqu'à la fin du jeu.
 Bonne chance et joyeux capitalisme !
 
 1 > Ok !
-------------------------------------------------------------------

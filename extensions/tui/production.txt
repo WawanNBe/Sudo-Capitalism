@@ -1,11 +1,17 @@
--------------------------< Production >---------------------------
-Budget: %0$
-Stocks: %3 unités
-Produits vendus par jour: %6 à %4$ par unité
+██████████████████████████  GESTION DE PRODUCTION  ██████████████████████████
 
-1 > Acheter de nouvelles machines         (+5 produits/j | -1000$)
-2 > Acheter des contrefaçons en chine         (+50 stocks | -200$)
-3 > Passer les employés sous coke          (+5 produits/j | -450$)
 
-4 > Retour
-------------------------------------------------------------------
+──────────────────────────── DONNEES FINANCIERES ────────────────────────────
+Budget          ▸ %0 $
+Prix de vente   ▸ %4 $
+
+──────────────────────────── DONNEES OPERATIONNELLES ────────────────────────
+Employés                ▸ %2
+Stocks                  ▸ %3 unités
+Production journalière  ▸ %6 unités
+
+[1] Acheter de nouvelles machines         (+5 produits/j | -1000$)
+[2] Acheter des contrefaçons en chine         (+50 stocks | -200$)
+[3] Passer les employés sous coke          (+5 produits/j | -450$)
+
+[4] Retour
