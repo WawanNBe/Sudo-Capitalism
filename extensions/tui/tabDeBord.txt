@@ -17,3 +17,5 @@ Ventes        ▸ %6 / jour à %4 $ l’unité
 [2] ▸ Gestion de la production
 
 [3] ▸ Valider la semaine
+
+[4] ▸ Quitter vers le menu principal

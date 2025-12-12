@@ -9,6 +9,4 @@ Nouvelles charges   ▸ %1 $ / semaine
 Nouveau nombre d'employés   %2
 
 ───────────────────────────── ACTIONS POSSIBLES ───────────────────────────────
-[1] ▸ Ok !
-
-[2] ▸ Quitter vers le menu principal
+[1] ▸ Nouvelle semaine !

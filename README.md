@@ -1,6 +1,12 @@
 # About the game
 *Humouristic terminal-based game about capitalism*
 
+**V2.3**
+
+- Added a way to quit the game
+
+
+
 **V2.2**
 
 - The end of the game is now managed by a function
