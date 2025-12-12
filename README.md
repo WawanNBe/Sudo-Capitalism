@@ -39,7 +39,7 @@ Previous version: **V1.0**
 *Listed in order of priority*
 
 *Most important features*
-- Add the ability to save the current game
+- ~~Add the ability to save the current game~~
 - ~~Create a function do manage the end of the game using booleans~~
 - ~~Complete the results TUI to display the changes from the previous week~~
 - ~~Externalize the objectives to win the game~~
