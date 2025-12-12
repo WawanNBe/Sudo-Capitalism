@@ -27,9 +27,9 @@ Previous version: **V1.0**
 
 *Most important features*
 - Add the ability to save the current game
-~~ - Create a function do manage the end of the game using booleans ~~
+~~-Create a function do manage the end of the game using booleans~~
 - Complete the results TUI to display the changes from the previous week
-~~ - Externalize the objectives to win the game ~~
+~~-Externalize the objectives to win the game~~
 
 *Other stuff to do*
 - Create an Employee type to add more depth to the gameplay
