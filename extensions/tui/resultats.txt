@@ -7,4 +7,6 @@
 ───────────────────────────── DONNEES OPERATIONNELLES ─────────────────────────
 
 
-[1] Ok !
+[1] ▸ Ok !
+
+[2] ▸ Quitter vers le menu principal

@@ -12,9 +12,9 @@ Mais attention ! Cela impacte ton score d'éthique.
 À toi de voir quel boss tu veux être !
 
 La partie s'arrête si:
-    - ton entreprise fait faillite
-    - l'année se termine
-    - l'objectif financier est atteint
+    ▸ ton entreprise fait faillite
+    ▸ l'année se termine
+    ▸ l'objectif financier est atteint
 
 
 Fonctionnement du jeu:
@@ -32,4 +32,4 @@ et ainsi de suite jusqu'à la fin du jeu.
 
 Bonne chance et joyeux capitalisme !
 
-1 > Ok !
+[1] ▸ Ok !

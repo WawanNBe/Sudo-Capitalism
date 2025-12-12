@@ -13,7 +13,7 @@ Stocks        ▸ %3 unités
 Ventes        ▸ %6 / jour à %4 $ l’unité
 
 ───────────────────────── MODULES DISPONIBLES ─────────────────────────
-[1] Gestion des employés
-[2] Gestion de la production
+[1] ▸ Gestion des employés
+[2] ▸ Gestion de la production
 
-[3] >> Valider la semaine <<
+[3] ▸ Valider la semaine

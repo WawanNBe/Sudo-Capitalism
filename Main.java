@@ -1,3 +1,14 @@
+//     ██████  █    ██ ▓█████▄  ▒█████      ▄████▄   ▄▄▄       ██▓███   ██▓▄▄▄█████▓ ▄▄▄       ██▓     ██▓  ██████  ███▄ ▄███▓
+//   ▒██    ▒  ██  ▓██▒▒██▀ ██▌▒██▒  ██▒   ▒██▀ ▀█  ▒████▄    ▓██░  ██▒▓██▒▓  ██▒ ▓▒▒████▄    ▓██▒    ▓██▒▒██    ▒ ▓██▒▀█▀ ██▒
+//   ░ ▓██▄   ▓██  ▒██░░██   █▌▒██░  ██▒   ▒▓█    ▄ ▒██  ▀█▄  ▓██░ ██▓▒▒██▒▒ ▓██░ ▒░▒██  ▀█▄  ▒██░    ▒██▒░ ▓██▄   ▓██    ▓██░
+//     ▒   ██▒▓▓█  ░██░░▓█▄   ▌▒██   ██░   ▒▓▓▄ ▄██▒░██▄▄▄▄██ ▒██▄█▓▒ ▒░██░░ ▓██▓ ░ ░██▄▄▄▄██ ▒██░    ░██░  ▒   ██▒▒██    ▒██ 
+//   ▒██████▒▒▒▒█████▓ ░▒████▓ ░ ████▓▒░   ▒ ▓███▀ ░ ▓█   ▓██▒▒██▒ ░  ░░██░  ▒██▒ ░  ▓█   ▓██▒░██████▒░██░▒██████▒▒▒██▒   ░██▒
+//   ▒ ▒▓▒ ▒ ░░▒▓▒ ▒ ▒  ▒▒▓  ▒ ░ ▒░▒░▒░    ░ ░▒ ▒  ░ ▒▒   ▓▒█░▒▓▒░ ░  ░░▓    ▒ ░░    ▒▒   ▓▒█░░ ▒░▓  ░░▓  ▒ ▒▓▒ ▒ ░░ ▒░   ░  ░
+//   ░ ░▒  ░ ░░░▒░ ░ ░  ░ ▒  ▒   ░ ▒ ▒░      ░  ▒     ▒   ▒▒ ░░▒ ░      ▒ ░    ░      ▒   ▒▒ ░░ ░ ▒  ░ ▒ ░░ ░▒  ░ ░░  ░      ░
+//   ░  ░  ░   ░░░ ░ ░  ░ ░  ░ ░ ░ ░ ▒     ░          ░   ▒   ░░        ▒ ░  ░        ░   ▒     ░ ░    ▒ ░░  ░  ░  ░      ░   
+//         ░     ░        ░        ░ ░     ░ ░            ░  ░          ░                 ░  ░    ░  ░ ░        ░         ░   
+//                      ░                  ░                                                                                  
+
 // -----------------------------------------------------------------< Imports des extensions >------------------------------------------------------------------
 
 import extensions.CSVFile; // import des CSV
@@ -19,25 +30,9 @@ class Main extends Program{
     String pathProduction = "./extensions/tui/production.txt"; // les menus du jeu
     String pathResultats = "./extensions/tui/resultats.txt"; // le tui des resulstats hebdomadaires
 
-    // conditions de fin de jeu (défaite et victoire)
-    boolean finAnnee = false; // la partie s'arrête si l'année se termine (sert à limiter le jeu à 52 tours)
-    boolean faillite = false; // si le joueur fait faillite, la partie s'arrête
-    boolean objectifAtteint = false; // si le joueur atteint l'objectif financier, la partie est gagnée
-
 
 
     // ------------------------------------------------< IMPLEMENTATION DES FONCTIONS SUIVIES DE LEURS TESTS RESPECTIFS >------------------------------------------------------------------
-
-    // tests de la fonction stringToInt
-    void test_stringToInt() {
-        String nbTest = "123";
-
-        assertEquals(123, stringToInt("123"));
-        assertEquals(0, stringToInt("0"));
-        assertEquals(1, stringToInt("1"));
-    }
-
-
 
     // -----------------------------------------------------------------< GESTION DE LA DATE >------------------------------------------------------------------
 
@@ -77,9 +72,7 @@ class Main extends Program{
     void gestionDate(Date date) {
         int[] mois = new int[] {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}; // les nombres de jours pour chaque mois
 
-        if (date.mois == 12 && date.jour == 31) {
-            finAnnee = true;
-        } else if (date.jour == mois[date.mois -1]) {
+        if (date.jour == mois[date.mois -1]) {
             date.jour = 1;
             date.mois += 1;
         } else {

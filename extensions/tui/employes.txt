@@ -8,9 +8,9 @@ Charges       ▸ %1 $ / semaine
 ─────────────────────────── DONNEES OPERATIONNELLES ───────────────────────
 Employés      ▸ %2
 
-[1] Recruter un employé            (+7 produits/j | -300$/semaine)
-[2] Virer un employé               (-7 produits/j | -300$/semaine)
-[3] Sous payer un nouvel employé   (+7 produits/j | -100$/semaine)
-[4] Baisser les salaires                   (-100$/employé/semaine)
+[1] ▸ Recruter un employé            (+7 produits/j | -300$/semaine)
+[2] ▸ Virer un employé               (-7 produits/j | -300$/semaine)
+[3] ▸ Sous payer un nouvel employé   (+7 produits/j | -100$/semaine)
+[4] ▸ Baisser les salaires                   (-100$/employé/semaine)
 
-[5] Retour
+[5] ▸ Retour
