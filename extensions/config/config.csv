@@ -1,5 +1,5 @@
-#Config de l'entreprise
-5000,300,1,100,10,1
+Budget,Charges,NbEmployes,Stocks,PrixDeVente,NiveauProduction,ProductionJournaliere,Reputation
+5000,300,1,0,10,1,50,0
 
 #Objectif financier à atteindre pour gagner
 1000000

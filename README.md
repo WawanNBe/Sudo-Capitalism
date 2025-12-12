@@ -1,6 +1,13 @@
 # About the game
 *Humouristic terminal-based game about capitalism*
 
+
+**V2.4**
+
+- Added a way to save and load a game
+
+
+
 **V2.3**
 
 - Added a way to quit the game

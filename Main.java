@@ -14,7 +14,7 @@
 import extensions.CSVFile; // import des CSV
 import extensions.File; // import des txt
 
-class Main extends Program{
+class Main extends Program {
 
 
     // -----------------------------------------------------------------< VARIABLES GLOBALES >------------------------------------------------------------------
@@ -126,7 +126,7 @@ class Main extends Program{
     // -----------------------------------------------------------------< GESTION DE L'ENTREPRISE >------------------------------------------------------------------
 
     // implémentation de la fonction newEntreprise
-    Entreprise newEntreprise(int budget, int charges, int nbEmployes, int stocks, int prixDeVente, int niveauProduction) {
+    Entreprise newEntreprise(int budget, int charges, int nbEmployes, int stocks, int prixDeVente, int niveauProduction, int reputation) {
         Entreprise entreprise = new Entreprise();
 
         entreprise.budget = budget;
@@ -136,13 +136,14 @@ class Main extends Program{
         entreprise.prixDeVente = prixDeVente;
         entreprise.niveauProduction = niveauProduction;
         entreprise.productionJournaliere = entreprise.nbEmployes * (25 + (25 * entreprise.niveauProduction));
+        entreprise.reputation = reputation;
 
         return entreprise;
     }
 
     // tests de la fonction newEntreprise
     void test_newEntreprise() {
-        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1);
+        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1, 0);
 
         assertEquals(2000, entreprise.budget);
         assertEquals(1500, entreprise.charges);
@@ -151,6 +152,7 @@ class Main extends Program{
         assertEquals(20, entreprise.prixDeVente);
         assertEquals(1, entreprise.niveauProduction);
         assertEquals(50, entreprise.productionJournaliere);
+        assertEquals(0, entreprise.reputation);
     }
 
 
@@ -169,7 +171,7 @@ class Main extends Program{
 
     // tests de la fonction recruterEmploye
     void test_recruterEmploye() {
-        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise par défaut
+        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1, 0); // création d'une entreprise par défaut
 
         recruterEmploye(entreprise);
 
@@ -191,14 +193,14 @@ class Main extends Program{
 
     // tests de la fonction virerEmploye
     void test_virerEmploye() {
-        Entreprise entreprise1 = newEntreprise(2000, 1500, 2, 10, 20, 1); // création d'une entreprise par défaut
+        Entreprise entreprise1 = newEntreprise(2000, 1500, 2, 10, 20, 1, 0); // création d'une entreprise par défaut
 
         virerEmploye(entreprise1);
 
         assertEquals(1, entreprise1.nbEmployes);
         assertEquals(1200, entreprise1.charges);
 
-        Entreprise entreprise2 = newEntreprise(2000, 1500, 1, 10, 20, 1); // cas où on ne peut pas virer d'employe
+        Entreprise entreprise2 = newEntreprise(2000, 1500, 1, 10, 20, 1, 0); // cas où on ne peut pas virer d'employe
 
         virerEmploye(entreprise2);
 
@@ -220,7 +222,7 @@ class Main extends Program{
 
     // tests de la fonction exploiterEmploye
     void test_exploiterEmploye() {
-        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise par défaut
+        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1, 0); // création d'une entreprise par défaut
 
         exploiterEmploye(entreprise);
 
@@ -242,7 +244,7 @@ class Main extends Program{
 
     // tests de la fonction baisserSalaires
     void test_baisserSalaires() {
-        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise par défaut
+        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1,0); // création d'une entreprise par défaut
 
         baisserSalaires(entreprise);
 
@@ -264,7 +266,7 @@ class Main extends Program{
 
     // tests de la fonction ameliorerProduction
     void test_acheterMachine() {
-        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise par défaut
+        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1, 0); // création d'une entreprise par défaut
 
         acheterMachine(entreprise);
 
@@ -287,7 +289,7 @@ class Main extends Program{
 
     // tests de la fonction ameliorerProduction
     void test_acheterContrefacon() {
-        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise par défaut
+        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1, 0); // création d'une entreprise par défaut
 
         acheterContrefacon(entreprise);
 
@@ -310,7 +312,7 @@ class Main extends Program{
 
     // tests de la fonction ameliorerProduction
     void test_snifferCoke() {
-        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise par défaut
+        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1, 0); // création d'une entreprise par défaut
 
         snifferCoke(entreprise);
 
@@ -331,19 +333,53 @@ class Main extends Program{
     // tests de la fonction finDePartie
     void test_finDePartie() {
         int objectif = 1000000; // objectif par défaut
-        Entreprise entrepriseFaillite = newEntreprise(0, 1500, 1, 10, 20, 1); // création d'une entreprise en faillite
+        Entreprise entrepriseFaillite = newEntreprise(0, 1500, 1, 10, 20, 1, 0); // création d'une entreprise en faillite
         Date dateAleatoire = newDate(15, 2); // date aléatoire
 
         assertTrue(finDePartie(entrepriseFaillite, dateAleatoire, objectif));
 
-        Entreprise entrepriseLambda = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise lambda
+        Entreprise entrepriseLambda = newEntreprise(2000, 1500, 1, 10, 20, 1, 0); // création d'une entreprise lambda
         Date dateFin = newDate(31, 12); // date fin d'année
 
         assertTrue(finDePartie(entrepriseLambda, dateFin, objectif));
 
-        Entreprise entrepriseObjectif = newEntreprise(1000000, 1500, 1, 10, 20, 1); // création d'une entreprise qui atteint l'objectif
+        Entreprise entrepriseObjectif = newEntreprise(1000000, 1500, 1, 10, 20, 1, 0); // création d'une entreprise qui atteint l'objectif
 
         assertTrue(finDePartie(entrepriseObjectif, dateAleatoire, objectif));
+    }
+
+
+    // implémentation de la fonction intToString
+    String intToString(int entier) {
+        String string = "";
+        return string += entier;
+    }
+
+    // tests de la fonction intToString
+    void test_intToString() {
+        assertEquals("123", intToString(123));
+        assertEquals("0", intToString(0));
+    }
+
+
+    void saveGame(Entreprise entreprise, Date date) {
+        String[][] sauvegarde = {
+        {"Budget", "Charges", "NbEmployes", "Stocks", "PrixDeVente", "NiveauProduction", "ProductionJournaliere", "Reputation", "Jour", "Mois"}, // titres des colonnes du tableau (sert uniquement à des fins visuelles)
+        
+        // récupération des données de l'entreprise et de la date dans un tableau
+        {intToString(entreprise.budget),
+         intToString(entreprise.charges),
+         intToString(entreprise.nbEmployes),
+         intToString(entreprise.stocks),
+         intToString(entreprise.prixDeVente),
+         intToString(entreprise.niveauProduction),
+         intToString(entreprise.productionJournaliere),
+         intToString(entreprise.reputation),
+
+         intToString(date.jour),
+         intToString(date.mois)}};
+
+        saveCSV(sauvegarde, "./extensions/config/save.csv");
     }
 
 
@@ -372,7 +408,7 @@ class Main extends Program{
 
     // tests de la fonction updateEntreprise
     void test_updateEntreprise() {
-        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise par défaut
+        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1, 0); // création d'une entreprise par défaut
         Date date = newDate(1, 1); // création d'une nouvelle date
 
         // simulation d'un tour de jeu
@@ -409,7 +445,8 @@ class Main extends Program{
                                   entreprise.stocks,
                                   entreprise.prixDeVente,
                                   entreprise.niveauProduction,
-                                  entreprise.productionJournaliere};
+                                  entreprise.productionJournaliere,
+                                  entreprise.reputation};
 
         while (ready(tui)) { // on récupère le tui en String
             affichage = affichage + readLine(tui) + '\n';
@@ -454,7 +491,8 @@ class Main extends Program{
                                               stringToInt(getCell(config, 1, 2)), // nbEmployes
                                               stringToInt(getCell(config, 1, 3)), // stocks
                                               stringToInt(getCell(config, 1, 4)), // prix de vente
-                                              stringToInt(getCell(config, 1, 5))); // niveau de production
+                                              stringToInt(getCell(config, 1, 5)), // niveau de production
+                                              stringToInt(getCell(config, 1, 7)));// réputation
 
         int objectif = stringToInt(getCell(config, 4, 0));  // objectif financier à atteindre
 
@@ -465,7 +503,8 @@ class Main extends Program{
             println(tuiToString(date, entreprise, pathAccueil)); // on affiche l'écran d'accueil
             choix = readString();
 
-            if (equals(choix, "1")) { // on lance la partie 
+            if (equals(choix, "1")) { // on lance une nouvelle partie 
+            
                 while (!equals(choix, "4")){
                     clear();
                     println(tuiToString(date, entreprise, pathTabDeBord));
@@ -513,7 +552,7 @@ class Main extends Program{
 
                     } else if (equals(choix, "3")) {
                         updateEntreprise(date, entreprise); // on met à jour les stats de l'entreprise
-                        // AJOUTER SAUVEGARDE ICI
+                        saveGame(entreprise, date);
 
                         while (!equals(choix, "1")){
                             clear();
@@ -523,7 +562,26 @@ class Main extends Program{
                     }
                 }
 
-            } else if (equals(choix, "2")) { // on affiche les règles du jeu        
+            } else if (equals(choix, "2")) { // on charge la partie auvegardée
+
+                // remplacement de la date
+                date.jour = stringToInt(getCell(save, 1, 8));
+                date.mois = stringToInt(getCell(save, 1, 9));
+
+                // remplacement de l'entreprise
+                entreprise.budget = stringToInt(getCell(save, 1, 0));
+                entreprise.charges = stringToInt(getCell(save, 1, 1));
+                entreprise.nbEmployes = stringToInt(getCell(save, 1, 2));
+                entreprise.stocks = stringToInt(getCell(save, 1, 3));
+                entreprise.prixDeVente = stringToInt(getCell(save, 1, 4));
+                entreprise.niveauProduction = stringToInt(getCell(save, 1, 5));
+                entreprise.productionJournaliere = stringToInt(getCell(save, 1, 6));
+                entreprise.reputation = stringToInt(getCell(save, 1, 7));
+
+                println(rgb(0, 128, 0, true) + "< Partie chargée ! >" + RESET);
+                sleep(700);
+
+            } else if (equals(choix, "3")) { // on affiche les règles du jeu        
                 while (!equals(choix, "1")) {
                     clear();
                     println(tuiToString(date, entreprise, pathButDuJeu));
