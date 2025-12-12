@@ -10,6 +10,7 @@ Employés                ▸ %2
 Stocks                  ▸ %3 unités
 Production journalière  ▸ %6 unités
 
+─────────────────────────── ACTIONS POSSIBLES ───────────────────────────────
 [1] ▸ Acheter de nouvelles machines         (+5 produits/j | -1000$)
 [2] ▸ Acheter des contrefaçons en chine         (+50 stocks | -200$)
 [3] ▸ Passer les employés sous coke          (+5 produits/j | -450$)

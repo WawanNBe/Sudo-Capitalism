@@ -1,4 +1,4 @@
-██████████████████████████  BUT DU JEU ██████████████████████████
+██████████████████████████  BUT DU JEU  ██████████████████████████
 
 Bienvenue jeune entrepreneur !
 
@@ -32,4 +32,5 @@ et ainsi de suite jusqu'à la fin du jeu.
 
 Bonne chance et joyeux capitalisme !
 
+──────────────────────── ACTIONS POSSIBLES ───────────────────────
 [1] ▸ Ok !
