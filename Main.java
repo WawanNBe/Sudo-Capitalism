@@ -10,6 +10,7 @@ class Main extends Program{
 
     CSVFile config = loadCSV("./extensions/config/config.csv"); // fichier config du jeu
     CSVFile save = loadCSV("./extensions/config/save.csv"); // fichier sauvegarde du jeu
+    CSVFile employes = loadCSV("./extensions/config/employes.csv"); // fichier contenant la liste des employés
 
     String pathAccueil = "./extensions/tui/accueil.txt"; // accueil du jeu
     String pathButDuJeu = "./extensions/tui/butDuJeu.txt"; // règles du jeu
@@ -105,6 +106,30 @@ class Main extends Program{
 
 
 
+    // -----------------------------------------------------------------< GESTION DES EMPLOYES >------------------------------------------------------------------
+
+    // implémentation de la fonction newEmploye
+    Employe newEmploye(String prenom, String nom) {
+        Employe employe = new Employe();
+        
+        employe.prenom = prenom;
+        employe.nom = nom;
+        employe.nivSatisfaction = random(1, 10);
+
+        return employe;
+    }
+
+    // tests de la fonction newEmploye
+    void test_newEmploye() {
+        Employe employe = newEmploye("Jean", "Bonbeur");
+
+        assertEquals(employe.nom, "Bonbeur");
+        assertEquals(employe.prenom, "Jean");
+        assertTrue(employe.nivSatisfaction >= 1 && employe.nivSatisfaction <= 10);
+    }
+
+
+
     // -----------------------------------------------------------------< GESTION DE L'ENTREPRISE >------------------------------------------------------------------
 
     // implémentation de la fonction newEntreprise
@@ -117,7 +142,7 @@ class Main extends Program{
         entreprise.stocks = stocks;
         entreprise.prixDeVente = prixDeVente;
         entreprise.niveauProduction = niveauProduction;
-        entreprise.produitsVendusParJour = entreprise.nbEmployes * (25 + (25 * entreprise.niveauProduction));
+        entreprise.productionJournaliere = entreprise.nbEmployes * (25 + (25 * entreprise.niveauProduction));
 
         return entreprise;
     }
@@ -132,7 +157,7 @@ class Main extends Program{
         assertEquals(10, entreprise.stocks);
         assertEquals(20, entreprise.prixDeVente);
         assertEquals(1, entreprise.niveauProduction);
-        assertEquals(4, entreprise.produitsVendusParJour);
+        assertEquals(50, entreprise.productionJournaliere);
     }
 
 
@@ -158,6 +183,7 @@ class Main extends Program{
         assertEquals(2, entreprise.nbEmployes);
         assertEquals(1800, entreprise.charges);
     }
+
 
     // implémentation de la fonction virerEmploye
     void virerEmploye(Entreprise entreprise) {
@@ -187,6 +213,7 @@ class Main extends Program{
         assertEquals(1500, entreprise2.charges);
     }
 
+
     // implémentation de la fonction exploiterEmploye
     void exploiterEmploye(Entreprise entreprise) {
         if (entreprise.budget < 100) {
@@ -207,6 +234,7 @@ class Main extends Program{
         assertEquals(2, entreprise.nbEmployes);
         assertEquals(1600, entreprise.charges);
     }
+
 
     // implémentation de la fonction baisserSalaires
     void baisserSalaires(Entreprise entreprise) {
@@ -251,6 +279,7 @@ class Main extends Program{
         assertEquals(2, entreprise.niveauProduction);
     }
 
+
     // implémentation de la fonction ameliorerProduction
     void acheterContrefacon(Entreprise entreprise) {
         if (entreprise.budget < 50) {
@@ -269,9 +298,10 @@ class Main extends Program{
 
         acheterContrefacon(entreprise);
 
-        assertEquals(1950, entreprise.budget);
+        assertEquals(1800, entreprise.budget);
         assertEquals(60, entreprise.stocks);
     }
+
 
     // implémentation de la fonction ameliorerProduction
     void snifferCoke(Entreprise entreprise) {
@@ -296,35 +326,55 @@ class Main extends Program{
     }
 
 
+    // implémentation de la fonction finDePartie
+    boolean finDePartie(Entreprise entreprise, Date date, int objectif) {
+        if ((entreprise.budget <= 0) || (date.jour == 31 && date.mois == 12) || (entreprise.budget >= objectif)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // tests de la fonction finDePartie
+    void test_finDePartie() {
+        int objectif = 1000000; // objectif par défaut
+        Entreprise entrepriseFaillite = newEntreprise(0, 1500, 1, 10, 20, 1); // création d'une entreprise en faillite
+        Date dateAleatoire = newDate(15, 2); // date aléatoire
+
+        assertTrue(finDePartie(entrepriseFaillite, dateAleatoire, objectif));
+
+        Entreprise entrepriseLambda = newEntreprise(2000, 1500, 1, 10, 20, 1); // création d'une entreprise lambda
+        Date dateFin = newDate(31, 12); // date fin d'année
+
+        assertTrue(finDePartie(entrepriseLambda, dateFin, objectif));
+
+        Entreprise entrepriseObjectif = newEntreprise(1000000, 1500, 1, 10, 20, 1); // création d'une entreprise qui atteint l'objectif
+
+        assertTrue(finDePartie(entrepriseObjectif, dateAleatoire, objectif));
+    }
+
+
 
     // -----------------------------------------------------------------< MISE À JOUR DES DONNÉES DE L'ENTREPRISE >------------------------------------------------------------------
 
     // implémentation de la fonction updateEntreprise
     void updateEntreprise(Date date, Entreprise entreprise) {
         // calcul sur la semaine et mise à jour
-        entreprise.produitsVendusParJour = entreprise.nbEmployes * (25 + (25 * entreprise.niveauProduction)); // on met à jour le nombre de produits vendus par jours
+        entreprise.productionJournaliere = entreprise.nbEmployes * (25 + (25 * entreprise.niveauProduction)); // on met à jour le nombre de produits vendus par jours
         
-        if ((entreprise.produitsVendusParJour * 5) > entreprise.stocks) { // si pas assez de stocks
+        if ((entreprise.productionJournaliere * 5) > entreprise.stocks) { // si pas assez de stocks
             entreprise.budget += (entreprise.stocks * entreprise.prixDeVente); // on ne vend que les stocks dispos 
             entreprise.stocks = 0; // on soustrait les produits vendus au stock
             
         } else { // sinon on applique la formule normale
-            entreprise.budget += (entreprise.produitsVendusParJour * entreprise.prixDeVente) * 5; // on calcule les revenus sur 5 jours (lundi -> vendredi)
-            entreprise.stocks -= entreprise.produitsVendusParJour * 5; // on soustrait les produits vendus de la semaine au stock
+            entreprise.budget += (entreprise.productionJournaliere * entreprise.prixDeVente) * 5; // on calcule les revenus sur 5 jours (lundi -> vendredi)
+            entreprise.stocks -= entreprise.productionJournaliere * 5; // on soustrait les produits vendus de la semaine au stock
         }
 
         entreprise.budget -= entreprise.charges; // on soustrait les charges au chiffre d'affaire
         for (int jour = 0; jour < 7; jour++){
             gestionDate(date);
         }
-
-        // on cherche si une condition (financière) d'arrêt du jeu est présente
-        if (entreprise.budget <= 0) {
-            faillite = true;
-
-        } // else if (entreprise.budget >= objectif) {
-        //     objectifAtteint = true;
-        // }
     }
 
     // tests de la fonction updateEntreprise
@@ -337,7 +387,7 @@ class Main extends Program{
         entreprise.charges = entreprise.charges - (100 * entreprise.nbEmployes); // baisse salaires
         entreprise.budget -= 300; entreprise.niveauProduction ++; // amélioration de la production
 
-        updateEntreprise(date, entreprise, faillite, objectifAtteint);
+        updateEntreprise(date, entreprise);
 
         assertEquals(600, entreprise.budget);
         assertEquals(1300, entreprise.charges);
@@ -345,7 +395,7 @@ class Main extends Program{
         assertEquals(0, entreprise.stocks);
         assertEquals(20, entreprise.prixDeVente);
         assertEquals(2, entreprise.niveauProduction);
-        assertEquals(10, entreprise.produitsVendusParJour);
+        assertEquals(150, entreprise.productionJournaliere);
     }
 
 
@@ -366,7 +416,7 @@ class Main extends Program{
                                   entreprise.stocks,
                                   entreprise.prixDeVente,
                                   entreprise.niveauProduction,
-                                  entreprise.produitsVendusParJour};
+                                  entreprise.productionJournaliere};
 
         while (ready(tui)) { // on récupère le tui en String
             affichage = affichage + readLine(tui) + '\n';
@@ -390,19 +440,22 @@ class Main extends Program{
     }
 
 
+    // implémentation de la fonction pour nettoyer le terminal
     void clear(){
-        // print("\033[H\033[2J");
         print("\033[H\033[2J\033[3J");
     }
+
+
 
     // -----------------------------------------------------------------< ALGORITHME PRINCIPAL >------------------------------------------------------------------
 
     void algorithm() {
         // initialisation des variables
-        String choix;
+        String choix = "";
+        Date date = newDate(1,1); // on initialise la date au 1er janvier
+
 
         // initialisation des variables du jeu via le CSV
-        Date date = newDate(1,1);
         Entreprise entreprise = newEntreprise(stringToInt(getCell(config, 1, 0)), // budget
                                               stringToInt(getCell(config, 1, 1)), // charges
                                               stringToInt(getCell(config, 1, 2)), // nbEmployes
@@ -410,10 +463,11 @@ class Main extends Program{
                                               stringToInt(getCell(config, 1, 4)), // prix de vente
                                               stringToInt(getCell(config, 1, 5))); // niveau de production
 
-        int objectif = stringToInt(getCell(config, 1, 0));  // objectif financier à atteindre
+        int objectif = stringToInt(getCell(config, 4, 0));  // objectif financier à atteindre
+
 
         // boucle principale du jeu
-        while (!finAnnee && !faillite && !objectifAtteint) { // tant que l'une des conditions d'arrêt n'est pas déclenchée
+        while (!finDePartie(entreprise, date, objectif) && !equals(choix, "stop")) { // tant que l'une des conditions d'arrêt n'est pas déclenchée
             clear(); // Nettoyer le terminal
             println(tuiToString(date, entreprise, pathAccueil)); // on affiche l'écran d'accueil
             choix = readString();
@@ -465,7 +519,7 @@ class Main extends Program{
                         }choix = "-1";
 
                     } else if (equals(choix, "3")) {
-                        updateEntreprise(date, entreprise, faillite, objectifAtteint); // on met à jour les stats de l'entreprise
+                        updateEntreprise(date, entreprise); // on met à jour les stats de l'entreprise
 
                         while (!equals(choix, "1")){
                             clear();
@@ -483,7 +537,7 @@ class Main extends Program{
                 }choix = "-1";
 
             } else {
-                objectifAtteint = !objectifAtteint; // on change l'état d'une des variables d'arrêt pour stopper le jeu si le joueur sélectionne "Quitter"
+                choix = "stop"; // on change l'état d'une des variables d'arrêt pour stopper le jeu si le joueur sélectionne "Quitter"
             }
         }
     }
