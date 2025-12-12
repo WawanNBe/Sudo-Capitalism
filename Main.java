@@ -1,15 +1,16 @@
-//     ██████  █    ██ ▓█████▄  ▒█████      ▄████▄   ▄▄▄       ██▓███   ██▓▄▄▄█████▓ ▄▄▄       ██▓     ██▓  ██████  ███▄ ▄███▓
-//   ▒██    ▒  ██  ▓██▒▒██▀ ██▌▒██▒  ██▒   ▒██▀ ▀█  ▒████▄    ▓██░  ██▒▓██▒▓  ██▒ ▓▒▒████▄    ▓██▒    ▓██▒▒██    ▒ ▓██▒▀█▀ ██▒
-//   ░ ▓██▄   ▓██  ▒██░░██   █▌▒██░  ██▒   ▒▓█    ▄ ▒██  ▀█▄  ▓██░ ██▓▒▒██▒▒ ▓██░ ▒░▒██  ▀█▄  ▒██░    ▒██▒░ ▓██▄   ▓██    ▓██░
-//     ▒   ██▒▓▓█  ░██░░▓█▄   ▌▒██   ██░   ▒▓▓▄ ▄██▒░██▄▄▄▄██ ▒██▄█▓▒ ▒░██░░ ▓██▓ ░ ░██▄▄▄▄██ ▒██░    ░██░  ▒   ██▒▒██    ▒██ 
-//   ▒██████▒▒▒▒█████▓ ░▒████▓ ░ ████▓▒░   ▒ ▓███▀ ░ ▓█   ▓██▒▒██▒ ░  ░░██░  ▒██▒ ░  ▓█   ▓██▒░██████▒░██░▒██████▒▒▒██▒   ░██▒
-//   ▒ ▒▓▒ ▒ ░░▒▓▒ ▒ ▒  ▒▒▓  ▒ ░ ▒░▒░▒░    ░ ░▒ ▒  ░ ▒▒   ▓▒█░▒▓▒░ ░  ░░▓    ▒ ░░    ▒▒   ▓▒█░░ ▒░▓  ░░▓  ▒ ▒▓▒ ▒ ░░ ▒░   ░  ░
-//   ░ ░▒  ░ ░░░▒░ ░ ░  ░ ▒  ▒   ░ ▒ ▒░      ░  ▒     ▒   ▒▒ ░░▒ ░      ▒ ░    ░      ▒   ▒▒ ░░ ░ ▒  ░ ▒ ░░ ░▒  ░ ░░  ░      ░
-//   ░  ░  ░   ░░░ ░ ░  ░ ░  ░ ░ ░ ░ ▒     ░          ░   ▒   ░░        ▒ ░  ░        ░   ▒     ░ ░    ▒ ░░  ░  ░  ░      ░   
-//         ░     ░        ░        ░ ░     ░ ░            ░  ░          ░                 ░  ░    ░  ░ ░        ░         ░   
-//                      ░                  ░                                                                                  
+//             ██████  █    ██ ▓█████▄  ▒█████      ▄████▄   ▄▄▄       ██▓███   ██▓▄▄▄█████▓ ▄▄▄       ██▓     ██▓  ██████  ███▄ ▄███▓
+//           ▒██    ▒  ██  ▓██▒▒██▀ ██▌▒██▒  ██▒   ▒██▀ ▀█  ▒████▄    ▓██░  ██▒▓██▒▓  ██▒ ▓▒▒████▄    ▓██▒    ▓██▒▒██    ▒ ▓██▒▀█▀ ██▒
+//           ░ ▓██▄   ▓██  ▒██░░██   █▌▒██░  ██▒   ▒▓█    ▄ ▒██  ▀█▄  ▓██░ ██▓▒▒██▒▒ ▓██░ ▒░▒██  ▀█▄  ▒██░    ▒██▒░ ▓██▄   ▓██    ▓██░
+//             ▒   ██▒▓▓█  ░██░░▓█▄   ▌▒██   ██░   ▒▓▓▄ ▄██▒░██▄▄▄▄██ ▒██▄█▓▒ ▒░██░░ ▓██▓ ░ ░██▄▄▄▄██ ▒██░    ░██░  ▒   ██▒▒██    ▒██ 
+//           ▒██████▒▒▒▒█████▓ ░▒████▓ ░ ████▓▒░   ▒ ▓███▀ ░ ▓█   ▓██▒▒██▒ ░  ░░██░  ▒██▒ ░  ▓█   ▓██▒░██████▒░██░▒██████▒▒▒██▒   ░██▒
+//           ▒ ▒▓▒ ▒ ░░▒▓▒ ▒ ▒  ▒▒▓  ▒ ░ ▒░▒░▒░    ░ ░▒ ▒  ░ ▒▒   ▓▒█░▒▓▒░ ░  ░░▓    ▒ ░░    ▒▒   ▓▒█░░ ▒░▓  ░░▓  ▒ ▒▓▒ ▒ ░░ ▒░   ░  ░
+//           ░ ░▒  ░ ░░░▒░ ░ ░  ░ ▒  ▒   ░ ▒ ▒░      ░  ▒     ▒   ▒▒ ░░▒ ░      ▒ ░    ░      ▒   ▒▒ ░░ ░ ▒  ░ ▒ ░░ ░▒  ░ ░░  ░      ░
+//           ░  ░  ░   ░░░ ░ ░  ░ ░  ░ ░ ░ ░ ▒     ░          ░   ▒   ░░        ▒ ░  ░        ░   ▒     ░ ░    ▒ ░░  ░  ░  ░      ░   
+//                 ░     ░        ░        ░ ░     ░ ░            ░  ░          ░                 ░  ░    ░  ░ ░        ░         ░   
+//                              ░                  ░                                                                                  
 
-// -----------------------------------------------------------------< Imports des extensions >------------------------------------------------------------------
+
+// -----------------------------------------------------------------< IMPORTS DES EXTENSIONS >------------------------------------------------------------------
 
 import extensions.CSVFile; // import des CSV
 import extensions.File; // import des txt
@@ -23,6 +24,7 @@ class Main extends Program {
     CSVFile save = loadCSV("./extensions/config/save.csv"); // fichier sauvegarde du jeu
     CSVFile employes = loadCSV("./extensions/config/employes.csv"); // fichier contenant la liste des employés
 
+    // utilisation des chemins afin de recharger les fichiers dans la fonction d'affichage
     String pathAccueil = "./extensions/tui/accueil.txt"; // accueil du jeu
     String pathButDuJeu = "./extensions/tui/butDuJeu.txt"; // règles du jeu
     String pathTabDeBord = "./extensions/tui/tabDeBord.txt"; // les menus du jeu
@@ -56,27 +58,32 @@ class Main extends Program {
 
     // implémentation de la fonction qui affiche la date
     String dateToString(Date date) {
+        // on utilise un tableau de mois
         String[] mois = new String[] {"Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Decembre"};
 
-        return date.jour + " " + mois[date.mois -1];
+        return date.jour + " " + mois[date.mois -1]; // affichage au format texte
     }
 
     // tests de la fonction d'affichage de date
     void test_dateToString() {
         Date premierJanvier = newDate(1,1);
+        Date deuxDecembre = newDate(2,12);
 
         assertEquals("1 Janvier", dateToString(premierJanvier));
+        assertEquals("2 Decembre", dateToString(deuxDecembre));
     }
+
 
     // implémentation de la fonction qui gère la date (incrémente le jour/mois lorsqu'elle est appelée)
     void gestionDate(Date date) {
         int[] mois = new int[] {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}; // les nombres de jours pour chaque mois
 
-        if (date.jour == mois[date.mois -1]) {
-            date.jour = 1;
-            date.mois += 1;
+        if (date.jour == mois[date.mois -1]) { // si on atteint le dernier jour d'un mois
+            date.jour = 1; // on réinitialise le jour
+            date.mois += 1; // on change de mois
+
         } else {
-            date.jour += 1;
+            date.jour += 1; // sinon on incrémente simplement le jour
         }
     }
 
@@ -99,7 +106,7 @@ class Main extends Program {
 
 
 
-    // -----------------------------------------------------------------< GESTION DES EMPLOYES >------------------------------------------------------------------
+    // -----------------------------------------------------------------< GESTION CLASSE EMPLOYE >------------------------------------------------------------------
 
     // implémentation de la fonction newEmploye
     Employe newEmploye(String prenom, String nom) {
@@ -123,7 +130,7 @@ class Main extends Program {
 
 
 
-    // -----------------------------------------------------------------< GESTION DE L'ENTREPRISE >------------------------------------------------------------------
+    // -----------------------------------------------------------------< GESTION CLASSE ENTREPRISE >------------------------------------------------------------------
 
     // implémentation de la fonction newEntreprise
     Entreprise newEntreprise(int budget, int charges, int nbEmployes, int stocks, int prixDeVente, int niveauProduction, int reputation) {
@@ -157,7 +164,8 @@ class Main extends Program {
 
 
 
-    // -----------------------------------------------------------------< GESTION DU JEU >------------------------------------------------------------------
+    // -----------------------------------------------------------------< GESTION DES CHOIX DU JOUEUR >------------------------------------------------------------------
+
     // implémentation de la fonction recruterEmploye
     void recruterEmploye(Entreprise entreprise) {
         if (entreprise.budget < 300) {
@@ -321,6 +329,9 @@ class Main extends Program {
     }
 
 
+
+    // -----------------------------------------------------------------< GESTION DU JEU >------------------------------------------------------------------
+
     // implémentation de la fonction finDePartie
     boolean finDePartie(Entreprise entreprise, Date date, int objectif) {
         if ((entreprise.budget <= 0) || (date.jour == 31 && date.mois == 12) || (entreprise.budget >= objectif)) {
@@ -362,6 +373,10 @@ class Main extends Program {
     }
 
 
+
+    // -----------------------------------------------------------------< SAUVEGARDE ET CHARGEMENT >------------------------------------------------------------------
+
+    // implémentation de la fonction saveGame
     void saveGame(Entreprise entreprise, Date date) {
         String[][] sauvegarde = {
         {"Budget", "Charges", "NbEmployes", "Stocks", "PrixDeVente", "NiveauProduction", "ProductionJournaliere", "Reputation", "Jour", "Mois"}, // titres des colonnes du tableau (sert uniquement à des fins visuelles)
@@ -380,6 +395,27 @@ class Main extends Program {
          intToString(date.mois)}};
 
         saveCSV(sauvegarde, "./extensions/config/save.csv");
+    }
+
+
+    // implémentation de la fonction loadGame
+    void loadGame(Entreprise entreprise, Date date) {
+        // remplacement de la date
+        date.jour = stringToInt(getCell(save, 1, 8));
+        date.mois = stringToInt(getCell(save, 1, 9));
+
+        // remplacement de l'entreprise
+        entreprise.budget = stringToInt(getCell(save, 1, 0));
+        entreprise.charges = stringToInt(getCell(save, 1, 1));
+        entreprise.nbEmployes = stringToInt(getCell(save, 1, 2));
+        entreprise.stocks = stringToInt(getCell(save, 1, 3));
+        entreprise.prixDeVente = stringToInt(getCell(save, 1, 4));
+        entreprise.niveauProduction = stringToInt(getCell(save, 1, 5));
+        entreprise.productionJournaliere = stringToInt(getCell(save, 1, 6));
+        entreprise.reputation = stringToInt(getCell(save, 1, 7));
+
+        println(rgb(0, 200, 0, true) + "< Partie chargée ! >" + RESET); // affichage d'un message de chargement
+        sleep(500);
     }
 
 
@@ -434,12 +470,14 @@ class Main extends Program {
     // implémentation de la fonction tuiToString
     String tuiToString(Date date, Entreprise entreprise, String pathTui) {
         File tui = new File(pathTui); // on récupère le chemin car le readline consomme le fichier
+
         String affichage = ""; // le tui sans les variables ni les couleurs
         String nouvChaine = ""; // le tui post traitement
-        int idx = 0;
-        int temp = 0;
 
-        int[] tabVar = new int[] {entreprise.budget, // on récupère les stats de l'entreprise dans un tableau
+        int idx = 0; // indice pour parcourir le TUI
+
+        // on récupère les stats de l'entreprise dans un tableau
+        int[] tabVar = new int[] {entreprise.budget,
                                   entreprise.charges,
                                   entreprise.nbEmployes,
                                   entreprise.stocks,
@@ -448,21 +486,23 @@ class Main extends Program {
                                   entreprise.productionJournaliere,
                                   entreprise.reputation};
 
-        while (ready(tui)) { // on récupère le tui en String
-            affichage = affichage + readLine(tui) + '\n';
+        // on récupère le tui en String
+        while (ready(tui)) { // tant que le fichier texte possède des lignes
+            affichage = affichage + readLine(tui) + '\n'; // on ajoute ces lignes au TUI au format String
         }
 
-        while (idx < length(affichage)) { // on traite le String et on y met les variables/couleurs
-            if (charAt(affichage, idx) == '%' && (charAt(affichage, idx +1) >= '0' && charAt(affichage, idx +1) <= '9')) {
-                nouvChaine += rgb(100, 100, 200, true) + tabVar[(int) (charAt(affichage, idx +1) - '0')]  + RESET;
-                idx += 2;
+        // on traite le String et on y met les variables/couleurs
+        while (idx < length(affichage)) { // tant que tous les caractères n'ont pas été lus
+            if (charAt(affichage, idx) == '%' && (charAt(affichage, idx +1) >= '0' && charAt(affichage, idx +1) <= '9')) { // si on détecte un placeholder de variable
+                nouvChaine += rgb(100, 100, 200, true) + tabVar[(int) (charAt(affichage, idx +1) - '0')]  + RESET; // on remplace le placeholder par la variable qui correspond
+                idx += 2; // on incrémente pour passer le placeholder
 
-            } else if (charAt(affichage, idx) == '%' && charAt(affichage, idx +1) == 'D') {
-                nouvChaine += rgb(100, 100, 200, true) + dateToString(date)  + RESET;
-                idx += 2;
+            } else if (charAt(affichage, idx) == '%' && charAt(affichage, idx +1) == 'D') { // si on détecte un placeholder de date
+                nouvChaine += rgb(100, 100, 200, true) + dateToString(date)  + RESET; // on remplace le placeholder par la date au format String
+                idx += 2; // on incrémente pour passer le placeholder
 
             } else {
-                nouvChaine += rgb(128, 128, 128, true) + charAt(affichage, idx) + RESET;
+                nouvChaine += rgb(128, 128, 128, true) + charAt(affichage, idx) + RESET; // on ajoute les caractères au String
                 idx ++;
             }
         }
@@ -472,7 +512,7 @@ class Main extends Program {
 
     // implémentation de la fonction pour nettoyer le terminal
     void clear(){
-        print("\033[H\033[2J\033[3J");
+        print("\033[H\033[2J\033[3J"); // séquence ANSI pour reset le terminal
     }
 
 
@@ -481,7 +521,7 @@ class Main extends Program {
 
     void algorithm() {
         // initialisation des variables
-        String choix = "";
+        String choix = ""; // on initialise le choix à une chaine vide
         Date date = newDate(1,1); // on initialise la date au 1er janvier
 
 
@@ -498,23 +538,22 @@ class Main extends Program {
 
 
         // boucle principale du jeu
-        while (!finDePartie(entreprise, date, objectif) && !equals(choix, "stop")) { // tant que l'une des conditions d'arrêt n'est pas déclenchée
+        while (!finDePartie(entreprise, date, objectif) && !equals(choix, "stop")) { // tant que les conditions de fin de partie ou le mot d'arrêt ne sont pas trigger
             clear(); // Nettoyer le terminal
             println(tuiToString(date, entreprise, pathAccueil)); // on affiche l'écran d'accueil
             choix = readString();
 
             if (equals(choix, "1")) { // on lance une nouvelle partie 
             
-                while (!equals(choix, "4")){
+                while (!equals(choix, "4")){ // on affiche le tableau de bord
                     clear();
                     println(tuiToString(date, entreprise, pathTabDeBord));
                     choix = readString();
 
-                    if (equals(choix, "1")) { // on ouvre le menu employés
-                        while (!equals(choix, "5")){
+                    if (equals(choix, "1")) {
+                        while (!equals(choix, "5")){ // on ouvre le menu employés
                             clear();
                             println(tuiToString(date, entreprise, pathEmployes));
-                            println(entreprise.nbEmployes);
                             choix = readString();
 
                             if (equals(choix, "1")) {
@@ -552,9 +591,9 @@ class Main extends Program {
 
                     } else if (equals(choix, "3")) {
                         updateEntreprise(date, entreprise); // on met à jour les stats de l'entreprise
-                        saveGame(entreprise, date);
+                        saveGame(entreprise, date); // on sauvegarde les stats du jeu (date et entreprise)
 
-                        while (!equals(choix, "1")){
+                        while (!equals(choix, "1")){ // on affiche l'écran des résultats de la semaine
                             clear();
                             println(tuiToString(date, entreprise, pathResultats));
                             choix = readString();
@@ -563,23 +602,7 @@ class Main extends Program {
                 }
 
             } else if (equals(choix, "2")) { // on charge la partie auvegardée
-
-                // remplacement de la date
-                date.jour = stringToInt(getCell(save, 1, 8));
-                date.mois = stringToInt(getCell(save, 1, 9));
-
-                // remplacement de l'entreprise
-                entreprise.budget = stringToInt(getCell(save, 1, 0));
-                entreprise.charges = stringToInt(getCell(save, 1, 1));
-                entreprise.nbEmployes = stringToInt(getCell(save, 1, 2));
-                entreprise.stocks = stringToInt(getCell(save, 1, 3));
-                entreprise.prixDeVente = stringToInt(getCell(save, 1, 4));
-                entreprise.niveauProduction = stringToInt(getCell(save, 1, 5));
-                entreprise.productionJournaliere = stringToInt(getCell(save, 1, 6));
-                entreprise.reputation = stringToInt(getCell(save, 1, 7));
-
-                println(rgb(0, 128, 0, true) + "< Partie chargée ! >" + RESET);
-                sleep(700);
+                loadGame(entreprise, date);
 
             } else if (equals(choix, "3")) { // on affiche les règles du jeu        
                 while (!equals(choix, "1")) {
@@ -589,7 +612,7 @@ class Main extends Program {
                 }choix = "-1";
 
             } else {
-                choix = "stop"; // on change l'état d'une des variables d'arrêt pour stopper le jeu si le joueur sélectionne "Quitter"
+                choix = "stop"; // on change le choix par un mot d'arrêt
             }
         }
     }
