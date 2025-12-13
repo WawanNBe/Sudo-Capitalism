@@ -603,6 +603,7 @@ class Main extends Program {
 
             } else if (equals(choix, "2")) { // on charge la partie auvegardée
                 loadGame(entreprise, date);
+                choix = "1";
 
             } else if (equals(choix, "3")) { // on affiche les règles du jeu        
                 while (!equals(choix, "1")) {
