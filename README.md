@@ -1,6 +1,13 @@
 # About the game
 *Humouristic terminal-based game about capitalism*
 
+**V2.5**
+
+- All the TUI's have been reworked (yes, again)
+- Fixed some bugs
+- Chanegd the way notifications are displayed
+
+
 
 **V2.4**
 

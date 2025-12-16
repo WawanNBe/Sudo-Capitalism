@@ -167,13 +167,14 @@ class Main extends Program {
     // -----------------------------------------------------------------< GESTION DES CHOIX DU JOUEUR >------------------------------------------------------------------
 
     // implémentation de la fonction recruterEmploye
-    void recruterEmploye(Entreprise entreprise) {
+    String recruterEmploye(Entreprise entreprise) {
         if (entreprise.budget < 300) {
-            println(rgb(200, 200, 0, true) + "< Fonds insufisants ! >" + RESET);
+            return rgb(200, 200, 0, true) + "< Fonds insufisants ! >" + RESET;
+
         } else {
-            println(rgb(0, 200, 0, true) + "< Vous avez recruté un employé ! >" + RESET);
             entreprise.nbEmployes ++;
             entreprise.charges += 300;
+            return rgb(0, 200, 0, true) + "< Vous avez recruté un employé ! >" + RESET;
         }
     }
 
@@ -189,13 +190,14 @@ class Main extends Program {
 
 
     // implémentation de la fonction virerEmploye
-    void virerEmploye(Entreprise entreprise) {
+    String virerEmploye(Entreprise entreprise) {
         if (entreprise.nbEmployes <= 1){
-            println(rgb(200, 200, 0, true) + "< Vous ne pouvez pas virer d'employer car vous n'en avez qu'un ! >" + RESET);
+            return rgb(200, 200, 0, true) + "< Vous ne pouvez pas virer d'employer car vous n'en avez qu'un ! >" + RESET;
+
         } else {
-            println(rgb(200, 0, 0, true) + "< Vous avez viré un employé ! >" + RESET);
             entreprise.nbEmployes --;
             entreprise.charges -= 300;
+            return rgb(200, 0, 0, true) + "< Vous avez viré un employé ! >" + RESET;
         }
     }
 
@@ -218,13 +220,14 @@ class Main extends Program {
 
 
     // implémentation de la fonction exploiterEmploye
-    void exploiterEmploye(Entreprise entreprise) {
+    String exploiterEmploye(Entreprise entreprise) {
         if (entreprise.budget < 100) {
-            println(rgb(200, 200, 0, true) + "< Fonds insufisants ! >" + RESET);
+            return rgb(200, 200, 0, true) + "< Fonds insufisants ! >" + RESET;
+
         } else {
-            println(rgb(200, 0, 0, true) + "< Vous avez commencé à exploiter un employé ! >" + RESET);
             entreprise.nbEmployes ++;
             entreprise.charges += 100;
+            return rgb(200, 0, 0, true) + "< Vous avez commencé à exploiter un employé ! >" + RESET;
         }
     }
 
@@ -240,13 +243,14 @@ class Main extends Program {
 
 
     // implémentation de la fonction baisserSalaires
-    void baisserSalaires(Entreprise entreprise) {
+    String baisserSalaires(Entreprise entreprise) {
         if (entreprise.charges <= 0){
             entreprise.charges = 0;
-            println(rgb(200, 200, 0, true) + "< Vous ne payez déjà pas vos employés ! >" + RESET);
+            return rgb(200, 200, 0, true) + "< Vous ne payez déjà pas vos employés ! >" + RESET;
+
         } else {
-            println(rgb(200, 200, 0, true) + "< Vous avez baissé les salaires de vos employés ! >" + RESET);
             entreprise.charges = entreprise.charges - (100 * entreprise.nbEmployes);
+            return rgb(200, 200, 0, true) + "< Vous avez baissé les salaires de vos employés ! >" + RESET;
         }
     }
 
@@ -261,14 +265,14 @@ class Main extends Program {
 
     
     // implémentation de la fonction ameliorerProduction
-    void acheterMachine(Entreprise entreprise) {
+    String acheterMachine(Entreprise entreprise) {
         if (entreprise.budget < 1000) {
-            println(rgb(200, 200, 0, true) + "< Fonds insufisants ! >" + RESET);
+            return rgb(200, 200, 0, true) + "< Fonds insufisants ! >" + RESET;
 
         } else {
-            println(rgb(0, 200, 0, true) + "< Vous avez acheté une nouvelle machine ! >" + RESET);
             entreprise.budget -= 1000;
             entreprise.niveauProduction ++;
+            return rgb(0, 200, 0, true) + "< Vous avez acheté une nouvelle machine ! >" + RESET;
         }
     }
 
@@ -284,14 +288,14 @@ class Main extends Program {
 
 
     // implémentation de la fonction ameliorerProduction
-    void acheterContrefacon(Entreprise entreprise) {
+    String acheterContrefacon(Entreprise entreprise) {
         if (entreprise.budget < 50) {
-            println(rgb(200, 200, 0, true) + "< Fonds insufisants ! >" + RESET);
+            return rgb(200, 200, 0, true) + "< Fonds insufisants ! >" + RESET;
 
         } else {
-            println(rgb(200, 200, 0, true) + "< Vous avez acheté des contrefaçons en chine ! >" + RESET);
             entreprise.budget -= 200;
             entreprise.stocks += 50;
+            return rgb(200, 200, 0, true) + "< Vous avez acheté des contrefaçons en chine ! >" + RESET;
         }
     }
 
@@ -307,14 +311,14 @@ class Main extends Program {
 
 
     // implémentation de la fonction ameliorerProduction
-    void snifferCoke(Entreprise entreprise) {
+    String snifferCoke(Entreprise entreprise) {
         if (entreprise.budget < 450) {
-            println(rgb(200, 200, 0, true) + "< Fonds insufisants ! >" + RESET);
+            return rgb(200, 200, 0, true) + "< Fonds insufisants ! >" + RESET;
 
         } else {
-            println(rgb(200, 0, 0, true) + "< Vous avez fait sniffer de la coke à vos employés ! >" + RESET);
             entreprise.budget -= 450;
             entreprise.niveauProduction += 1;
+            return rgb(200, 0, 0, true) + "< Vous avez fait sniffer de la coke à vos employés ! >" + RESET;
         }
     }
 
@@ -399,7 +403,7 @@ class Main extends Program {
 
 
     // implémentation de la fonction loadGame
-    void loadGame(Entreprise entreprise, Date date) {
+    String loadGame(Entreprise entreprise, Date date) {
         // remplacement de la date
         date.jour = stringToInt(getCell(save, 1, 8));
         date.mois = stringToInt(getCell(save, 1, 9));
@@ -414,8 +418,8 @@ class Main extends Program {
         entreprise.productionJournaliere = stringToInt(getCell(save, 1, 6));
         entreprise.reputation = stringToInt(getCell(save, 1, 7));
 
-        println(rgb(0, 200, 0, true) + "< Partie chargée ! >" + RESET); // affichage d'un message de chargement
-        sleep(500);
+        String notification = rgb(0, 200, 0, true) + "< Partie chargée ! >" + RESET; // création d'un message de chargement
+        return notification;
     }
 
 
@@ -468,7 +472,7 @@ class Main extends Program {
     // -----------------------------------------------------------------< GESTION DE L'AFFICHAGE  >------------------------------------------------------------------
 
     // implémentation de la fonction tuiToString
-    String tuiToString(Date date, Entreprise entreprise, String pathTui) {
+    String tuiToString(Date date, Entreprise entreprise, String pathTui, String notification) {
         File tui = new File(pathTui); // on récupère le chemin car le readline consomme le fichier
 
         String affichage = ""; // le tui sans les variables ni les couleurs
@@ -501,6 +505,10 @@ class Main extends Program {
                 nouvChaine += rgb(100, 100, 200, true) + dateToString(date)  + RESET; // on remplace le placeholder par la date au format String
                 idx += 2; // on incrémente pour passer le placeholder
 
+            } else if (charAt(affichage, idx) == '%' && charAt(affichage, idx +1) == 'N') { // si on détecte un placeholder de notification
+                nouvChaine += rgb(100, 100, 200, true) + notification  + RESET; // on remplace le placeholder par la date au format String
+                idx += 2; // on incrémente pour passer le placeholder
+
             } else {
                 nouvChaine += rgb(128, 128, 128, true) + charAt(affichage, idx) + RESET; // on ajoute les caractères au String
                 idx ++;
@@ -523,6 +531,7 @@ class Main extends Program {
         // initialisation des variables
         String choix = ""; // on initialise le choix à une chaine vide
         Date date = newDate(1,1); // on initialise la date au 1er janvier
+        String notification = "";
 
 
         // initialisation des variables du jeu via le CSV
@@ -540,54 +549,56 @@ class Main extends Program {
         // boucle principale du jeu
         while (!finDePartie(entreprise, date, objectif) && !equals(choix, "stop")) { // tant que les conditions de fin de partie ou le mot d'arrêt ne sont pas trigger
             clear(); // Nettoyer le terminal
-            println(tuiToString(date, entreprise, pathAccueil)); // on affiche l'écran d'accueil
+            println(tuiToString(date, entreprise, pathAccueil, notification)); // on affiche l'écran d'accueil
             choix = readString();
 
             if (equals(choix, "1")) { // on lance une nouvelle partie 
             
                 while (!equals(choix, "4")){ // on affiche le tableau de bord
                     clear();
-                    println(tuiToString(date, entreprise, pathTabDeBord));
+                    println(tuiToString(date, entreprise, pathTabDeBord, notification));
                     choix = readString();
 
                     if (equals(choix, "1")) {
                         while (!equals(choix, "5")){ // on ouvre le menu employés
                             clear();
-                            println(tuiToString(date, entreprise, pathEmployes));
+                            println(tuiToString(date, entreprise, pathEmployes, notification));
                             choix = readString();
 
                             if (equals(choix, "1")) {
-                                recruterEmploye(entreprise);
+                                notification = recruterEmploye(entreprise);
 
                             }else if (equals(choix, "2")) {
-                                virerEmploye(entreprise);
+                                notification = virerEmploye(entreprise);
 
                             }else if (equals(choix, "3")) {
-                                exploiterEmploye(entreprise);
+                                notification = exploiterEmploye(entreprise);
                                 
                             }else if (equals(choix, "4")) {
-                                baisserSalaires(entreprise);
+                                notification = baisserSalaires(entreprise);
                                 
                             }
                         }choix = "-1";
+                        notification = "";
 
                     } else if (equals(choix, "2")) { // on ouvre le menu production      
                         while (!equals(choix, "4")) {
                             clear();
-                            println(tuiToString(date, entreprise, pathProduction));
+                            println(tuiToString(date, entreprise, pathProduction, notification));
                             choix = readString();
 
                             if (equals(choix, "1")) {
-                                acheterMachine(entreprise);
+                                notification = acheterMachine(entreprise);
 
                             } else if (equals(choix, "2")) {
-                                acheterContrefacon(entreprise);
+                                notification = acheterContrefacon(entreprise);
                                 
                             } else if (equals(choix, "3")) {
-                                snifferCoke(entreprise);
+                                notification = snifferCoke(entreprise);
 
                             }
                         }choix = "-1";
+                        notification = "";
 
                     } else if (equals(choix, "3")) {
                         updateEntreprise(date, entreprise); // on met à jour les stats de l'entreprise
@@ -595,22 +606,24 @@ class Main extends Program {
 
                         while (!equals(choix, "1")){ // on affiche l'écran des résultats de la semaine
                             clear();
-                            println(tuiToString(date, entreprise, pathResultats));
+                            println(tuiToString(date, entreprise, pathResultats, notification));
                             choix = readString();
                         }choix = "1";
+                        notification = "";
                     }
-                }
+                } choix = "1";
 
             } else if (equals(choix, "2")) { // on charge la partie auvegardée
-                loadGame(entreprise, date);
+                notification = loadGame(entreprise, date);
                 choix = "1";
 
             } else if (equals(choix, "3")) { // on affiche les règles du jeu        
                 while (!equals(choix, "1")) {
                     clear();
-                    println(tuiToString(date, entreprise, pathButDuJeu));
+                    println(tuiToString(date, entreprise, pathButDuJeu, notification));
                     choix = readString();
                 }choix = "-1";
+                notification = "";
 
             } else {
                 choix = "stop"; // on change le choix par un mot d'arrêt
