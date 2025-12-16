@@ -1,6 +1,14 @@
 # About the game
 *Humouristic terminal-based game about capitalism*
 
+**V2.6**
+
+- The employees class is almost fully implemented
+- The TUIs have been adapted
+- Minor bug fixes
+
+
+
 **V2.5**
 
 - All the TUI's have been reworked (yes, again)

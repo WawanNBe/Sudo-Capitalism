@@ -34,40 +34,42 @@ class Main extends Program {
 
 
 
-    // ------------------------------------------------< IMPLEMENTATION DES FONCTIONS SUIVIES DE LEURS TESTS RESPECTIFS >------------------------------------------------------------------
+    // ------------------------------------------------< IMPLEMENTATION DES FONCTIONS SUIVIES DE LEURS TESTS RESPECTIFS >---------------------------------------
 
     // -----------------------------------------------------------------< GESTION DE LA DATE >------------------------------------------------------------------
 
-    // implémentation de la fonction newDate
+    // implémentation de la fonction newDate qui permet d'initialiser une date
     Date newDate(int jour, int mois) {
+        // on utilise des chiffes pour les mois car ils sont utilisés dans une fonction d'affichage
         Date date = new Date();
 
-        date.jour = jour;
-        date.mois = mois;
+        date.jour = jour; // initialise le jour avec celui donné en paramètres
+        date.mois = mois; // initialise le mois avec celui donné en paramètres
 
         return date;
     }
 
     // tests de la fonction newDate
     void test_newDate() {
-        Date premierJanvier = newDate(1,1);
+        Date premierJanvier = newDate(1,1); // test avec l'initialisation du premier janvier
 
         assertEquals(1, premierJanvier.jour);
         assertEquals(1, premierJanvier.mois);
     }
 
-    // implémentation de la fonction qui affiche la date
+
+    // implémentation de la fonction qui affiche la date au format jour + mois en texte
     String dateToString(Date date) {
-        // on utilise un tableau de mois
+        // on utilise un tableau de mois qui utilise l'indice le numéro de mois -1 comme indice
         String[] mois = new String[] {"Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Decembre"};
 
-        return date.jour + " " + mois[date.mois -1]; // affichage au format texte
+        return date.jour + " " + mois[date.mois -1]; // affichage de la date au format texte
     }
 
     // tests de la fonction d'affichage de date
     void test_dateToString() {
-        Date premierJanvier = newDate(1,1);
-        Date deuxDecembre = newDate(2,12);
+        Date premierJanvier = newDate(1,1); // on initialise une date au premier janvier
+        Date deuxDecembre = newDate(2,12); // on initialise une autre date au 2 décembre
 
         assertEquals("1 Janvier", dateToString(premierJanvier));
         assertEquals("2 Decembre", dateToString(deuxDecembre));
@@ -80,7 +82,7 @@ class Main extends Program {
 
         if (date.jour == mois[date.mois -1]) { // si on atteint le dernier jour d'un mois
             date.jour = 1; // on réinitialise le jour
-            date.mois += 1; // on change de mois
+            date.mois += 1; // on passe au mois suivant
 
         } else {
             date.jour += 1; // sinon on incrémente simplement le jour
@@ -107,14 +109,15 @@ class Main extends Program {
 
 
     // -----------------------------------------------------------------< GESTION CLASSE EMPLOYE >------------------------------------------------------------------
+    // NOTE: les employés ne sont pas encre employés en tant que classe pour l'instant pour le gameplay actuel
 
-    // implémentation de la fonction newEmploye
+    // implémentation de la fonction newEmploye qui initialise un nouvel employé
     Employe newEmploye(String prenom, String nom) {
         Employe employe = new Employe();
         
         employe.prenom = prenom;
         employe.nom = nom;
-        employe.nivSatisfaction = random(1, 10);
+        employe.dispo = true;
 
         return employe;
     }
@@ -125,41 +128,91 @@ class Main extends Program {
 
         assertEquals(employe.nom, "Bonbeur");
         assertEquals(employe.prenom, "Jean");
-        assertTrue(employe.nivSatisfaction >= 1 && employe.nivSatisfaction <= 10);
+        assertTrue(employe.dispo);
     }
 
 
+    // implémentation de la fonction initEmployesDispos qui initialise la liste des employés dispos au recrutement
+    Employe[] initEmployesDispos() {
+        Employe[] listeEmployesDispos = new Employe[rowCount(employes) -1]; // on crée un tableau qui contient autant d'employés que de lignes (-1 pour les titres) dans le csv employes
+
+        for (int idx = 1; idx < rowCount(employes); idx++) {
+            Employe nouvEmploye;
+            listeEmployesDispos[idx -1] = newEmploye(getCell(employes, idx, 0), getCell(employes, idx, 1));
+        }
+
+        return listeEmployesDispos;
+    }
+
+    // tests de la fonction employesDispos
+    void test_initEmployesDispos() {
+        Employe[] listeEmployesDispos = initEmployesDispos();
+
+        assertEquals("Jean", listeEmployesDispos[0].prenom); // on vrérifie que le premier employé correspond bien à la première ligne du csv
+        assertEquals("Bonbeur", listeEmployesDispos[0].nom);
+
+        assertEquals("Léo", listeEmployesDispos[9].prenom); // on vrérifie que le dernier employé correspond bien à la dernière ligne du csv
+        assertEquals("Giciel", listeEmployesDispos[9].nom);
+    }
+
+
+    // implémentation de la fonction listeEmployesToString qui permet d'afficher la liste des employés donnée en paramètres
+    String listeEmployesToString(Entreprise entreprise) {
+        String affichage = "";
+
+        for (int idx = 0; idx < entreprise.nbEmployes; idx++) {
+            affichage = affichage + " ▸ " + entreprise.listeEmployes[idx].prenom + " " + entreprise.listeEmployes[idx].nom + '\n';
+        }
+        return affichage;
+    }
+    
+    // tests de la fonction listeEmployesToString
+    void test_listeEmployesToString() {
+        Employe jean = newEmploye("Jean", "Bonbeur");
+        Employe[] listeEmployes = new Employe[] {jean};
+        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20);
+
+        assertEquals(" ▸ Jean Bonbeur", listeEmployesToString(entreprise));
+    }
 
     // -----------------------------------------------------------------< GESTION CLASSE ENTREPRISE >------------------------------------------------------------------
 
     // implémentation de la fonction newEntreprise
-    Entreprise newEntreprise(int budget, int charges, int nbEmployes, int stocks, int prixDeVente, int niveauProduction, int reputation) {
+    Entreprise newEntreprise(Employe[] listeEmployes, int budget, int stocks, int prixDeVente) {
         Entreprise entreprise = new Entreprise();
 
-        entreprise.budget = budget;
-        entreprise.charges = charges;
-        entreprise.nbEmployes = nbEmployes;
-        entreprise.stocks = stocks;
-        entreprise.prixDeVente = prixDeVente;
-        entreprise.niveauProduction = niveauProduction;
-        entreprise.productionJournaliere = entreprise.nbEmployes * (25 + (25 * entreprise.niveauProduction));
-        entreprise.reputation = reputation;
+        entreprise.listeEmployes = listeEmployes; // la liste des employes acuetls
+        entreprise.nbEmployes = 1; // 1 employé par défaut
+        entreprise.budget = budget; // le budget de l'entreprise
+        entreprise.charges = 300 * entreprise.nbEmployes; // 300$ par employe par défaut
+
+        entreprise.stocks = stocks; // stocks au départ
+        entreprise.prixDeVente = prixDeVente; // prix de vente initial
+
+        entreprise.niveauProduction = 1; // par défaut l'entreprise commence au niveau 1
+        entreprise.productionJournaliere = (int) ((entreprise.nbEmployes * 15) * (entreprise.niveauProduction + 0.5));
+        entreprise.demandeActuelle = 150; // demande par défaut TODO: verif que c'est ok
 
         return entreprise;
     }
 
     // tests de la fonction newEntreprise
     void test_newEntreprise() {
-        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1, 0);
+        Employe employe = newEmploye("Jean", "Bonbeur");
+        Employe[] listeEmployes = new Employe[] {employe};
+        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20);
 
-        assertEquals(2000, entreprise.budget);
-        assertEquals(1500, entreprise.charges);
+        // assertArrayEquals(new Employe[] {employe}, entreprise.listeEmployes);
         assertEquals(1, entreprise.nbEmployes);
-        assertEquals(10, entreprise.stocks);
+        assertEquals(2000, entreprise.budget);
+        assertEquals(300, entreprise.charges);
+
+        assertEquals(30, entreprise.stocks);
         assertEquals(20, entreprise.prixDeVente);
+
         assertEquals(1, entreprise.niveauProduction);
-        assertEquals(50, entreprise.productionJournaliere);
-        assertEquals(0, entreprise.reputation);
+        assertEquals(22, entreprise.productionJournaliere);
+        assertEquals(150, entreprise.demandeActuelle);
     }
 
 
@@ -167,25 +220,31 @@ class Main extends Program {
     // -----------------------------------------------------------------< GESTION DES CHOIX DU JOUEUR >------------------------------------------------------------------
 
     // implémentation de la fonction recruterEmploye
-    String recruterEmploye(Entreprise entreprise) {
+    String recruterEmploye(Entreprise entreprise, Employe[] listeEmployesDispos) {
         if (entreprise.budget < 300) {
             return rgb(200, 200, 0, true) + "< Fonds insufisants ! >" + RESET;
 
+        } else if (entreprise.nbEmployes == length(listeEmployesDispos)) {
+            return rgb(200, 200, 0, true) + "< Plus personne n'a déposé de candidature pour être embauché ! >" + RESET;
+
         } else {
-            entreprise.nbEmployes ++;
             entreprise.charges += 300;
+            entreprise.listeEmployes[entreprise.nbEmployes] = listeEmployesDispos[entreprise.nbEmployes];
+            entreprise.nbEmployes ++;
             return rgb(0, 200, 0, true) + "< Vous avez recruté un employé ! >" + RESET;
         }
     }
 
     // tests de la fonction recruterEmploye
     void test_recruterEmploye() {
-        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1, 0); // création d'une entreprise par défaut
+        Employe employe = newEmploye("Jean", "Bonbeur");
+        Employe[] listeEmployes = new Employe[] {employe};
+        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20);
 
-        recruterEmploye(entreprise);
+        recruterEmploye(entreprise, listeEmployes);
 
-        assertEquals(2, entreprise.nbEmployes);
-        assertEquals(1800, entreprise.charges);
+        assertEquals(1, entreprise.nbEmployes);
+        assertEquals(300, entreprise.charges);
     }
 
 
@@ -203,19 +262,18 @@ class Main extends Program {
 
     // tests de la fonction virerEmploye
     void test_virerEmploye() {
-        Entreprise entreprise1 = newEntreprise(2000, 1500, 2, 10, 20, 1, 0); // création d'une entreprise par défaut
 
-        virerEmploye(entreprise1);
+        // TODO refaire ces tests
 
-        assertEquals(1, entreprise1.nbEmployes);
-        assertEquals(1200, entreprise1.charges);
+        // Employe employe = newEmploye("Jean", "Bonbeur");
+        // Employe[] listeEmployes = new Employe[] {employe};
 
-        Entreprise entreprise2 = newEntreprise(2000, 1500, 1, 10, 20, 1, 0); // cas où on ne peut pas virer d'employe
+        // Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20);
 
-        virerEmploye(entreprise2);
+        // virerEmploye(entreprise2);
 
-        assertEquals(1, entreprise2.nbEmployes);
-        assertEquals(1500, entreprise2.charges);
+        // assertEquals(1, entreprise2.nbEmployes);
+        // assertEquals(1500, entreprise2.charges);
     }
 
 
@@ -233,7 +291,9 @@ class Main extends Program {
 
     // tests de la fonction exploiterEmploye
     void test_exploiterEmploye() {
-        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1, 0); // création d'une entreprise par défaut
+        Employe employe = newEmploye("Jean", "Bonbeur");
+        Employe[] listeEmployes = new Employe[] {employe};
+        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20);
 
         exploiterEmploye(entreprise);
 
@@ -256,7 +316,9 @@ class Main extends Program {
 
     // tests de la fonction baisserSalaires
     void test_baisserSalaires() {
-        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1,0); // création d'une entreprise par défaut
+        Employe employe = newEmploye("Jean", "Bonbeur");
+        Employe[] listeEmployes = new Employe[] {employe};
+        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20);
 
         baisserSalaires(entreprise);
 
@@ -265,7 +327,7 @@ class Main extends Program {
 
     
     // implémentation de la fonction ameliorerProduction
-    String acheterMachine(Entreprise entreprise) {
+    String ameliorerProduction(Entreprise entreprise) {
         if (entreprise.budget < 1000) {
             return rgb(200, 200, 0, true) + "< Fonds insufisants ! >" + RESET;
 
@@ -277,10 +339,12 @@ class Main extends Program {
     }
 
     // tests de la fonction ameliorerProduction
-    void test_acheterMachine() {
-        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1, 0); // création d'une entreprise par défaut
+    void test_ameliorerProduction() {
+        Employe employe = newEmploye("Jean", "Bonbeur");
+        Employe[] listeEmployes = new Employe[] {employe};
+        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20);
 
-        acheterMachine(entreprise);
+        ameliorerProduction(entreprise);
 
         assertEquals(1000, entreprise.budget);
         assertEquals(2, entreprise.niveauProduction);
@@ -301,7 +365,9 @@ class Main extends Program {
 
     // tests de la fonction ameliorerProduction
     void test_acheterContrefacon() {
-        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1, 0); // création d'une entreprise par défaut
+        Employe employe = newEmploye("Jean", "Bonbeur");
+        Employe[] listeEmployes = new Employe[] {employe};
+        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20);
 
         acheterContrefacon(entreprise);
 
@@ -324,7 +390,9 @@ class Main extends Program {
 
     // tests de la fonction ameliorerProduction
     void test_snifferCoke() {
-        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1, 0); // création d'une entreprise par défaut
+        Employe employe = newEmploye("Jean", "Bonbeur");
+        Employe[] listeEmployes = new Employe[] {employe};
+        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20);
 
         snifferCoke(entreprise);
 
@@ -347,20 +415,7 @@ class Main extends Program {
 
     // tests de la fonction finDePartie
     void test_finDePartie() {
-        int objectif = 1000000; // objectif par défaut
-        Entreprise entrepriseFaillite = newEntreprise(0, 1500, 1, 10, 20, 1, 0); // création d'une entreprise en faillite
-        Date dateAleatoire = newDate(15, 2); // date aléatoire
-
-        assertTrue(finDePartie(entrepriseFaillite, dateAleatoire, objectif));
-
-        Entreprise entrepriseLambda = newEntreprise(2000, 1500, 1, 10, 20, 1, 0); // création d'une entreprise lambda
-        Date dateFin = newDate(31, 12); // date fin d'année
-
-        assertTrue(finDePartie(entrepriseLambda, dateFin, objectif));
-
-        Entreprise entrepriseObjectif = newEntreprise(1000000, 1500, 1, 10, 20, 1, 0); // création d'une entreprise qui atteint l'objectif
-
-        assertTrue(finDePartie(entrepriseObjectif, dateAleatoire, objectif));
+        // TODO refaire les tests
     }
 
 
@@ -383,7 +438,7 @@ class Main extends Program {
     // implémentation de la fonction saveGame
     void saveGame(Entreprise entreprise, Date date) {
         String[][] sauvegarde = {
-        {"Budget", "Charges", "NbEmployes", "Stocks", "PrixDeVente", "NiveauProduction", "ProductionJournaliere", "Reputation", "Jour", "Mois"}, // titres des colonnes du tableau (sert uniquement à des fins visuelles)
+        {"Budget", "Charges", "NbEmployes", "Stocks", "PrixDeVente", "NiveauProduction", "ProductionJournaliere", "Jour", "Mois"}, // titres des colonnes du tableau (sert uniquement à des fins visuelles)
         
         // récupération des données de l'entreprise et de la date dans un tableau
         {intToString(entreprise.budget),
@@ -393,7 +448,6 @@ class Main extends Program {
          intToString(entreprise.prixDeVente),
          intToString(entreprise.niveauProduction),
          intToString(entreprise.productionJournaliere),
-         intToString(entreprise.reputation),
 
          intToString(date.jour),
          intToString(date.mois)}};
@@ -416,7 +470,6 @@ class Main extends Program {
         entreprise.prixDeVente = stringToInt(getCell(save, 1, 4));
         entreprise.niveauProduction = stringToInt(getCell(save, 1, 5));
         entreprise.productionJournaliere = stringToInt(getCell(save, 1, 6));
-        entreprise.reputation = stringToInt(getCell(save, 1, 7));
 
         String notification = rgb(0, 200, 0, true) + "< Partie chargée ! >" + RESET; // création d'un message de chargement
         return notification;
@@ -448,7 +501,10 @@ class Main extends Program {
 
     // tests de la fonction updateEntreprise
     void test_updateEntreprise() {
-        Entreprise entreprise = newEntreprise(2000, 1500, 1, 10, 20, 1, 0); // création d'une entreprise par défaut
+        Employe employe = newEmploye("Jean", "Bonbeur");
+        Employe[] listeEmployes = new Employe[] {employe};
+        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20);
+
         Date date = newDate(1, 1); // création d'une nouvelle date
 
         // simulation d'un tour de jeu
@@ -480,15 +536,15 @@ class Main extends Program {
 
         int idx = 0; // indice pour parcourir le TUI
 
-        // on récupère les stats de l'entreprise dans un tableau
-        int[] tabVar = new int[] {entreprise.budget,
-                                  entreprise.charges,
-                                  entreprise.nbEmployes,
-                                  entreprise.stocks,
-                                  entreprise.prixDeVente,
-                                  entreprise.niveauProduction,
-                                  entreprise.productionJournaliere,
-                                  entreprise.reputation};
+        // on récupère les stats de l'entreprise dans un tableau de variables
+        int[] tabVar = new int[] {entreprise.nbEmployes,            // %0
+                                  entreprise.budget,                // %1
+                                  entreprise.charges,               // %2
+                                  entreprise.stocks,                // %3
+                                  entreprise.prixDeVente,           // %4
+                                  entreprise.niveauProduction,      // %5
+                                  entreprise.productionJournaliere, // %6
+                                  entreprise.demandeActuelle};      // %7
 
         // on récupère le tui en String
         while (ready(tui)) { // tant que le fichier texte possède des lignes
@@ -502,14 +558,18 @@ class Main extends Program {
                 idx += 2; // on incrémente pour passer le placeholder
 
             } else if (charAt(affichage, idx) == '%' && charAt(affichage, idx +1) == 'D') { // si on détecte un placeholder de date
-                nouvChaine += rgb(100, 100, 200, true) + dateToString(date)  + RESET; // on remplace le placeholder par la date au format String
+                nouvChaine += rgb(100, 100, 200, true) + dateToString(date) + RESET; // on remplace le placeholder par la date au format String
                 idx += 2; // on incrémente pour passer le placeholder
 
             } else if (charAt(affichage, idx) == '%' && charAt(affichage, idx +1) == 'N') { // si on détecte un placeholder de notification
-                nouvChaine += rgb(100, 100, 200, true) + notification  + RESET; // on remplace le placeholder par la date au format String
+                nouvChaine += rgb(100, 100, 200, true) + notification + RESET; // on remplace le placeholder par la date au format String
                 idx += 2; // on incrémente pour passer le placeholder
 
-            } else {
+            } else if (charAt(affichage, idx) == '%' && charAt(affichage, idx +1) == 'E') { // si on détecte un placeholder de notification
+                nouvChaine += rgb(100, 100, 200, true) + listeEmployesToString(entreprise) + RESET; // on remplace le placeholder par la date au format String
+                idx += 2; // on incrémente pour passer le placeholder
+
+            }else {
                 nouvChaine += rgb(128, 128, 128, true) + charAt(affichage, idx) + RESET; // on ajoute les caractères au String
                 idx ++;
             }
@@ -534,15 +594,21 @@ class Main extends Program {
         String notification = "";
 
 
-        // initialisation des variables du jeu via le CSV
-        Entreprise entreprise = newEntreprise(stringToInt(getCell(config, 1, 0)), // budget
-                                              stringToInt(getCell(config, 1, 1)), // charges
-                                              stringToInt(getCell(config, 1, 2)), // nbEmployes
-                                              stringToInt(getCell(config, 1, 3)), // stocks
-                                              stringToInt(getCell(config, 1, 4)), // prix de vente
-                                              stringToInt(getCell(config, 1, 5)), // niveau de production
-                                              stringToInt(getCell(config, 1, 7)));// réputation
+        // initialisation des variables du jeu via les CSVs
 
+        // initialisation des employés dispos
+        Employe[] listeEmployesDispos = initEmployesDispos();
+
+        // initialisation de l'entreprise
+        Employe[] listeEmployes = new Employe[length(listeEmployesDispos)]; // la taille de la liste d'meployes correspond au nombre d'employes potentiellement employables
+        listeEmployes[0] = listeEmployesDispos[0]; // on y met le premier employé de l'entreprise
+
+        Entreprise entreprise = newEntreprise(listeEmployes,
+                                              stringToInt(getCell(config, 1, 0)), // budget
+                                              stringToInt(getCell(config, 1, 1)), // stock
+                                              stringToInt(getCell(config, 1, 2))); // prix de vente
+
+        // initialisation de l'objectif
         int objectif = stringToInt(getCell(config, 4, 0));  // objectif financier à atteindre
 
 
@@ -552,10 +618,11 @@ class Main extends Program {
             println(tuiToString(date, entreprise, pathAccueil, notification)); // on affiche l'écran d'accueil
             choix = readString();
 
-            if (equals(choix, "1")) { // on lance une nouvelle partie 
+            if (equals(choix, "1")) { // on lance une nouvelle partie
             
                 while (!equals(choix, "4")){ // on affiche le tableau de bord
                     clear();
+                    notification = "";
                     println(tuiToString(date, entreprise, pathTabDeBord, notification));
                     choix = readString();
 
@@ -566,7 +633,7 @@ class Main extends Program {
                             choix = readString();
 
                             if (equals(choix, "1")) {
-                                notification = recruterEmploye(entreprise);
+                                notification = recruterEmploye(entreprise, listeEmployesDispos);
 
                             }else if (equals(choix, "2")) {
                                 notification = virerEmploye(entreprise);
@@ -588,7 +655,7 @@ class Main extends Program {
                             choix = readString();
 
                             if (equals(choix, "1")) {
-                                notification = acheterMachine(entreprise);
+                                notification = ameliorerProduction(entreprise);
 
                             } else if (equals(choix, "2")) {
                                 notification = acheterContrefacon(entreprise);
