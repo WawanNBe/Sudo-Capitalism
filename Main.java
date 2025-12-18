@@ -22,7 +22,7 @@ class Main extends Program {
 
     CSVFile config = loadCSV("./extensions/config/config.csv"); // fichier config du jeu
     CSVFile save = loadCSV("./extensions/config/save.csv"); // fichier sauvegarde du jeu
-    CSVFile employes = loadCSV("./extensions/config/employes.csv"); // fichier contenant la liste des employés
+    CSVFile employes = loadCSV("./extensions/config/employes.csv"); // fichier contenant la liste des employes
 
     // utilisation des chemins afin de recharger les fichiers dans la fonction d'affichage
     String pathAccueil = "./extensions/tui/accueil.txt"; // accueil du jeu
@@ -117,7 +117,10 @@ class Main extends Program {
         
         employe.prenom = prenom;
         employe.nom = nom;
-        employe.dispo = true;
+
+        employe.salarie = false;
+
+        employe.nivSatisfaction = random(1, 10);
 
         return employe;
     }
@@ -128,51 +131,56 @@ class Main extends Program {
 
         assertEquals(employe.nom, "Bonbeur");
         assertEquals(employe.prenom, "Jean");
-        assertTrue(employe.dispo);
+
+        assertFalse(employe.salarie);
+
+        assertTrue(employe.nivSatisfaction >= 1 && employe.nivSatisfaction <= 10);
     }
 
 
-    // implémentation de la fonction initEmployesDispos qui initialise la liste des employés dispos au recrutement
-    Employe[] initEmployesDispos() {
-        Employe[] listeEmployesDispos = new Employe[rowCount(employes) -1]; // on crée un tableau qui contient autant d'employés que de lignes (-1 pour les titres) dans le csv employes
+    // implémentation de la fonction initEmployesSalaries qui initialise la liste des employés salaries au recrutement
+    Employe[] initEmployes() {
+        Employe[] listeEmployes = new Employe[rowCount(employes) -1]; // on crée un tableau qui contient autant d'employés que de lignes (-1 pour les titres) dans le csv employes
 
         for (int idx = 1; idx < rowCount(employes); idx++) {
-            Employe nouvEmploye;
-            listeEmployesDispos[idx -1] = newEmploye(getCell(employes, idx, 0), getCell(employes, idx, 1));
+            Employe employe; // on initialise chaque candidat
+            listeEmployes[idx -1] = newEmploye(getCell(employes, idx, 0), getCell(employes, idx, 1));
         }
 
-        return listeEmployesDispos;
+        return listeEmployes;
     }
 
     // tests de la fonction employesDispos
-    void test_initEmployesDispos() {
-        Employe[] listeEmployesDispos = initEmployesDispos();
+    void test_initEmployes() {
+        Employe[] listeEmployes = initEmployes();
 
-        assertEquals("Jean", listeEmployesDispos[0].prenom); // on vrérifie que le premier employé correspond bien à la première ligne du csv
-        assertEquals("Bonbeur", listeEmployesDispos[0].nom);
+        assertEquals("Jean", listeEmployes[0].prenom); // on vrérifie que le premier employé correspond bien à la première ligne du csv
+        assertEquals("Bonbeur", listeEmployes[0].nom);
 
-        assertEquals("Léo", listeEmployesDispos[9].prenom); // on vrérifie que le dernier employé correspond bien à la dernière ligne du csv
-        assertEquals("Giciel", listeEmployesDispos[9].nom);
+        assertEquals("Léo", listeEmployes[9].prenom); // on vrérifie que le dernier employé correspond bien à la dernière ligne du csv
+        assertEquals("Giciel", listeEmployes[9].nom);
     }
 
 
-    // implémentation de la fonction listeEmployesToString qui permet d'afficher la liste des employés donnée en paramètres
-    String listeEmployesToString(Entreprise entreprise) {
-        String affichage = "";
+    // implémentation de la fonction compteEmployes
+    int compteEmployes(Employe[] listeEmployes) {
+        int nbEmployes = 0;
 
-        for (int idx = 0; idx < entreprise.nbEmployes; idx++) {
-            affichage = affichage + " ▸ " + entreprise.listeEmployes[idx].prenom + " " + entreprise.listeEmployes[idx].nom + '\n';
+        for (int idx = 0; idx < length(listeEmployes); idx ++) {
+            if (listeEmployes[idx].salarie) { // si l'employé à l'indice idx est salarié
+                nbEmployes ++;
+            }
         }
-        return affichage;
+        return nbEmployes;
     }
-    
-    // tests de la fonction listeEmployesToString
-    void test_listeEmployesToString() {
-        Employe jean = newEmploye("Jean", "Bonbeur");
-        Employe[] listeEmployes = new Employe[] {jean};
-        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20);
 
-        assertEquals(" ▸ Jean Bonbeur", listeEmployesToString(entreprise));
+    // tests de la fonction compteEmployes
+    void test_compteEmployes() {
+        Employe[] listeEmployes = initEmployes();
+        listeEmployes[0].salarie = true;
+        listeEmployes[5].salarie = true;
+
+        assertEquals(2, compteEmployes(listeEmployes));
     }
 
     // -----------------------------------------------------------------< GESTION CLASSE ENTREPRISE >------------------------------------------------------------------
@@ -182,7 +190,7 @@ class Main extends Program {
         Entreprise entreprise = new Entreprise();
 
         entreprise.listeEmployes = listeEmployes; // la liste des employes acuetls
-        entreprise.nbEmployes = 1; // 1 employé par défaut
+        entreprise.nbEmployes = compteEmployes(entreprise.listeEmployes); // 1 employé par défaut
         entreprise.budget = budget; // le budget de l'entreprise
         entreprise.charges = 300 * entreprise.nbEmployes; // 300$ par employe par défaut
 
@@ -220,31 +228,23 @@ class Main extends Program {
     // -----------------------------------------------------------------< GESTION DES CHOIX DU JOUEUR >------------------------------------------------------------------
 
     // implémentation de la fonction recruterEmploye
-    String recruterEmploye(Entreprise entreprise, Employe[] listeEmployesDispos) {
+    String recruterEmploye(Entreprise entreprise) {
         if (entreprise.budget < 300) {
             return rgb(200, 200, 0, true) + "< Fonds insufisants ! >" + RESET;
 
-        } else if (entreprise.nbEmployes == length(listeEmployesDispos)) {
+        } else if (entreprise.nbEmployes == length(entreprise.listeEmployes)) {
             return rgb(200, 200, 0, true) + "< Plus personne n'a déposé de candidature pour être embauché ! >" + RESET;
 
         } else {
-            entreprise.charges += 300;
-            entreprise.listeEmployes[entreprise.nbEmployes] = listeEmployesDispos[entreprise.nbEmployes];
-            entreprise.nbEmployes ++;
-            return rgb(0, 200, 0, true) + "< Vous avez recruté un employé ! >" + RESET;
+            
+
+            return rgb(0, 200, 0, true) + "< Vous avez recruté " + entreprise.listeEmployes[entreprise.nbEmployes -1].prenom + " " + entreprise.listeEmployes[entreprise.nbEmployes -1].nom + " ! >" + RESET;
         }
     }
 
     // tests de la fonction recruterEmploye
     void test_recruterEmploye() {
-        Employe employe = newEmploye("Jean", "Bonbeur");
-        Employe[] listeEmployes = new Employe[] {employe};
-        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20);
 
-        recruterEmploye(entreprise, listeEmployes);
-
-        assertEquals(1, entreprise.nbEmployes);
-        assertEquals(300, entreprise.charges);
     }
 
 
@@ -254,51 +254,37 @@ class Main extends Program {
             return rgb(200, 200, 0, true) + "< Vous ne pouvez pas virer d'employer car vous n'en avez qu'un ! >" + RESET;
 
         } else {
-            entreprise.nbEmployes --;
-            entreprise.charges -= 300;
-            return rgb(200, 0, 0, true) + "< Vous avez viré un employé ! >" + RESET;
+            if (entreprise.listeEmployes[entreprise.nbEmployes].sousPaye) {
+ 
+                return rgb(200, 0, 0, true) + "< Vous avez viré " + entreprise.listeEmployes[entreprise.nbEmployes -1].prenom + " " + entreprise.listeEmployes[entreprise.nbEmployes -1].nom + " qui était sous payé ! >" + RESET;
+
+            } else {
+
+                return rgb(200, 0, 0, true) + "< Vous avez viré " + entreprise.listeEmployes[entreprise.nbEmployes -1].prenom + " " + entreprise.listeEmployes[entreprise.nbEmployes -1].nom + " ! >" + RESET;
+            }
         }
     }
 
     // tests de la fonction virerEmploye
     void test_virerEmploye() {
 
-        // TODO refaire ces tests
-
-        // Employe employe = newEmploye("Jean", "Bonbeur");
-        // Employe[] listeEmployes = new Employe[] {employe};
-
-        // Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20);
-
-        // virerEmploye(entreprise2);
-
-        // assertEquals(1, entreprise2.nbEmployes);
-        // assertEquals(1500, entreprise2.charges);
     }
 
 
-    // implémentation de la fonction exploiterEmploye
-    String exploiterEmploye(Entreprise entreprise) {
+    // implémentation de la fonction sousPayerEmploye
+    String sousPayerEmploye(Entreprise entreprise) {
         if (entreprise.budget < 100) {
             return rgb(200, 200, 0, true) + "< Fonds insufisants ! >" + RESET;
 
         } else {
-            entreprise.nbEmployes ++;
-            entreprise.charges += 100;
-            return rgb(200, 0, 0, true) + "< Vous avez commencé à exploiter un employé ! >" + RESET;
+
+            return rgb(200, 200, 0, true) + "< Vous avez recruté " + entreprise.listeEmployes[entreprise.nbEmployes -1].prenom + " " + entreprise.listeEmployes[entreprise.nbEmployes -1].nom + " sans le déclarer ! >" + RESET;
         }
     }
 
-    // tests de la fonction exploiterEmploye
-    void test_exploiterEmploye() {
-        Employe employe = newEmploye("Jean", "Bonbeur");
-        Employe[] listeEmployes = new Employe[] {employe};
-        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20);
+    // tests de la fonction sousPayerEmploye
+    void test_sousPayerEmploye() {
 
-        exploiterEmploye(entreprise);
-
-        assertEquals(2, entreprise.nbEmployes);
-        assertEquals(1600, entreprise.charges);
     }
 
 
@@ -309,20 +295,23 @@ class Main extends Program {
             return rgb(200, 200, 0, true) + "< Vous ne payez déjà pas vos employés ! >" + RESET;
 
         } else {
-            entreprise.charges = entreprise.charges - (100 * entreprise.nbEmployes);
+            int baisseSalaires = entreprise.charges - (100 * entreprise.nbEmployes);
+
+            // on vérifie si la réduction ne va pas nous faire passer en négatif
+            if (entreprise.charges - baisseSalaires < 0) {
+                entreprise.charges = 0; // on fixe à 0 si ça dépasse
+                
+            } else {
+                entreprise.charges = entreprise.charges - baisseSalaires; // sinon on applique la réduction
+            }
+
             return rgb(200, 200, 0, true) + "< Vous avez baissé les salaires de vos employés ! >" + RESET;
         }
     }
 
     // tests de la fonction baisserSalaires
     void test_baisserSalaires() {
-        Employe employe = newEmploye("Jean", "Bonbeur");
-        Employe[] listeEmployes = new Employe[] {employe};
-        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20);
 
-        baisserSalaires(entreprise);
-
-        assertEquals(1400, entreprise.charges);
     }
 
     
@@ -331,27 +320,23 @@ class Main extends Program {
         if (entreprise.budget < 1000) {
             return rgb(200, 200, 0, true) + "< Fonds insufisants ! >" + RESET;
 
+        } else if (entreprise.niveauProduction == 10) {
+            return rgb(200, 200, 0, true) + "< Votre production est déjà améliorée au niveau 10, qui est le maximum ! >" + RESET;
+
         } else {
             entreprise.budget -= 1000;
             entreprise.niveauProduction ++;
-            return rgb(0, 200, 0, true) + "< Vous avez acheté une nouvelle machine ! >" + RESET;
+            return rgb(0, 200, 0, true) + "< Vous avez amélioré votre production au niveau " + entreprise.niveauProduction + " >" + RESET;
         }
     }
 
     // tests de la fonction ameliorerProduction
     void test_ameliorerProduction() {
-        Employe employe = newEmploye("Jean", "Bonbeur");
-        Employe[] listeEmployes = new Employe[] {employe};
-        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20);
 
-        ameliorerProduction(entreprise);
-
-        assertEquals(1000, entreprise.budget);
-        assertEquals(2, entreprise.niveauProduction);
     }
 
 
-    // implémentation de la fonction ameliorerProduction
+    // implémentation de la fonction acheterContrefacon
     String acheterContrefacon(Entreprise entreprise) {
         if (entreprise.budget < 50) {
             return rgb(200, 200, 0, true) + "< Fonds insufisants ! >" + RESET;
@@ -363,41 +348,27 @@ class Main extends Program {
         }
     }
 
-    // tests de la fonction ameliorerProduction
+    // tests de la fonction acheterContrefacon
     void test_acheterContrefacon() {
-        Employe employe = newEmploye("Jean", "Bonbeur");
-        Employe[] listeEmployes = new Employe[] {employe};
-        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20);
 
-        acheterContrefacon(entreprise);
-
-        assertEquals(1800, entreprise.budget);
-        assertEquals(60, entreprise.stocks);
     }
 
 
-    // implémentation de la fonction ameliorerProduction
+    // implémentation de la fonction snifferCoke
     String snifferCoke(Entreprise entreprise) {
         if (entreprise.budget < 450) {
             return rgb(200, 200, 0, true) + "< Fonds insufisants ! >" + RESET;
 
         } else {
-            entreprise.budget -= 450;
-            entreprise.niveauProduction += 1;
+
+
             return rgb(200, 0, 0, true) + "< Vous avez fait sniffer de la coke à vos employés ! >" + RESET;
         }
     }
 
-    // tests de la fonction ameliorerProduction
+    // tests de la fonction snifferCoke
     void test_snifferCoke() {
-        Employe employe = newEmploye("Jean", "Bonbeur");
-        Employe[] listeEmployes = new Employe[] {employe};
-        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20);
 
-        snifferCoke(entreprise);
-
-        assertEquals(1550, entreprise.budget);
-        assertEquals(2, entreprise.niveauProduction);
     }
 
 
@@ -480,52 +451,77 @@ class Main extends Program {
     // -----------------------------------------------------------------< MISE À JOUR DES DONNÉES DE L'ENTREPRISE >------------------------------------------------------------------
 
     // implémentation de la fonction updateEntreprise
-    void updateEntreprise(Date date, Entreprise entreprise) {
-        // calcul sur la semaine et mise à jour
-        entreprise.productionJournaliere = entreprise.nbEmployes * (25 + (25 * entreprise.niveauProduction)); // on met à jour le nombre de produits vendus par jours
+    void updateEntreprise(Date date, Entreprise entreprise, Marche marche) {
+        int coutMatierePremiere = 2; 
         
-        if ((entreprise.productionJournaliere * 5) > entreprise.stocks) { // si pas assez de stocks
-            entreprise.budget += (entreprise.stocks * entreprise.prixDeVente); // on ne vend que les stocks dispos 
-            entreprise.stocks = 0; // on soustrait les produits vendus au stock
+        // simulation sur 5 jours (Lundi -> Vendredi)
+        for(int i = 0; i < 5; i++) {
             
-        } else { // sinon on applique la formule normale
-            entreprise.budget += (entreprise.productionJournaliere * entreprise.prixDeVente) * 5; // on calcule les revenus sur 5 jours (lundi -> vendredi)
-            entreprise.stocks -= entreprise.productionJournaliere * 5; // on soustrait les produits vendus de la semaine au stock
+            // 1. Production (et paiement matière première)
+            int productionPossible = entreprise.nbEmployes * (25 + (25 * entreprise.niveauProduction));
+            int coutProductionJour = productionPossible * coutMatierePremiere;
+            int productionReelle = 0;
+
+            if (entreprise.budget >= coutProductionJour) {
+                entreprise.budget -= coutProductionJour;
+                productionReelle = productionPossible;
+            } else {
+                // si fauché, on produit ce qu'on peut
+                if (entreprise.budget > 0) {
+                    productionReelle = entreprise.budget / coutMatierePremiere;
+                    entreprise.budget -= (productionReelle * coutMatierePremiere);
+                } else {
+                    productionReelle = 0;
+                }
+            }
+            entreprise.stocks += productionReelle;
+            entreprise.productionJournaliere = productionReelle; 
+
+            // 2. Marché
+            simulerMarche(marche, entreprise);
+
+            // 3. Vente
+            // on divise la demande hebdo par 5 pour avoir la demande du jour
+            int demandeDuJour = entreprise.demandeActuelle / 5;
+            
+            int ventesDuJour = 0;
+            if (entreprise.stocks >= demandeDuJour) {
+                ventesDuJour = demandeDuJour;
+            } else {
+                ventesDuJour = entreprise.stocks; 
+            }
+
+            entreprise.stocks -= ventesDuJour;
+            entreprise.budget += (ventesDuJour * entreprise.prixDeVente);
         }
 
-        entreprise.budget -= entreprise.charges; // on soustrait les charges au chiffre d'affaire
+        // 4. Paiement des charges hebdo
+        entreprise.budget -= entreprise.charges;
+        
+        // 5. Passage du temps
         for (int jour = 0; jour < 7; jour++){
             gestionDate(date);
         }
     }
 
+    // fonction pour générer le message de fin de semaine
+    String genererMessageFinancier(Entreprise entreprise) {
+        if (entreprise.budget < 0) {
+            return rgb(200, 0, 0, true) + "< Dû à vos coûts > à vos ventes, la banque vous a mis dans le négatif ! >" + RESET;
+
+        } else {
+            return rgb(0, 200, 0, true) + "< Semaine terminée. Les comptes sont bons. >" + RESET;
+        }
+    }
+
     // tests de la fonction updateEntreprise
     void test_updateEntreprise() {
-        Employe employe = newEmploye("Jean", "Bonbeur");
-        Employe[] listeEmployes = new Employe[] {employe};
-        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20);
 
-        Date date = newDate(1, 1); // création d'une nouvelle date
-
-        // simulation d'un tour de jeu
-        entreprise.nbEmployes ++; // ajout employé
-        entreprise.charges = entreprise.charges - (100 * entreprise.nbEmployes); // baisse salaires
-        entreprise.budget -= 300; entreprise.niveauProduction ++; // amélioration de la production
-
-        updateEntreprise(date, entreprise);
-
-        assertEquals(600, entreprise.budget);
-        assertEquals(1300, entreprise.charges);
-        assertEquals(2, entreprise.nbEmployes);
-        assertEquals(0, entreprise.stocks);
-        assertEquals(20, entreprise.prixDeVente);
-        assertEquals(2, entreprise.niveauProduction);
-        assertEquals(150, entreprise.productionJournaliere);
     }
 
 
 
-    // -----------------------------------------------------------------< GESTION DE L'AFFICHAGE  >------------------------------------------------------------------
+    // -----------------------------------------------------------------< GESTION DES AFFICHAGES  >------------------------------------------------------------------
 
     // implémentation de la fonction tuiToString
     String tuiToString(Date date, Entreprise entreprise, String pathTui, String notification) {
@@ -566,7 +562,7 @@ class Main extends Program {
                 idx += 2; // on incrémente pour passer le placeholder
 
             } else if (charAt(affichage, idx) == '%' && charAt(affichage, idx +1) == 'E') { // si on détecte un placeholder de notification
-                nouvChaine += rgb(100, 100, 200, true) + listeEmployesToString(entreprise) + RESET; // on remplace le placeholder par la date au format String
+                nouvChaine += rgb(100, 100, 200, true) + listeEmployesToString(entreprise.listeEmployes) + RESET; // on remplace le placeholder par la date au format String
                 idx += 2; // on incrémente pour passer le placeholder
 
             }else {
@@ -584,6 +580,24 @@ class Main extends Program {
     }
 
 
+    // implémentation de la fonction listeEmployesToString qui permet d'afficher la liste des employés donnée en paramètres
+    String listeEmployesToString(Employe[] listeEmployes) {
+        String affichage = "";
+
+        for (int idx = 0; idx < length(listeEmployes); idx++) {
+            if (listeEmployes[idx].salarie) { // si lemployé est salarié
+                affichage = affichage + " ▸ " + listeEmployes[idx -1].prenom + " " + listeEmployes[idx -1].nom + '\n';
+            }
+        }
+        return affichage;
+    }
+    
+    // tests de la fonction listeEmployesToString
+    void test_listeEmployesToString() {
+
+    }
+
+
 
     // -----------------------------------------------------------------< ALGORITHME PRINCIPAL >------------------------------------------------------------------
 
@@ -596,12 +610,9 @@ class Main extends Program {
 
         // initialisation des variables du jeu via les CSVs
 
-        // initialisation des employés dispos
-        Employe[] listeEmployesDispos = initEmployesDispos();
-
-        // initialisation de l'entreprise
-        Employe[] listeEmployes = new Employe[length(listeEmployesDispos)]; // la taille de la liste d'meployes correspond au nombre d'employes potentiellement employables
-        listeEmployes[0] = listeEmployesDispos[0]; // on y met le premier employé de l'entreprise
+        // initialisation des candidatures
+        Employe[] listeEmployes = initEmployes(); // on initialise la liste des employes ou non
+        listeEmployes[0].salarie = true; // on active le premier employé
 
         Entreprise entreprise = newEntreprise(listeEmployes,
                                               stringToInt(getCell(config, 1, 0)), // budget
@@ -633,13 +644,13 @@ class Main extends Program {
                             choix = readString();
 
                             if (equals(choix, "1")) {
-                                notification = recruterEmploye(entreprise, listeEmployesDispos);
+                                notification = recruterEmploye(entreprise);
 
                             }else if (equals(choix, "2")) {
                                 notification = virerEmploye(entreprise);
 
                             }else if (equals(choix, "3")) {
-                                notification = exploiterEmploye(entreprise);
+                                notification = sousPayerEmploye(entreprise);
                                 
                             }else if (equals(choix, "4")) {
                                 notification = baisserSalaires(entreprise);
