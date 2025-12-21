@@ -18,11 +18,9 @@ Bienvenue jeune entrepreneur !
   d'argent.
 
 
-  Pour parvenir à tes fins, tu peux utiliser des moyens
-  légaux ou illégaux (comme certaines entreprises le
-  font).
-  Mais attention ! Cela impacte ton score d'éthique.
-  À toi de voir quel boss tu veux être !
+  Pour parvenir à tes fins, tu peux utiliser des moyens légaux ou illégaux (comme certaines entreprises le font).
+
+  Mais attention ! Cela impacte ton score d'éthique, à toi de voir quel genre boss tu veux être !
 
   La partie s'arrête si:
       ▸ ton entreprise fait faillite
@@ -31,16 +29,12 @@ Bienvenue jeune entrepreneur !
 └────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────── Comment jouer ──────────────────────────────────────────────────────┐
-  Chaque lundi matin, tu peux prendre (ou non) des
-  décisions au sujet de la gestion de tes employés ou
-  de ta production.
+  Chaque lundi matin, tu peux prendre (ou non) des décisions au sujet de la gestion de tes employés ou de ta production.
 
-  Une fois tes choix validés pour la semaine, tu
-  obtiendras un récap des résultats de ton entreprise sur
+  Une fois tes choix validés pour la semaine, tu obtiendras un récap des résultats de ton entreprise sur 
   5 jours (lundi -> vendredi).
 
-  Au lundi suivant, tu peux effectuer de nouveaux choix
-  et ainsi de suite jusqu'à la fin du jeu.
+  Au lundi suivant, tu peux effectuer de nouveaux choix et ainsi de suite jusqu'à la fin du jeu.
 
   Bonne chance et joyeux capitalisme !
 └────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘

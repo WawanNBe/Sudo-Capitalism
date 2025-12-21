@@ -1,5 +1,8 @@
 Budget,Stocks,PrixDeVente
 5000,0,10
 
-#Objectif financier à atteindre pour gagner
+PrixMarche,StockMarche,DemandeMarche
+15,50000,25
+
+Objectif
 1000000

@@ -21,7 +21,6 @@ class Main extends Program {
     CSVFile config = loadCSV("./extensions/config/config.csv"); // fichier config du jeu
     CSVFile save = loadCSV("./extensions/config/save.csv"); // fichier sauvegarde du jeu
     CSVFile employesCSV = loadCSV("./extensions/config/employes.csv"); // fichier contenant la liste des employes
-    CSVFile marcheCSV = loadCSV("./extensions/config/marche.csv"); // fichier de config du marche
 
     // Utilisation des chemins afin de recharger les fichiers dans la fonction d'affichage
     String pathAccueil = "./extensions/tui/accueil.txt"; // accueil du jeu
@@ -202,6 +201,7 @@ class Main extends Program {
     // Tests de la fonction compteEmployes
     void test_compteEmployes() {
         Employe[] listeEmployes = initEmployes();
+
         listeEmployes[0].salarie = true;
         listeEmployes[5].salarie = true;
 
@@ -231,13 +231,14 @@ class Main extends Program {
         return entreprise;
     }
 
+    // Tests du constructeur
     void test_newEntreprise() {
-        Employe employe = newEmploye("Jean", "Bonbeur");
-        Employe[] listeEmployes = new Employe[] {employe};
-        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20);
+        Employe[] listeEmployes = initEmployes(); // initialisation de la liste des employés
+        listeEmployes[0].salarie = true; // on active le premier employé en tant que salarie
+        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20); // on crée l'entreprise
 
-        // assertArrayEquals(new Employe[] {employe}, entreprise.listeEmployes);
-        assertEquals(1, entreprise.nbEmployes);
+        assertArrayEquals(listeEmployes, entreprise.listeEmployes);
+        assertEquals(1, compteEmployes(entreprise.listeEmployes));
         assertEquals(2000, entreprise.budget);
         assertEquals(300, entreprise.charges);
 
@@ -249,457 +250,629 @@ class Main extends Program {
         assertEquals(150, entreprise.demandeActuelle);
     }
 
-    // -----------------------------------------------------------------< GESTION DU MARCHE >------------------------------------------------------------------
+    // -----------------------------------------------------------------< GESTION CLASSE MARCHE >------------------------------------------------------------------
 
+    // Constructeur d'un marché
     Marche newMarche(int prixDeVente, int stocks, int demande) {
-        Marche m = new Marche();
-        m.prixDeVente = prixDeVente;
-        m.stocks = stocks;
-        m.demande = demande;
-        return m;
+        Marche marche = new Marche();
+
+        marche.prixDeVente = prixDeVente; // prix de vente initial sur le marché
+        marche.stocks = stocks; // stocks initiaux présents sur le marché
+        marche.demande = demande; // demande initiale sur le marché
+
+        return marche;
     }
 
+    // Tests du constructeur
     void test_newMarche() {
-        Marche m = newMarche(10, 100, 50);
-        assertEquals(10, m.prixDeVente);
+        Marche marche = newMarche(10, 100, 50); // on initialise un marche
+
+        assertEquals(10, marche.prixDeVente);
+        assertEquals(100, marche.stocks);
+        assertEquals(50, marche.demande);
     }
 
+
+    // Fonction qui calcule l'impact de l'entreprise sur la demande
     int calculerImpactDemande(double diffPourcentage, int demandeDeBase) {
-        int impact = 0;
-        if (diffPourcentage >= 0) { 
-            if (diffPourcentage > 75) impact = -(int)(demandeDeBase * 0.98);
-            else if (diffPourcentage > 50) impact = -(int)(demandeDeBase * 0.65);
-            else if (diffPourcentage > 25) impact = -(int)(demandeDeBase * 0.4);
-            else if (diffPourcentage > 10) impact = -(int)(demandeDeBase * 0.15);
-            else impact = 0;
-        } else { 
-            if (diffPourcentage < -75) impact = -demandeDeBase; 
-            else if (diffPourcentage < -50) impact = (int)(demandeDeBase * 0.80);
-            else if (diffPourcentage < -25) impact = (int)(demandeDeBase * 0.50);
-            else if (diffPourcentage < -10) impact = (int)(demandeDeBase * 0.20);
-            else impact = (int)(demandeDeBase * 0.05);
+        int impact = 0; // impact du prix sur la demande
+
+        if (diffPourcentage >= 0) { // si le prix est supérieur ou égal à celui du marché
+
+            if (diffPourcentage > 75) { // si le prix de vente est supérieur à 1.75x celui du marché
+                impact = -(int)(demandeDeBase * 0.98);
+
+            } else if (diffPourcentage > 50) { // si le prix de vente est supérieur à 1.50x celui du marché
+                impact = -(int)(demandeDeBase * 0.65);
+
+            } else if (diffPourcentage > 25) { // si le prix de vente est supérieur à 1.25x celui du marché
+                impact = -(int)(demandeDeBase * 0.4);
+
+            } else if (diffPourcentage > 10) { // si le prix de vente est supérieur à 1.10x celui du marché
+                impact = -(int)(demandeDeBase * 0.15);
+
+            } else { // sinon le prix n'impacte pas la demande
+                impact = 0;
+            }
+
+        } else { // si le prix est inférieur à celui du marché
+
+            if (diffPourcentage < -75) { // si le prix est inférieur ou égal à 0.25x de celui du marché
+                impact = -demandeDeBase;
+
+            } else if (diffPourcentage < -50) { // si le prix est inférieur ou égal à 0.50x de celui du marché
+                impact = (int)(demandeDeBase * 0.80);
+
+            } else if (diffPourcentage < -25) { // si le prix est inférieur ou égal à 0.75x de celui du marché
+                impact = (int)(demandeDeBase * 0.50);
+            }
+            else if (diffPourcentage < -10) { // si le prix est inférieur ou égal à 0.90x de celui du marché
+                impact = (int)(demandeDeBase * 0.20);
+
+            } else { // si le prix est légèrement inférieur à celui du marché
+                impact = (int)(demandeDeBase * 0.05);
+            }
         }
         return impact;
     }
 
+    // Tests de la fonction du calcul se l'impact
     void test_calculerImpactDemande() {
         assertEquals(0, calculerImpactDemande(5.0, 100));
         assertEquals(-15, calculerImpactDemande(15.0, 100));
     }
 
-    void simulerMarche(Marche m, Entreprise e) {
-        double variationPrix = (random() * 10.0) - 5.0; 
-        m.prixDeVente += (int)variationPrix;   
-        if (m.prixDeVente < 1) m.prixDeVente = 1;
 
-        int demandeDeBase = 140 + (int)(random() * 60); 
-        double diffPourcentage = 100.0 * (e.prixDeVente - m.prixDeVente) / m.prixDeVente;
+    // Fonction qui gère la simulation du marché
+    void simulerMarche(Marche marche, Entreprise entreprise) {
+        double variationPrix = (random() * 10.0) - 5.0; // on simule la variation du prix du marché avec une variable aléatoire
+        marche.prixDeVente += (int)variationPrix; // on caste la variation dans le prix de vente
+
+        if (marche.prixDeVente < 1) { // on s'assure que le prix de vente sur le marché ne peut pas être inférieur à un
+            marche.prixDeVente = 1;
+        }
+
+        int demandeDeBase = 140 + (int)(random() * 60); // on initialise une demande variable sur le marché
+        double diffPourcentage = 100.0 * (entreprise.prixDeVente - marche.prixDeVente) / marche.prixDeVente; // on calcule le pourcentage de différence entre les prix de vente
         
-        int impact = calculerImpactDemande(diffPourcentage, demandeDeBase);
+        int impact = calculerImpactDemande(diffPourcentage, demandeDeBase); // on calcule l'impacte que cela a sur le marché
         
-        e.demandeActuelle = demandeDeBase + impact;
-        if (e.demandeActuelle < 0) e.demandeActuelle = 0;
+        entreprise.demandeActuelle = demandeDeBase + impact; // on actualise la demande de l'entreprise
+
+        if (entreprise.demandeActuelle < 0) { // si la demande après calcul tombe en dessous de zéro la corrige à zéro
+            entreprise.demandeActuelle = 0;
+        }
     }
 
-    String augmenterPrix(Entreprise e, int montant) {
-        e.prixDeVente = e.prixDeVente + montant;
+
+
+    // -----------------------------------------------------------------< CHOIX DU JOUEUR: MARCHE >------------------------------------------------------------------
+
+    // Focntion qui gère l'augmentation des prix
+    String augmenterPrix(Entreprise entreprise, int montant) {
+        entreprise.prixDeVente = entreprise.prixDeVente + montant; // on incrémente le prix de vente par le montant passé en paramètres
         
-        String[] phrases = new String[]{
-            "< Prix en hausse. Les clients râlent mais achètent. >",
-            "< Inflation artificielle activée. >",
-            "< + " + montant + "$ sur l'étiquette. C'est du 'Positionnement Premium'. >"
-        };
+        // phrases retournées aléatoirement
+        String[] phrases = new String[]{"< Prix en hausse. Les clients râlent mais achètent quand même ! >",
+                                        "< Inflation artificielle activée ! >",
+                                        "< + " + montant + "$ sur l'étiquette. C'est du 'Positionnement Premium'. >",
+                                        "< Les clients n'y verront que du feu nan ? >",
+                                        "< C'est l'inflation, ça choquera personne >"};
+
         return rgb(0, 200, 0, true) + messageAleatoire(phrases) + RESET;
     }
 
+    // Tests de la fonction qui augmente les prix
     void test_augmenterPrix() {
-        Entreprise entreprise = newEntreprise(new Employe[0], 2000, 30, 20);
+        Entreprise entreprise = newEntreprise(new Employe[0], 2000, 30, 20); // on crée une première entreprise
+        Entreprise entreprise2 = newEntreprise(new Employe[0], 2000, 30, 0); // on crée une seconde entreprise
 
         augmenterPrix(entreprise, 5);
+        augmenterPrix(entreprise2, 100);
 
-        assertEquals(15, entreprise.prixDeVente);
+        assertEquals(25, entreprise.prixDeVente);
+        assertEquals(100, entreprise2.prixDeVente);
     }
 
+
+    // Fonction qui gère la baisse des prix
     String baisserPrix(Entreprise entreprise, int montant) {
-        if (entreprise.prixDeVente - montant < 1) {
+
+        if (entreprise.prixDeVente - montant < 1) { // si le prix après baisse est inférieur à un on le normalise à 1$
             entreprise.prixDeVente = 1;
 
-            return rgb(200, 200, 0, true) + "< Prix minimum atteint (1$) ! On ne donne pas encore les produits ! >" + RESET;
+            // phrases retournées aléatoirement
+            String[] phrases = new String[]{"< Prix minimum atteint (1$) ! On ne donne pas encore les produits ! >",
+                                            "< Eh c'est pas la charité non plus ici ! >",
+                                            "< + " + montant + "$ ?? Sérieux ? Et la marge alors ! >",
+                                            "< Euh... c'est pas ça qui va payer les vacances aux Bahamas >"};
+
+            return rgb(200, 200, 0, true) + messageAleatoire(phrases) + RESET;
         }
-        entreprise.prixDeVente = entreprise.prixDeVente - montant;
         
-        String[] phrases = new String[]{
-            "< Prix cassés ! On écrase la concurrence. >",
-            "< C'est les soldes. Émeute dans le rayon 4. >",
-            "< Dumping commercial activé. >"
-        };
+        entreprise.prixDeVente = entreprise.prixDeVente - montant; // sinon on actualise juste le prix
+        
+        String[] phrases = new String[]{"< Prix cassés ! On écrase la concurrence. >",
+                                        "< C'est les soldes. Émeute dans le rayon 4. >",
+                                        "< Dumping commercial activé. >"};
+
         return rgb(200, 0, 0, true) + messageAleatoire(phrases) + RESET;
     }
 
     void test_baisserPrix() {
-        Entreprise entreprise = newEntreprise(new Employe[0], 2000, 30, 20);
+        Entreprise entreprise = newEntreprise(new Employe[0], 2000, 30, 20); // on crée une première entreprise
+        Entreprise entreprise2 = newEntreprise(new Employe[0], 2000, 30, 0); // on crée une seconde entreprise
 
         baisserPrix(entreprise, 5);
+        baisserPrix(entreprise2, 1);
 
-        assertEquals(5, entreprise.prixDeVente);
+        assertEquals(15, entreprise.prixDeVente);
+        assertEquals(1, entreprise2.prixDeVente); // on vérifie la normalisation du prix
     }
 
-    // -----------------------------------------------------------------< GESTION DES CHOIX DU JOUEUR >------------------------------------------------------------------
 
+
+    // -----------------------------------------------------------------< CHOIX DU JOUEUR: EMPLOYES >------------------------------------------------------------------
+
+    // Focntion qui gère le recrutemebt d'employés
     String recruterEmploye(Entreprise entreprise, int budgetDebutSemaine) {
-        int chargesFutures = entreprise.charges + SALAIRE_STANDARD;
+        int chargesFutures = entreprise.charges + SALAIRE_STANDARD; // on fait une prévision des charges pour voir si le budget le permet
 
-        // SECURITÉ : Les charges futures ne doivent pas dépasser 50% du budget du début de la semaine
-        if (chargesFutures * 2 > budgetDebutSemaine) {
-            return rgb(200, 100, 0, true) + "< Trésorerie insuffisante (Charges > 50% du budget initial) ! >" + RESET;
-        } 
-        else if (entreprise.budget < COUT_RECRUTEMENT) {
-            return rgb(200, 200, 0, true) + "< Fonds insuffisants pour l'annonce ! >" + RESET;
-        } 
-        else {
-            int idx = -1;
-            for(int i = 0; i < length(entreprise.listeEmployes); i++) {
-                if (!entreprise.listeEmployes[i].salarie) {
-                    idx = i;
-                    break;
-                }
-            }
+        if (chargesFutures * 2 > budgetDebutSemaine) { // les charges futures ne doivent pas dépasser 50% du budget au début de la semaine
+            return rgb(200, 0, 0, true) + "< Trésorerie insuffisante ! Si on embauche quelqu'un de plus, on est dans le rouge la semaine prochaine ! >" + RESET;
 
-            if (idx != -1) {
-                entreprise.listeEmployes[idx].salarie = true;
-                entreprise.listeEmployes[idx].sousPaye = false;
-                entreprise.nbEmployes = entreprise.nbEmployes + 1;
-                
-                entreprise.budget = entreprise.budget - COUT_RECRUTEMENT;
-                entreprise.charges = entreprise.charges + SALAIRE_STANDARD;
-                
-                String[] phrases = new String[]{
-                    "< " + entreprise.listeEmployes[idx].prenom + " recruté. Il a l'air motivé (le pauvre). >",
-                    "< Nouvelle recrue : " + entreprise.listeEmployes[idx].prenom + ". Espérance de vie dans la boîte : 3 mois. >",
-                    "< " + entreprise.listeEmployes[idx].prenom + " a signé. Il n'a pas lu les petites lignes. >"
-                };
-                return rgb(0, 200, 0, true) + messageAleatoire(phrases) + RESET;
-
-            } else {
-                return rgb(200, 200, 0, true) + "< Le marché du travail est vide ! >" + RESET;
-            }
-        }
-    }
-
-    void test_recruterEmploye() {
-        Employe[] tab = new Employe[2];
-        tab[0] = newEmploye("A", "A");
-        Entreprise entreprise = newEntreprise(tab, 2000, 30, 20);
-
-        recruterEmploye(entreprise, 2000);
-
-        assertEquals(1, entreprise.nbEmployes);
-        assertEquals(300, entreprise.charges);
-        assertEquals(1700, entreprise.budget);
-    }
-
-    String virerEmploye(Entreprise entreprise) {
-        if (entreprise.nbEmployes <= 1) {
-            return rgb(200, 200, 0, true) + "< Vous ne pouvez pas virer le dernier employé ! >" + RESET;
-
-        } else if (entreprise.budget < COUT_LICENCIEMENT) {
-            return rgb(200, 200, 0, true) + "< Pas assez d'argent pour payer les indemnités (" + COUT_LICENCIEMENT + "$) ! >" + RESET;
+        } else if (entreprise.budget < COUT_RECRUTEMENT) { // on vérifie que l'on dispose des fonds nécéssaires au recrutement
+            return rgb(200, 200, 0, true) + "< Fonds insuffisants pour embaucher un nouvel employé ! >" + RESET;
         }
 
+        // si le recrutement est possible
         int idx = -1;
-        for(int i = length(entreprise.listeEmployes) - 1; i >= 0; i--) {
-            if (entreprise.listeEmployes[i].salarie) {
-                idx = i;
-                break;
-            }
-        }
 
-        if (idx != -1) {
-            boolean etaitSousPaye = entreprise.listeEmployes[idx].sousPaye;
-            entreprise.listeEmployes[idx].salarie = false;
-            entreprise.listeEmployes[idx].sousPaye = false;
-            entreprise.nbEmployes = entreprise.nbEmployes - 1;
-            
-            entreprise.budget = entreprise.budget - COUT_LICENCIEMENT;
-            
-            if (etaitSousPaye) {
-                entreprise.charges = entreprise.charges - SALAIRE_EXPLOITE;
-            } else {
-                entreprise.charges = entreprise.charges - SALAIRE_STANDARD;
-            }
-            
-            if (entreprise.charges < 0) {
-                entreprise.charges = 0;
-            }
-
-            String[] phrases = new String[]{
-                "< " + entreprise.listeEmployes[idx].prenom + " viré. La sécurité l'a raccompagné. >",
-                "< Hop, " + entreprise.listeEmployes[idx].prenom + " à la trappe. C'est la 'flexisécurité'. >",
-                "< " + entreprise.listeEmployes[idx].prenom + " nous quitte. On a gardé son stylo. >"
-            };
-
-            return rgb(200, 0, 0, true) + messageAleatoire(phrases) + RESET;
-        }
-        return "< Erreur interne >";
-    }
-
-    void test_virerEmploye() {
-        Employe[] tab = new Employe[2];
-        tab[0] = newEmploye("A", "A"); tab[0].salarie = true;
-        tab[1] = newEmploye("B", "B"); tab[1].salarie = true;
-
-        Entreprise entreprise = newEntreprise(tab, 2000, 30, 20);
-
-        virerEmploye(entreprise);
-
-        assertEquals(1, entreprise.nbEmployes);
-        assertEquals(1500, entreprise.budget); 
-    }
-
-    String exploiterEmploye(Entreprise entreprise, int budgetDebutSemaine) {
-        int chargesFutures = entreprise.charges + SALAIRE_EXPLOITE;
-
-        if (chargesFutures * 2 > budgetDebutSemaine) {
-             return rgb(200, 100, 0, true) + "< Trésorerie trop fragile pour recruter ! >" + RESET;
-        }
-        else if (entreprise.budget < COUT_CORRUPTION) {
-            return rgb(200, 200, 0, true) + "< Fonds insuffisants (" + COUT_CORRUPTION + "$) ! >" + RESET;
-        } 
-        
-        int idx = -1;
-        for(int i = 0; i < length(entreprise.listeEmployes); i++) {
+        for (int i = 0; i < length(entreprise.listeEmployes); i++) { // on cherche le premier non salarié dans la liste
             if (!entreprise.listeEmployes[i].salarie) {
                 idx = i;
                 break;
             }
         }
 
-        if (idx != -1) {
-            entreprise.listeEmployes[idx].salarie = true;
-            entreprise.listeEmployes[idx].sousPaye = true;
-            entreprise.nbEmployes = entreprise.nbEmployes + 1;
+        if (idx != -1) { // si un non salarié est trouvé
+            entreprise.listeEmployes[idx].salarie = true; // on change son statut
+            entreprise.listeEmployes[idx].sousPaye = false; // l'employé est payé normalement
+
+            entreprise.nbEmployes = compteEmployes(entreprise.listeEmployes); // on actualise le nombre d'employés
             
-            entreprise.budget = entreprise.budget - COUT_CORRUPTION;
-            entreprise.charges = entreprise.charges + SALAIRE_EXPLOITE;
+            entreprise.budget = entreprise.budget - COUT_RECRUTEMENT; // on prend en compte le coût du recrutement
+            entreprise.charges = entreprise.charges + SALAIRE_STANDARD; // on augment les charges
             
-            String[] phrases = new String[]{
-                "< " + entreprise.listeEmployes[idx].prenom + " embauché au black. Chut. >",
-                "< Main d'oeuvre pas chère trouvée (" + entreprise.listeEmployes[idx].prenom + "). >"
-            };
+            String[] phrases = new String[]{"< " + entreprise.listeEmployes[idx].prenom + " recruté. Il a l'air motivé (le pauvre). >",
+                                            "< Nouvelle recrue : " + entreprise.listeEmployes[idx].prenom + ". Espérance de vie dans la boîte : 3 mois. >",
+                                            "< " + entreprise.listeEmployes[idx].prenom + " a signé. Il n'a pas lu les petites lignes. >"};
+
+            return rgb(0, 200, 0, true) + messageAleatoire(phrases) + RESET;
+
+        } else { // si il n'y a plus de candidats disponibles
+            return rgb(200, 200, 0, true) + "< Le marché du travail est vide ! >" + RESET;
+        }
+    }
+
+    // Tests de la fonction de recrutement
+    void test_recruterEmploye() {
+        Employe[] listeEmployes = initEmployes(); // on initialise une liste d'employés
+        listeEmployes[0].salarie = true; // on active un employé
+        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20); // on initialise une entreprise
+
+        recruterEmploye(entreprise, 2000);
+
+        assertEquals(2, entreprise.nbEmployes);
+        assertEquals(600, entreprise.charges);
+        assertEquals(1700, entreprise.budget);
+    }
+
+    // Fonction qui gère le licenciement
+    String virerEmploye(Entreprise entreprise) {
+
+        if (entreprise.nbEmployes <= 1) { // si il ne reste qu'un seul employé
+            return rgb(200, 200, 0, true) + "< Vous ne pouvez pas virer le dernier employé ! >" + RESET;
+
+        } else if (entreprise.budget < COUT_LICENCIEMENT) { // si l'entreprise ne dispose pas d'assez de fonds pour payer le licenciement
+            return rgb(200, 200, 0, true) + "< Pas assez d'argent pour payer les indemnités (" + COUT_LICENCIEMENT + "$) ! >" + RESET;
+        }
+
+        // si le licenciement est possible
+        int idx = -1;
+
+        for(int i = length(entreprise.listeEmployes) - 1; i >= 0; i--) { // on cherche le dernier employé embauché
+            if (entreprise.listeEmployes[i].salarie) {
+                idx = i;
+                break;
+            }
+        }
+
+        if (idx != -1) { // si un employé salarié est trouvé
+            boolean etaitSousPaye = entreprise.listeEmployes[idx].sousPaye; // on récupère son statut de paie
+
+            entreprise.listeEmployes[idx].salarie = false; // on change son statut
+            entreprise.listeEmployes[idx].sousPaye = false; // on réinitialise le statut de sa paie
+
+            entreprise.nbEmployes = compteEmployes(entreprise.listeEmployes);
+            
+            entreprise.budget = entreprise.budget - COUT_LICENCIEMENT; // on soustrait les charges du licenciement au budget
+            
+            if (etaitSousPaye) { // si l'employé était sous payé
+                entreprise.charges = entreprise.charges - SALAIRE_EXPLOITE;
+
+            } else { // si il était payé normalement
+                entreprise.charges = entreprise.charges - SALAIRE_STANDARD;
+            }
+            
+            if (entreprise.charges < 0) { // si les charges tombent en dessous de zéro on normalise à 0
+                entreprise.charges = 0;
+            }
+
+            // phrases aléatoires
+            String[] phrases = new String[]{"< " + entreprise.listeEmployes[idx].prenom + " viré. La sécurité l'a raccompagné. >",
+                                            "< Hop, " + entreprise.listeEmployes[idx].prenom + " à la trappe. Dommage. >",
+                                            "< " + entreprise.listeEmployes[idx].prenom + " nous quitte. On a gardé son stylo. >",
+                                            "< " + entreprise.listeEmployes[idx].prenom + " n'a pas tenu le rythme'. >"};
+
+            return rgb(200, 0, 0, true) + messageAleatoire(phrases) + RESET;
+        }
+        return "Erreur";
+    }
+
+    // Tests de la fonction de licenciement
+    void test_virerEmploye() {
+        Employe[] listeEmployes = initEmployes(); // on initialise une liste d'employés
+        listeEmployes[0].salarie = true; // on active un premier employé
+        listeEmployes[1].salarie = true; // on active un deuxième employé
+        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20); // on initialise une entreprise
+
+        virerEmploye(entreprise);
+
+        assertEquals(1, entreprise.nbEmployes);
+        assertEquals(300, entreprise.charges);
+        assertEquals(1500, entreprise.budget);
+    }
+
+
+    // Fonction qui gère l'emploi d'un employé en le sous payant
+    String exploiterEmploye(Entreprise entreprise, int budgetDebutSemaine) {
+        int chargesFutures = entreprise.charges + SALAIRE_EXPLOITE; // on simule si l'entreprise possède les fonds nécessaires
+
+        if (chargesFutures * 2 > budgetDebutSemaine) { // si l'entreprise ne possède pas assez
+             return rgb(200, 100, 0, true) + "< Trésorerie trop fragile pour recruter ! >" + RESET;
+
+        } else if (entreprise.budget < COUT_CORRUPTION) { // si l'entreprise ne possède pas assez de fonds pour corrompre les RH
+            return rgb(200, 200, 0, true) + "< Fonds insuffisants (" + COUT_CORRUPTION + "$) pour corrompre les RH ! >" + RESET;
+        } 
+        
+        // si on peut sous payer un employé
+        int idx = -1;
+
+        for(int i = 0; i < length(entreprise.listeEmployes); i++) { // on cherche le premier employé non salarié
+
+            if (!entreprise.listeEmployes[i].salarie) {
+                idx = i;
+                break;
+            }
+        }
+
+        if (idx != -1) { // si on trouve un candidat
+            entreprise.listeEmployes[idx].salarie = true; // il devient salarié
+            entreprise.listeEmployes[idx].sousPaye = true; // il devient aussi sous payé
+            
+            entreprise.nbEmployes = compteEmployes(entreprise.listeEmployes); // on actualise le nombre d'employés
+            
+            entreprise.budget = entreprise.budget - COUT_CORRUPTION; // on met à jour le budget
+            entreprise.charges = entreprise.charges + SALAIRE_EXPLOITE; // on met à jour les charges
+            
+            // phrases retournées
+            String[] phrases = new String[]{"< " + entreprise.listeEmployes[idx].prenom + " embauché au black. Chut... >",
+                                            "< Main d'oeuvre pas chère trouvée (" + entreprise.listeEmployes[idx].prenom + "). >",
+                                            "< Vous avez graiddé la patte des RH.. >"};
 
             return rgb(200, 0, 0, true) + messageAleatoire(phrases) + RESET;
 
         } else {
-            return "< Personne à exploiter >";
+            return "< Personne n'est disponible sur le marché du travail >";
         }
     }
 
+    // Tests de la fonction qui gère l'exploitation d'un employé
     void test_exploiterEmploye() {
-        Employe[] tab = new Employe[1];
-        tab[0] = newEmploye("A", "A");
+        Employe[] listeEmployes = initEmployes(); // on initialise une liste d'employés
+        listeEmployes[0].salarie = true; // on active un employé
+        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20); // on initialise une entreprise
 
-        Entreprise entreprise = newEntreprise(tab, 1000, 30, 20);
+        exploiterEmploye(entreprise, 2000);
 
-        exploiterEmploye(entreprise, 1000);
-
-        assertEquals(100, entreprise.charges);
-        assertEquals(950, entreprise.budget);
+        assertEquals(2, entreprise.nbEmployes);
+        assertEquals(400, entreprise.charges);
+        assertEquals(1950, entreprise.budget);
     }
 
+    // Fonction qui gère la baisse des salaires
     String baisserSalaires(Entreprise entreprise) {
-        int reduction = 50 * entreprise.nbEmployes;
-        if (entreprise.charges <= 50 * entreprise.nbEmployes) {
+        int reduction = 50 * entreprise.nbEmployes; // on baisse les salaires de tous les employés de 50$
+
+        if (entreprise.charges <= 50 * entreprise.nbEmployes) { // si on a déjà atteint le salaire minimal par employé
             return rgb(200, 200, 0, true) + "< Salaire minimum déjà atteint ! >" + RESET;
-        } else {
-            entreprise.charges = entreprise.charges - reduction;
-            if (entreprise.charges < 0) entreprise.charges = 0;
+
+        } else { // sinon on applique la baisse de salaires
+            entreprise.charges = entreprise.charges - reduction; // on met à jour les charges
+
+            if (entreprise.charges < 0) { // si les charges passent dans le négatif on les normalise à 0
+                entreprise.charges = 0;
+            }
             
-            String[] phrases = new String[]{
-                "< Salaires baissés. Le moral chute, la marge augmente. >",
-                "< Vous avez rogné sur la paye. Ils mangeront des pâtes. >",
-                "< Économies réalisées sur le dos des employés. Bravo. >"
-            };
+            // phrases aléatoires
+            String[] phrases = new String[]{"< Salaires baissés. Le moral chute, la marge augmente. >",
+                                            "< Vous avez rogné sur la paye. Tant pis, ls mangeront des pâtes. >",
+                                            "< Économies réalisées sur le dos des employés, les actionnaires vous félicitent ! >"};
+
             return rgb(200, 200, 0, true) + messageAleatoire(phrases) + RESET;
         }
     }
 
+    // Tests de la fonction qui baisse les salaires
     void test_baisserSalaires() {
-        Employe[] tab = new Employe[2]; 
-        tab[0] = newEmploye("A","A"); tab[0].salarie=true;
-        Entreprise entreprise = newEntreprise(tab, 1000, 30, 20);
+        Employe[] listeEmployes = initEmployes(); // on initialise une liste d'employés
+        listeEmployes[0].salarie = true; // on active un employé
+        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20); // on initialise une entreprise
+
         baisserSalaires(entreprise);
-        assertEquals(250, entreprise.charges); 
+
+        assertEquals(1, entreprise.nbEmployes);
+        assertEquals(250, entreprise.charges);
     }
 
 
-    String acheterMachine(Entreprise entreprise) {
-        if (entreprise.budget < 1000) return rgb(200, 200, 0, true) + "< Pas assez d'argent (1000$) ! >" + RESET;
-        entreprise.budget = entreprise.budget - 1000;
-        entreprise.niveauProduction = entreprise.niveauProduction + 1;
+
+    // -----------------------------------------------------------------< CHOIX DU JOUEUR: PRODUCTION >------------------------------------------------------------------
+
+    // Fonction qui gère l'amélioration de la production
+    String ameliorerProduction(Entreprise entreprise) {
+    
+        if (entreprise.budget < 1000) { // si l'entreprise ne possède pas les fonds nécessaires
+            return rgb(200, 200, 0, true) + "< Pas assez d'argent (1000$) ! >" + RESET;
+
+        } else if (entreprise.niveauProduction >= 10) { // si l'entreprise a déjà atteint le niveau max
+            return rgb(200, 200, 0, true) + "< Nous avons atteint le niveau de production maximum ! >" + RESET;
+        }
+
+        entreprise.budget = entreprise.budget - 1000; // on met à jour le budget de l'entreprise
+        entreprise.niveauProduction = entreprise.niveauProduction + 1; // on incrémente le niveau de production
         
-        String[] phrases = new String[]{
-            "< Nouvelle machine installée. Elle remplace 10 humains. >",
-            "< Investissement technologique. Skynet approche. >",
-            "< La production va s'accélérer (et le bruit aussi). >"
-        };
+        // phrases aléatoires
+        String[] phrases = new String[]{"< Nouvelle machine installée. Elle remplace 10 humains. >",
+                                        "< Investissement technologique. Skynet approche. >",
+                                        "< La production va s'accélérer (et le bruit aussi). >"};
+
         return rgb(0, 200, 0, true) + messageAleatoire(phrases) + RESET;
     }
 
-    void test_acheterMachine() {
-        Entreprise entreprise = newEntreprise(new Employe[0], 2000, 30, 20);
-        acheterMachine(entreprise);
+    // Tests de la fonction qui gère l'amélioration de la production
+    void test_ameliorerProduction() {
+        Employe[] listeEmployes = initEmployes(); // on initialise une liste d'employés
+        listeEmployes[0].salarie = true; // on active un employé
+        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20); // on initialise une entreprise
+
+        ameliorerProduction(entreprise);
+
         assertEquals(1000, entreprise.budget);
         assertEquals(2, entreprise.niveauProduction);
     }
 
+    // Fonction qui gère l'achat de contrefaçons
     String acheterContrefacon(Entreprise entreprise) {
-        if (entreprise.budget < 200) return rgb(200, 200, 0, true) + "< Pas assez d'argent (200$) ! >" + RESET;
-        entreprise.budget = entreprise.budget - 200;
-        entreprise.stocks = entreprise.stocks + 50;
+
+        if (entreprise.budget < 200) { // si l'entreprise ne dispose pas des fonds nécessaires
+            return rgb(200, 200, 0, true) + "< Vous avez besoin d'au moins 200$ ! >" + RESET;
+        }
+
+        entreprise.budget = entreprise.budget - 200; // on met à jour le budget
+        entreprise.stocks = entreprise.stocks + 50; // on ajoute les contrefaçons aux stocks
         
-        String[] phrases = new String[]{
-            "< Stock de 'Adibas' reçu. Personne ne verra la différence. >",
-            "< Made in Nulle-Part ajouté au stock. Marge maximale. >",
-            "< C'est du plastique, mais on vendra ça comme du cuir. >"
-        };
+        String[] phrases = new String[]{"< Stock de 'Adibas' reçu. Personne ne verra la différence. >",
+                                        "< Qualité minimale. Marge maximale. >",
+                                        "< C'est du plastique, mais on vendra ça comme du cuir. >"};
+
         return rgb(200, 200, 0, true) + messageAleatoire(phrases) + RESET;
     }
 
+    // Tests de la fonction d'achat de contrefaçons
     void test_acheterContrefacon() {
-        Entreprise entreprise = newEntreprise(new Employe[0], 2000, 0, 20);
+        Employe[] listeEmployes = initEmployes(); // on initialise une liste d'employés
+        listeEmployes[0].salarie = true; // on active un employé
+        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20); // on initialise une entreprise
+
         acheterContrefacon(entreprise);
+
         assertEquals(1800, entreprise.budget);
-        assertEquals(50, entreprise.stocks);
+        assertEquals(80, entreprise.stocks);
     }
 
+
+    // Fonction qui gère la prise de coke
     String snifferCoke(Entreprise entreprise) {
-        if (entreprise.budget < 450) return rgb(200, 200, 0, true) + "< Votre dealer n'accepte pas le crédit (450$). >" + RESET;
-        entreprise.budget = entreprise.budget - 450;
-        entreprise.niveauProduction = entreprise.niveauProduction + 1;
+
+        if (entreprise.budget < 450) {
+            return rgb(200, 200, 0, true) + "< Désolé, votre dealer n'accepte pas le crédit... >" + RESET;
+        }
+
+        entreprise.budget = entreprise.budget - 450; // on met à jour le budget de l'entreprise
+        entreprise.niveauProduction = entreprise.niveauProduction + 1; // on augmente le niveau de production
         
-        String[] phrases = new String[]{
-            "< Productivité boostée ! Les employés voient des couleurs bizarres. >",
-            "< Ambiance 'Loup de Wall Street' dans l'open space ! >"
-        };
+        // phrases aléatoires
+        String[] phrases = new String[]{"< Productivité boostée ! Les employés voient les sons et entendent les couleurs ! >",
+                                        "< Ambiance 'Loup de Wall Street' dans l'open space ! >",
+                                        "< La poudre blanche coule à flot ! >",
+                                        "< Les employés battent tous les records ! >"};
+
         return rgb(200, 0, 0, true) + messageAleatoire(phrases) + RESET;
     }
 
+    // Tests de la fonction de prise de coke
     void test_snifferCoke() {
-        Entreprise entreprise = newEntreprise(new Employe[0], 2000, 30, 20);
+        Employe[] listeEmployes = initEmployes(); // on initialise une liste d'employés
+        listeEmployes[0].salarie = true; // on active un employé
+        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20); // on initialise une entreprise
+
         snifferCoke(entreprise);
+
         assertEquals(1550, entreprise.budget);
         assertEquals(2, entreprise.niveauProduction);
     }
 
+
+
     // -----------------------------------------------------------------< GESTION DU JEU >------------------------------------------------------------------
 
-
-    // implémentation de la fonction finDePartie
+    // Fonction qui gère la fin de partie
     boolean finDePartie(Entreprise entreprise, Date date, int objectif) {
+
+        // si le budget de l'entreprise passe dans le négatif ou que la fin de l'année est atteinte ou le budget dépasse l'objectif
         if ((entreprise.budget <= 0) || (date.jour == 31 && date.mois == 12) || (entreprise.budget >= objectif)) {
             return true;
-        } else {
+
+        } else { // sinon le jeu continue
             return false;
         }
     }
 
+    // Tests de la fonction de fin de partie
     void test_finDePartie() {
-        Entreprise entreprise = newEntreprise(new Employe[0], -100, 0, 0);
-        assertTrue(finDePartie(entreprise, newDate(1,1), 1000));
-        entreprise.budget = 2000;
-        assertTrue(finDePartie(entreprise, newDate(31,12), 1000));
+        int objectif = 1000000; // on initialise un objectif
+
+        Date dateLambda = newDate(1,10); // on initialise une date lambda
+        Date datePerd = newDate(31,12); // on initialise une date qui termine le jeu
+
+        Entreprise entrepriseGagne = newEntreprise(new Employe[0], 1000000, 0, 0); // on initialise une entreprise qui a atteint l'objectif
+        Entreprise entrepriseLambda = newEntreprise(new Employe[0], 1000, 0, 0); // on initialise une entreprise lambda
+        Entreprise entreprisePerd = newEntreprise(new Employe[0], 0, 0, 0); // on initialise une entreprise lambda
+
+        assertTrue(finDePartie(entrepriseGagne, dateLambda, objectif));
+        assertTrue(finDePartie(entrepriseLambda, datePerd, objectif));
+        assertTrue(finDePartie(entreprisePerd, dateLambda, objectif));
     }
 
-    void saveGame(Entreprise entreprise, Date date) {
-        String[][] sauvegarde = {
-            {"Budget", "Charges", "NbEmployes", "Stocks", "PrixDeVente", "NiveauProduction", "ProductionJournaliere", "Jour", "Mois"},
-            {intToString(entreprise.budget), intToString(entreprise.charges), intToString(entreprise.nbEmployes), intToString(entreprise.stocks),
-             intToString(entreprise.prixDeVente), intToString(entreprise.niveauProduction), intToString(entreprise.productionJournaliere),
-             intToString(date.jour), intToString(date.mois)}
-        };
-        saveCSV(sauvegarde, "./extensions/config/save.csv");
+    // Fonction qui gère la sauvegarde des donnés du jeu
+    void saveGame(Entreprise entreprise, Date date, Marche marche) {
+
+        String[][] sauvegarde = {{"nbEmployes", "budget", "charges", "stocks", "prixDeVente", "niveauProduction", "productionJournalière", "demandeActuelle", "jour", "mois"},
+                                {intToString(entreprise.nbEmployes), // budget de l'entreprise
+                                 intToString(entreprise.budget), // charges
+                                 intToString(entreprise.charges), // nombre d'employés
+                                 intToString(entreprise.stocks), // stocks
+                                 intToString(entreprise.prixDeVente), // prix de vente
+                                 intToString(entreprise.niveauProduction), // niveau de production
+                                 intToString(entreprise.productionJournaliere), // production journalière
+                                 intToString(entreprise.demandeActuelle), // demande actuelle
+
+                                 intToString(date.jour), // jour
+                                 intToString(date.mois)}}; // mois
+
+        saveCSV(sauvegarde, "./extensions/config/save.csv"); // on sauvegarde dans le CSV
     }
 
+    // Fonction qui gère le chargement des donnés du jeu
     String loadGame(Entreprise entreprise, Date date) {
-        if (rowCount(save) < 2) return rgb(200, 0, 0, true) + "< Sauvegarde vide >" + RESET;
 
-        date.jour = stringToInt(getCell(save, 1, 7));
-        date.mois = stringToInt(getCell(save, 1, 8));
-
-        entreprise.budget = stringToInt(getCell(save, 1, 0));
-        entreprise.charges = stringToInt(getCell(save, 1, 1));
-        
-        int nbSaved = stringToInt(getCell(save, 1, 2));
-        for(int i=0; i<length(entreprise.listeEmployes); i++) {
-            entreprise.listeEmployes[i].salarie = false;
-            entreprise.listeEmployes[i].sousPaye = false;
+        if (rowCount(save) < 2) { // si il n'y a pas de sauvegarde
+            return rgb(200, 0, 0, true) + "< Sauvegarde vide >" + RESET;
         }
-        for(int i=0; i<nbSaved && i<length(entreprise.listeEmployes); i++) {
-            entreprise.listeEmployes[i].salarie = true;
-        }
-        entreprise.nbEmployes = nbSaved;
 
-        entreprise.stocks = stringToInt(getCell(save, 1, 3));
-        entreprise.prixDeVente = stringToInt(getCell(save, 1, 4));
-        entreprise.niveauProduction = stringToInt(getCell(save, 1, 5));
-        entreprise.productionJournaliere = stringToInt(getCell(save, 1, 6));
+        // on charge la date
+        date.jour = stringToInt(getCell(save, 1, 7)); // jour
+        date.mois = stringToInt(getCell(save, 1, 8)); // mois
+
+        // on charge les données de l'entreprise
+        entreprise.nbEmployes = stringToInt(getCell(save, 1, 0)); // nombre d'employés
+        entreprise.budget = stringToInt(getCell(save, 1, 1)); // budget
+        entreprise.charges = stringToInt(getCell(save, 1, 2)); // charges
+        entreprise.stocks = stringToInt(getCell(save, 1, 3)); // stocks
+        entreprise.prixDeVente = stringToInt(getCell(save, 1, 4)); // prix de vente
+        entreprise.niveauProduction = stringToInt(getCell(save, 1, 5)); // niveau de production
+        entreprise.productionJournaliere = stringToInt(getCell(save, 1, 5)); // production journalière
+        entreprise.demandeActuelle = stringToInt(getCell(save, 1, 5)); // demande actuelle
+
+        entreprise.listeEmployes = initEmployes(); // on restaure la liste des employés
+        for (int idx = 0; idx < length(entreprise.nbEmployes); idx ++) {
+            entreprise.listeEmployes[idx].salarie = true;
+        }
         
         return rgb(0, 200, 0, true) + "< Partie chargée ! >" + RESET;
     }
 
-    void updateEntreprise(Date date, Entreprise entreprise, Marche m) {
-        int coutMatierePremiere = 2; 
+
+    // Fonction qui met à jour l'entreprise pour simuler la semaine
+    void updateEntreprise(Date date, Entreprise entreprise, Marche marche) {
+        int coutMatierePremiere = 2; // on initialise le coût des matières premières
         
         for(int i = 0; i < 5; i++) {
-            entreprise.productionJournaliere = (int) ((entreprise.nbEmployes * 15) * (entreprise.niveauProduction + 0.5));
+            entreprise.productionJournaliere = (int) ((entreprise.nbEmployes * 15) * (entreprise.niveauProduction + 0.5)); // on met à jour la production
             
-            int productionPossible = entreprise.productionJournaliere;
-            int coutProductionJour = productionPossible * coutMatierePremiere;
-            int productionReelle = 0;
+            int productionPossible = entreprise.productionJournaliere; // on initialise la production possible
+            int coutProductionJour = productionPossible * coutMatierePremiere; // on crée le coût de la production
+            int productionReelle = 0; // on initialise la production réelle
 
-            if (entreprise.budget >= coutProductionJour) {
-                entreprise.budget = entreprise.budget - coutProductionJour;
-                productionReelle = productionPossible;
+            if (entreprise.budget >= coutProductionJour) { // si le budget permet la production
+                entreprise.budget = entreprise.budget - coutProductionJour; // on soustrait le coût de production au budget
+                productionReelle = productionPossible; // la production réelle est la production possible
 
-            } else if (entreprise.budget > 0) {
-                productionReelle = entreprise.budget / coutMatierePremiere;
-                entreprise.budget = entreprise.budget - (productionReelle * coutMatierePremiere);
+            } else if (entreprise.budget > 0) { // si le budget est supérieur à 0 mais insuffisant
+                productionReelle = entreprise.budget / coutMatierePremiere; // on ne produit que ce que l'on peut se payer
+                entreprise.budget = entreprise.budget - (productionReelle * coutMatierePremiere); // on met à jour le budget de l'entreprise
             }
-            entreprise.stocks = entreprise.stocks + productionReelle;
+            entreprise.stocks = entreprise.stocks + productionReelle; // on ajoute la production aux stocks
             
-            simulerMarche(m, entreprise);
+            simulerMarche(marche, entreprise); // on simule le marché
 
-            int demandeDuJour = entreprise.demandeActuelle / 5;
-            if(entreprise.demandeActuelle > 0 && demandeDuJour == 0) demandeDuJour = 1;
+            int demandeDuJour = entreprise.demandeActuelle / 5; // on met la demande de l'entreprise sur 5 jours
+
+            if (entreprise.demandeActuelle > 0 && demandeDuJour == 0) { // si les demandes sont à zéro, on passe la demande de l'entreprise à 1
+                demandeDuJour = 1;
+            }
             
-            int ventesDuJour = 0;
-            if (entreprise.stocks < demandeDuJour) {
-                ventesDuJour = entreprise.stocks;
-            } else {
+            int ventesDuJour = 0; // on initialise le nombre de ventes du jour
+
+            if (entreprise.stocks < demandeDuJour) { // si on ne dispose pas d'assez de stocks
+                ventesDuJour = entreprise.stocks; // on vend tout
+
+            } else { // sinon on vend la demande
                 ventesDuJour = demandeDuJour;
             }
 
-            entreprise.stocks = entreprise.stocks - ventesDuJour;
-            entreprise.budget = entreprise.budget + (ventesDuJour * entreprise.prixDeVente);
+            entreprise.stocks = entreprise.stocks - ventesDuJour; // on met à jour les stocks
+            entreprise.budget = entreprise.budget + (ventesDuJour * entreprise.prixDeVente); // on met à jour le budget
         }
 
-        entreprise.budget = entreprise.budget - entreprise.charges;
-        for (int j = 0; j < 7; j++) {
+        entreprise.budget = entreprise.budget - entreprise.charges; // on paye les charges des employés
+
+        // on cyle la date pour passer 7 jours et arriver à la semaine suivante
+        for (int jour = 0; jour < 7; jour++) {
             gestionDate(date);
         }
     }
 
+    // Tests de la fonction de mise à jour
     void test_updateEntreprise() {
-        Entreprise entreprise = newEntreprise(new Employe[0], 1000, 0, 100);
-        Marche m = newMarche(10, 100, 50);
-        Date d = newDate(1, 1);
+        Entreprise entreprise = newEntreprise(new Employe[0], 2000, 30, 20);
+        Marche marche = newMarche(15, 100, 50);
+        Date date = newDate(1, 1);
 
-        updateEntreprise(d, entreprise, m);
+        updateEntreprise(date, entreprise, marche);
 
-        assertTrue(entreprise.budget != 1000); 
+        assertTrue(entreprise.budget != 2000);
+        assertTrue(entreprise.stocks != 30);
+
+        assertTrue(date.jour == 8);
+
+        assertTrue(marche.prixDeVente != 15);
     }
 
-    // CORRECTION ICI : Ajout de l'accolade manquante
+
+    // Fonction qui genere un message à afficher sur l'écran des résultats en fonction des performances de l'entreprise
     String genererMessageFinancier(Entreprise entreprise) {
         if (entreprise.budget < 0) {
             return rgb(200, 0, 0, true) + "< La banque vous a mis dans le rouge. Ils menacent de saisir la machine à café ! >" + RESET;
@@ -715,197 +888,231 @@ class Main extends Program {
         }
     }
 
-    // ============================================================================================
-    //                                     INTERFACE (TUI)
-    // ============================================================================================
 
-    String tuiToString(Date date, Entreprise entreprise, Marche m, String pathTui, String notification) {
-        File tui = new File(pathTui);
-        String affichage = "";
-        String res = "";
-        int idx = 0;
+
+    // -----------------------------------------------------------------< GESTION DES AFFICHAGES >------------------------------------------------------------------
+
+    // Fonction qui transforme les affichages txt en String et qui y ajoute des variables
+    String tuiToString(Date date, Entreprise entreprise, Marche marche, String pathTui, String notification) {
+        File tui = new File(pathTui); // on récupère le chemin du fichier
+        String affichage = ""; // on crée la variable qui nous permet de convertir en String
+        String resultat = ""; // on initialise le résultat renvoyé après balayage et ajout des variables
+        int idx = 0; // l'indice de parcours du TUI
         
-        int[] tabVar = new int[] {
-            entreprise.budget, 
-            entreprise.charges, 
-            entreprise.nbEmployes, 
-            entreprise.stocks, 
-            entreprise.prixDeVente, 
-            entreprise.niveauProduction, 
-            entreprise.productionJournaliere * 5, 
-            m.prixDeVente,
-            entreprise.demandeActuelle 
-        };
+        // on récupère les données du marché et de l'entrerise dans un tableau de variables
+        int[] tabVar = new int[] {entreprise.budget,                    // %0
+                                  entreprise.charges,                   // %1
+                                  entreprise.nbEmployes,                // %2
+                                  entreprise.stocks,                    // %3
+                                  entreprise.prixDeVente,               // %4
+                                  entreprise.niveauProduction,          // %5
+                                  entreprise.productionJournaliere,     // %6
+                                  marche.prixDeVente,                   // %7
+                                  entreprise.demandeActuelle};          // %8
 
+        // on parcours une première fois pour récupérer les placeholders
         while (ready(tui)) affichage = affichage + readLine(tui) + '\n';
 
+        // on parcours une dexième fois le String créé en remplaçant les placeholders par les variables en utilisant l'indice du tableau
         while (idx < length(affichage)) { 
-            if (charAt(affichage, idx) == '%' && (charAt(affichage, idx +1) >= '0' && charAt(affichage, idx +1) <= '9')) { 
-                int varIndex = (int)(charAt(affichage, idx +1) - '0');
-                if (varIndex < length(tabVar)) {
-                    res = res + rgb(100, 100, 200, true) + tabVar[varIndex] + RESET;
-                } else {
-                    res = res + "ERR";
-                }
-                idx = idx + 2;
 
-            } else if (charAt(affichage, idx) == '%' && charAt(affichage, idx +1) == 'D') { 
-                res = res + rgb(100, 100, 200, true) + dateToString(date) + RESET;
-                idx = idx + 2;
+            if (charAt(affichage, idx) == '%' && (charAt(affichage, idx +1) >= '0' && charAt(affichage, idx +1) <= '9')) { // si le placeholder concerne l'entreprise ou le marche
 
-            } else if (charAt(affichage, idx) == '%' && charAt(affichage, idx +1) == 'N') { 
-                res = res + rgb(100, 100, 200, true) + notification + RESET;
-                idx = idx + 2;
+                int varIndex = (int)(charAt(affichage, idx +1) - '0'); // on initialise un indice pour le tableau
 
-            } else if (charAt(affichage, idx) == '%' && charAt(affichage, idx +1) == 'E') { 
-                res = res + rgb(150, 150, 150, true) + listeEmployesToString(entreprise.listeEmployes) + RESET;
-                idx = idx + 2;
+                resultat = resultat + rgb(100, 100, 200, true) + tabVar[varIndex] + RESET; // on ajoute la variable correspondante au String avec de la couleur
+                idx += 2; // on incrémente de 2 pour skip le placeholder
+
+            } else if (charAt(affichage, idx) == '%' && charAt(affichage, idx +1) == 'D') {  // si le placeholder concerne la date
+                resultat = resultat + rgb(100, 100, 200, true) + dateToString(date) + RESET; // on ajoute la date au format String avec de la couleur
+                idx += 2; // on incrémente de 2 pour skip le placeholder
+
+            } else if (charAt(affichage, idx) == '%' && charAt(affichage, idx +1) == 'N') { // si le placeholder concerne une notification
+                resultat = resultat + rgb(100, 100, 200, true) + notification + RESET; // on ajoute la notification avec de la couleur
+                idx += 2; // on incrémente de 2 pour skip le placeholder
+
+            } else if (charAt(affichage, idx) == '%' && charAt(affichage, idx +1) == 'E') { // si le placeholder concerne la liste des employés
+                resultat = resultat + rgb(100, 100, 200, true) + listeEmployesToString(entreprise.listeEmployes) + RESET; // on ajoute la liste au format String en couleur
+                idx += 2; // on incrémente de 2 pour skip le placeholder
 
             } else {
-                res = res + rgb(128, 128, 128, true) + charAt(affichage, idx) + RESET;
-                idx = idx + 1;
+                resultat = resultat + rgb(128, 128, 128, true) + charAt(affichage, idx) + RESET; // sinon on ajoute les caractères à la suite
+                idx ++; // on incrémente de 1
             }
         }
-        return res;
+        return resultat;
     }
 
 
     // Fonction qui permet de convertir la liste des employés en String
     String listeEmployesToString(Employe[] listeEmployes) {
-        String affichage = "";
+        String affichage = ""; // on initialise un affichage en String
 
+        // on parcours la liste des employés
         for (int idx = 0; idx < length(listeEmployes); idx++) {
             if (listeEmployes[idx].salarie) { // si lemployé est salarié
-                affichage = affichage + " ▸ " + listeEmployes[idx -1].prenom + " " + listeEmployes[idx -1].nom + '\n';
+                affichage = affichage + " ▸ " + listeEmployes[idx].prenom + " " + listeEmployes[idx].nom + '\n'; // on l'ajoute à la liste avec un formatage
             }
         }
         return affichage;
     }
 
+
+    // Fonction qui permet de clear le terminal et son historique
     void clear() {
         print("\033[H\033[2J\033[3J");
     }
 
+
+
     // -----------------------------------------------------------------< ALGORITHME PRINCIPAL >------------------------------------------------------------------
 
     void algorithm() {
-        String choix = "";
-        Date date = newDate(1,1);
-        String notification = "";
+        String choix = ""; // on initialise la variable qui va contenir les choix du joueur en String pour gérer le contrôle de saisie
+        String notification = ""; // on initialise la variable qui contiendra les notifications à afficher sur les écrans de jeu
         
-        Employe[] listeEmployes = initEmployes();
-        if (length(listeEmployes) > 0) listeEmployes[0].salarie = true;
+        // initialisation des 3 classes
+        Date date = newDate(1,1); // on initialise la date au premier janvier
 
-        int budget = 5000;
-        int charges = 300;
-        int stocks = 0;
-        int prix = 10;
-        int prod = 1;
+        Employe[] listeEmployes = initEmployes(); // on initialise la liste des employés
+        listeEmployes[0].salarie = true; // on ajoute le premier employé
 
-        if (rowCount(config) >= 2) {
-             budget = stringToInt(getCell(config, 1, 0));
-             stocks = stringToInt(getCell(config, 1, 1)); 
-             prix = stringToInt(getCell(config, 1, 2));   
-        }
-
-        Entreprise entreprise = newEntreprise(listeEmployes, budget, stocks, prix);
+        // on initialise l'entreprise depuis le csv de config
+        Entreprise entreprise = newEntreprise(listeEmployes,
+                                              stringToInt(getCell(config, 1, 0)),
+                                              stringToInt(getCell(config, 1, 1)),
+                                              stringToInt(getCell(config, 1, 2)));
         
-        int prixMarche = 15;
-        int stockMarche = 50000;
-        int demandeMarche = 25;
-        if (rowCount(marcheCSV) >= 2) {
-            prixMarche = stringToInt(getCell(marcheCSV, 1, 0));
-            stockMarche = stringToInt(getCell(marcheCSV, 1, 1));
-            demandeMarche = stringToInt(getCell(marcheCSV, 1, 2));
-        }
-        Marche marche = newMarche(prixMarche, stockMarche, demandeMarche);
+        // on initialise le marche depuis le csv de config
+        Marche marche = newMarche(stringToInt(getCell(config, 4, 0)),
+                                  stringToInt(getCell(config, 4, 1)),
+                                  stringToInt(getCell(config, 4, 2)));
 
-        int objectif = 1000000;
-        if (rowCount(config) >= 5) objectif = stringToInt(getCell(config, 4, 0));
+        // on initialise l'objectif financier à atteindre depuis le csv de config
+        int objectif = stringToInt(getCell(config, 7, 0));
 
-        int budgetDebutSemaine = entreprise.budget;
+        int budgetDebutSemaine = entreprise.budget; // on initialise le budget de début de semaine sur le budget de l'entreprise pour la première semaine
 
-        while (!finDePartie(entreprise, date, objectif) && !equals(choix, "stop")) { 
-            clear();
-            println(tuiToString(date, entreprise, marche, pathAccueil, notification));
-            choix = readString();
+
+
+        // -----------< Boucle de jeu >-----------
+
+        while (!finDePartie(entreprise, date, objectif) && !equals(choix, "stop")) { // tant que la fon de partie n'est pas activée ou que l'on ne saisit pas le mot stop (sert uniquement pour la possibilité de quitter le jeu)
+            clear(); // on nettoie le terminal
+            println(tuiToString(date, entreprise, marche, pathAccueil, notification)); // on affiche l'accueil du jeu
+            choix = readString(); // on propose au joueur de choisir entre jouer, importer une sauvegarde, lire les règles du jeu ou quitter
             
-            if (equals(choix, "1")) { 
-                
-                budgetDebutSemaine = entreprise.budget;
+            if (equals(choix, "1")) { // si le joueur choisit de lancer la partie 
 
-                while (!equals(choix, "4")){ 
+                while (!equals(choix, "4")){ // tant que le joueur ne choisit pas de quitter
                     clear();
-                    println(tuiToString(date, entreprise, marche, pathTabDeBord, notification));
-                    choix = readString();
+                    println(tuiToString(date, entreprise, marche, pathTabDeBord, notification)); // on affiche le tableau de bord
+                    choix = readString(); // on propose au joueur de choisir entre gérer les employés, gérer la production, gérer le marché et valider la semaine
 
-                    if (equals(choix, "1")) { 
-                        while (!equals(choix, "5")){ 
+                    if (equals(choix, "1")) { // si le joueur choisit de gérer les employés
+
+                        while (!equals(choix, "5")){ // tant que le joueur ne choisit pas de revenir au menu précédent
                             clear();
-                            println(tuiToString(date, entreprise, marche, pathEmployes, notification));
-                            choix = readString();
+                            println(tuiToString(date, entreprise, marche, pathEmployes, notification)); // on affiche l'écran de gestion des employés
+                            choix = readString(); // on propose au joueur de choisir entre recruter, virer, sous payer, baisser les salaires et revenir au menu précédent
 
-                            if (equals(choix, "1")) notification = recruterEmploye(entreprise, budgetDebutSemaine);
-                            else if (equals(choix, "2")) notification = virerEmploye(entreprise);
-                            else if (equals(choix, "3")) notification = exploiterEmploye(entreprise, budgetDebutSemaine);
-                            else if (equals(choix, "4")) notification = baisserSalaires(entreprise);
-                        }
-                        choix = "-1"; notification = "";
+                            if (equals(choix, "1")) {
+                                notification = recruterEmploye(entreprise, budgetDebutSemaine); // on recrute un employé
 
-                    } else if (equals(choix, "2")) { 
-                        while (!equals(choix, "4")) {
+                            } else if (equals(choix, "2")) {
+                                notification = virerEmploye(entreprise); // on vire un employé
+
+                            } else if (equals(choix, "3")) {
+                                notification = exploiterEmploye(entreprise, budgetDebutSemaine); // on sous paye un nouvel employé
+
+                            } else if (equals(choix, "4")) {
+                                notification = baisserSalaires(entreprise); // on baisse les salaires
+                            }
+                        } choix = "-1"; notification = ""; // on revient en arrière
+                          notification = ""; // on clear les notifications
+
+
+                    } else if (equals(choix, "2")) { // si le joueur choisit de gérer la production
+
+                        while (!equals(choix, "4")) { // tant que le joueur ne choisit pas de revenir au menu précédent
                             clear();
-                            println(tuiToString(date, entreprise, marche, pathProduction, notification));
-                            choix = readString();
+                            println(tuiToString(date, entreprise, marche, pathProduction, notification)); // on affiche l'écran de production
+                            choix = readString(); // on propose au joueur de choisir entre améliorer la prod, acheter des contrefaçons, passer les employés sous coke ou revenir en arrière
 
-                            if (equals(choix, "1")) notification = acheterMachine(entreprise);
-                            else if (equals(choix, "2")) notification = acheterContrefacon(entreprise);
-                            else if (equals(choix, "3")) notification = snifferCoke(entreprise);
-                        }
-                        choix = "-1"; notification = "";
+                            if (equals(choix, "1")) {
+                                notification = ameliorerProduction(entreprise); // on améliore la prod
 
-                    } else if (equals(choix, "3")) { 
-                        while (!equals(choix, "5")) {
+                            } else if (equals(choix, "2")) {
+                                notification = acheterContrefacon(entreprise); // on achete des contrefaçons
+
+                            } else if (equals(choix, "3")) {
+                                notification = snifferCoke(entreprise); // on fait sniffer de la coke aux employés
+                            }
+                        } choix = "-1"; // on revient en arrière
+                          notification = ""; // on clear les notifications
+
+
+                    } else if (equals(choix, "3")) {  // si le joueur choisit de gérer le marche
+
+                        while (!equals(choix, "5")) { // tant que le joueur ne choisit pas de revenir au menu précédent
                             clear();
-                            println(tuiToString(date, entreprise, marche, pathMarche, notification));
-                            choix = readString();
+                            println(tuiToString(date, entreprise, marche, pathMarche, notification)); // on affiche l'écran de gestion du marché
+                            choix = readString(); // on propose au joueur de monter les prix de 1$, 5$, baisser de 1$, 5$
                             
-                            if (equals(choix, "1")) notification = augmenterPrix(entreprise, 1);
-                            else if (equals(choix, "2")) notification = baisserPrix(entreprise, 1);
-                            else if (equals(choix, "3")) notification = augmenterPrix(entreprise, 5);
-                            else if (equals(choix, "4")) notification = baisserPrix(entreprise, 5);
-                         }
-                         choix = "-1"; notification = "";
+                            if (equals(choix, "1")) {
+                                notification = augmenterPrix(entreprise, 1); // on augmente les prix de 1$
 
-                    } else if (equals(choix, "4")) { 
-                        updateEntreprise(date, entreprise, marche);
-                        budgetDebutSemaine = entreprise.budget;
-                        notification = genererMessageFinancier(entreprise);
-                        saveGame(entreprise, date);
+                            }else if (equals(choix, "2")) {
+                                notification = augmenterPrix(entreprise, 5); // on augmente les prix de 5$
 
-                        while (!equals(choix, "1")){ 
+                            }else if (equals(choix, "3")) {
+                                notification = baisserPrix(entreprise, 1); // on augmente les prix de 1$
+
+                            }else if (equals(choix, "4")) {
+                                notification = baisserPrix(entreprise, 5); // on augmente les prix de 5$
+
+                            }
+                         } choix = "-1"; // on revient en arrière
+                           notification = ""; // on clear les notifications
+
+
+                    } else if (equals(choix, "4")) { // si le joueur choisit de valider la semaine
+
+                        updateEntreprise(date, entreprise, marche); // on met à jour les stats de l'entreprise
+                        budgetDebutSemaine = entreprise.budget; // on met à jour le budget de la semaine
+
+                        notification = genererMessageFinancier(entreprise); // on affiche un message sur les performances de l'entreprise
+
+                        saveGame(entreprise, date, marche); // on sauvegarde la partie
+
+                        while (!equals(choix, "1")){  // tant que le joueur ne choisit pas de passer à la semaine suivante
                             clear();
-                            println(tuiToString(date, entreprise, marche, pathResultats, notification));
+                            println(tuiToString(date, entreprise, marche, pathResultats, notification)); // on affiche l'écran des résultats
                             choix = readString();
-                        }
-                        choix = "1"; notification = "";
+
+                        } choix = "1";
+                          notification = "";
                     }
                 } choix = "1";
                 
-            } else if (equals(choix, "2")) { 
-                notification = loadGame(entreprise, date);
-                budgetDebutSemaine = entreprise.budget;
+            } else if (equals(choix, "2")) { // si le joueur a choisi de charger sa partie
+
+                notification = loadGame(entreprise, date); // on affiche un message et on charge la partie
+                budgetDebutSemaine = entreprise.budget; // on met à jour le budget hebdomadaire de l'entreprise
                 choix = "1";
 
-            } else if (equals(choix, "3")) { 
-                while (!equals(choix, "1")) {
+            } else if (equals(choix, "3")) { // si le joueur affiche les règles du jeu
+
+                while (!equals(choix, "1")) { // tant que le joueur ne revient pas en arrière
                     clear();
-                    println(tuiToString(date, entreprise, marche, pathButDuJeu, notification));
+                    println(tuiToString(date, entreprise, marche, pathButDuJeu, notification)); // on affiche les règles du jeu
                     choix = readString();
-                }
-                choix = "-1"; notification = "";
-            } else {
-                choix = "stop";
+
+                } choix = "-1";
+                  notification = "";
+
+            } else { // si le joueur choisit de quitter le jeu
+                choix = "stop"; // on met le choix à stop pour arrêter la boucle
             }
         }
     }

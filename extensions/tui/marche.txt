@@ -19,8 +19,8 @@
 
 ┌──────────────────────────────────────────────── ACTIONS POSSIBLES ──────────────────────────────────────────────────┐
   [1] ▸  Augmenter le prix                                                                       ▲ Prix unitaire +1$
-  [2] ▸  Baisser le prix                                                                         ▼ Prix unitaire -1$
-  [3] ▸  Augmenter le prix                                                                       ▲ Prix unitaire +5$
+  [2] ▸  Augmenter le prix                                                                       ▲ Prix unitaire +5$
+  [3] ▸  Baisser le prix                                                                         ▼ Prix unitaire -1$
   [4] ▸  Baisser le prix                                                                         ▼ Prix unitaire -5$
 └─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 

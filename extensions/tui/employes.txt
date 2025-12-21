@@ -24,7 +24,7 @@
   [1] ▸  Recruter un employé                                                              ▲ Production | -300$/semaine
   [2] ▸  Virer un employé                                                                 ▼ Production | -300$/semaine
   [3] ▸  Sous payer un nouvel employé                                                     ▲ Production | -100$/semaine
-  [4] ▸  Baisser les salaires                                                                            -100$/employé
+  [4] ▸  Baisser les salaires                                                                            -50$/employé
 └───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
 [5] ▸  Retour

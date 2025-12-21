@@ -1,2 +1,2 @@
-Budget,Charges,NbEmployes,Stocks,PrixDeVente,NiveauProduction,ProductionJournaliere,Jour,Mois
-7510,300,1,0,17,1,22,22,1
+nbEmployes,budget,charges,stocks,prixDeVente,niveauProduction,productionJournalière,demandeActuelle,jour,mois
+4,22597,100,6908,23,5,330,216,26,3
