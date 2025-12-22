@@ -783,8 +783,8 @@ class Main extends Program {
         }
 
         // on charge la date
-        date.jour = stringToInt(getCell(save, 1, 7)); // jour
-        date.mois = stringToInt(getCell(save, 1, 8)); // mois
+        date.jour = stringToInt(getCell(save, 1, 8)); // jour
+        date.mois = stringToInt(getCell(save, 1, 9)); // mois
 
         // on charge les données de l'entreprise
         entreprise.nbEmployes = stringToInt(getCell(save, 1, 0)); // nombre d'employés
@@ -797,7 +797,7 @@ class Main extends Program {
         entreprise.demandeActuelle = stringToInt(getCell(save, 1, 5)); // demande actuelle
 
         entreprise.listeEmployes = initEmployes(); // on restaure la liste des employés
-        for (int idx = 0; idx < length(entreprise.nbEmployes); idx ++) {
+        for (int idx = 0; idx < entreprise.nbEmployes; idx ++) {
             entreprise.listeEmployes[idx].salarie = true;
         }
         
@@ -1004,7 +1004,7 @@ class Main extends Program {
             
             if (equals(choix, "1")) { // si le joueur choisit de lancer la partie 
 
-                while (!equals(choix, "4")){ // tant que le joueur ne choisit pas de quitter
+                while (!equals(choix, "5")){ // tant que le joueur ne choisit pas de quitter
                     clear();
                     println(tuiToString(date, entreprise, marche, pathTabDeBord, notification)); // on affiche le tableau de bord
                     choix = readString(); // on propose au joueur de choisir entre gérer les employés, gérer la production, gérer le marché et valider la semaine

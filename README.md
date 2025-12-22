@@ -1,6 +1,12 @@
 # About the game
 *Humouristic terminal-based game about capitalism*
 
+**V2.8 Stable**
+
+- Fixed saving issue
+- Fixed the game loop bug
+
+
 
 **V2.7 Stable**
 
