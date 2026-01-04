@@ -1085,6 +1085,8 @@ class Main extends Program {
 
                         saveGame(entreprise, date, marche); // on sauvegarde la partie
 
+                        finDePartie(entreprise, date, objectif) // on vérifie si le jeu est gagné/perdu
+
                         while (!equals(choix, "1")){  // tant que le joueur ne choisit pas de passer à la semaine suivante
                             clear();
                             println(tuiToString(date, entreprise, marche, pathResultats, notification)); // on affiche l'écran des résultats
