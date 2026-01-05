@@ -1,6 +1,12 @@
 # About the game
 *Humouristic terminal-based game about capitalism*
 
+**V2.8 Stable**
+
+- Fixed saving issue
+- Fixed the game loop bug
+
+
 
 **V2.7 Stable**
 
@@ -71,6 +77,7 @@
 
 *Other stuff to do*
 - ~~Create an Employee type to add more depth to the gameplay~~
+- Set xx/objective
 - Choices have an impact on the employees (can be sick/die/quit the job)
 - Add the ability to choose whether or not to declare revenues
 - Add an external file with random events
