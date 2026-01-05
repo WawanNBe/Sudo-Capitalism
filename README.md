@@ -67,17 +67,16 @@
 *Listed in order of priority*
 
 *Most important features*
-- Externalize the phrases in the choices
-- Put the market config in the config.csv
+- ~~Put the market config in the config.csv~~
 - Save properly the employee's list
 - ~~Add the ability to save the current game~~
 - ~~Create a function do manage the end of the game using booleans~~
 - ~~Complete the results TUI to display the changes from the previous week~~
 - ~~Externalize the objectives to win the game~~
 
-*Other stuff to do*
+*Other stuff to maybe do*
 - ~~Create an Employee type to add more depth to the gameplay~~
-- Set xx/objective
+- ~~Set xx/objective~~
 - Choices have an impact on the employees (can be sick/die/quit the job)
 - Add the ability to choose whether or not to declare revenues
 - Add an external file with random events

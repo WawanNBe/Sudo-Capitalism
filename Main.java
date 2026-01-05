@@ -893,7 +893,7 @@ class Main extends Program {
     // -----------------------------------------------------------------< GESTION DES AFFICHAGES >------------------------------------------------------------------
 
     // Fonction qui transforme les affichages txt en String et qui y ajoute des variables
-    String tuiToString(Date date, Entreprise entreprise, Marche marche, String pathTui, String notification) {
+    String tuiToString(Date date, Entreprise entreprise, Marche marche, String pathTui, String notification, int objectif) {
         File tui = new File(pathTui); // on récupère le chemin du fichier
         String affichage = ""; // on crée la variable qui nous permet de convertir en String
         String resultat = ""; // on initialise le résultat renvoyé après balayage et ajout des variables
@@ -933,6 +933,10 @@ class Main extends Program {
 
             } else if (charAt(affichage, idx) == '%' && charAt(affichage, idx +1) == 'E') { // si le placeholder concerne la liste des employés
                 resultat = resultat + rgb(100, 100, 200, true) + listeEmployesToString(entreprise.listeEmployes) + RESET; // on ajoute la liste au format String en couleur
+                idx += 2; // on incrémente de 2 pour skip le placeholder
+
+            } else if (charAt(affichage, idx) == '%' && charAt(affichage, idx +1) == 'O') { // si le placeholder concerne la liste des employés
+                resultat = resultat + rgb(100, 100, 200, true) + objectif + RESET; // on ajoute la liste au format String en couleur
                 idx += 2; // on incrémente de 2 pour skip le placeholder
 
             } else {
@@ -999,21 +1003,21 @@ class Main extends Program {
 
         while (!finDePartie(entreprise, date, objectif) && !equals(choix, "stop")) { // tant que la fon de partie n'est pas activée ou que l'on ne saisit pas le mot stop (sert uniquement pour la possibilité de quitter le jeu)
             clear(); // on nettoie le terminal
-            println(tuiToString(date, entreprise, marche, pathAccueil, notification)); // on affiche l'accueil du jeu
+            println(tuiToString(date, entreprise, marche, pathAccueil, notification, objectif)); // on affiche l'accueil du jeu
             choix = readString(); // on propose au joueur de choisir entre jouer, importer une sauvegarde, lire les règles du jeu ou quitter
             
             if (equals(choix, "1")) { // si le joueur choisit de lancer la partie 
 
                 while (!equals(choix, "5")){ // tant que le joueur ne choisit pas de quitter
                     clear();
-                    println(tuiToString(date, entreprise, marche, pathTabDeBord, notification)); // on affiche le tableau de bord
+                    println(tuiToString(date, entreprise, marche, pathTabDeBord, notification, objectif)); // on affiche le tableau de bord
                     choix = readString(); // on propose au joueur de choisir entre gérer les employés, gérer la production, gérer le marché et valider la semaine
 
                     if (equals(choix, "1")) { // si le joueur choisit de gérer les employés
 
                         while (!equals(choix, "5")){ // tant que le joueur ne choisit pas de revenir au menu précédent
                             clear();
-                            println(tuiToString(date, entreprise, marche, pathEmployes, notification)); // on affiche l'écran de gestion des employés
+                            println(tuiToString(date, entreprise, marche, pathEmployes, notification, objectif)); // on affiche l'écran de gestion des employés
                             choix = readString(); // on propose au joueur de choisir entre recruter, virer, sous payer, baisser les salaires et revenir au menu précédent
 
                             if (equals(choix, "1")) {
@@ -1036,7 +1040,7 @@ class Main extends Program {
 
                         while (!equals(choix, "4")) { // tant que le joueur ne choisit pas de revenir au menu précédent
                             clear();
-                            println(tuiToString(date, entreprise, marche, pathProduction, notification)); // on affiche l'écran de production
+                            println(tuiToString(date, entreprise, marche, pathProduction, notification, objectif)); // on affiche l'écran de production
                             choix = readString(); // on propose au joueur de choisir entre améliorer la prod, acheter des contrefaçons, passer les employés sous coke ou revenir en arrière
 
                             if (equals(choix, "1")) {
@@ -1056,7 +1060,7 @@ class Main extends Program {
 
                         while (!equals(choix, "5")) { // tant que le joueur ne choisit pas de revenir au menu précédent
                             clear();
-                            println(tuiToString(date, entreprise, marche, pathMarche, notification)); // on affiche l'écran de gestion du marché
+                            println(tuiToString(date, entreprise, marche, pathMarche, notification, objectif)); // on affiche l'écran de gestion du marché
                             choix = readString(); // on propose au joueur de monter les prix de 1$, 5$, baisser de 1$, 5$
                             
                             if (equals(choix, "1")) {
@@ -1085,11 +1089,11 @@ class Main extends Program {
 
                         saveGame(entreprise, date, marche); // on sauvegarde la partie
 
-                        finDePartie(entreprise, date, objectif) // on vérifie si le jeu est gagné/perdu
+                        finDePartie(entreprise, date, objectif); // on vérifie si le jeu est gagné/perdu
 
                         while (!equals(choix, "1")){  // tant que le joueur ne choisit pas de passer à la semaine suivante
                             clear();
-                            println(tuiToString(date, entreprise, marche, pathResultats, notification)); // on affiche l'écran des résultats
+                            println(tuiToString(date, entreprise, marche, pathResultats, notification, objectif)); // on affiche l'écran des résultats
                             choix = readString();
 
                         } choix = "1";
@@ -1107,7 +1111,7 @@ class Main extends Program {
 
                 while (!equals(choix, "1")) { // tant que le joueur ne revient pas en arrière
                     clear();
-                    println(tuiToString(date, entreprise, marche, pathButDuJeu, notification)); // on affiche les règles du jeu
+                    println(tuiToString(date, entreprise, marche, pathButDuJeu, notification, objectif)); // on affiche les règles du jeu
                     choix = readString();
 
                 } choix = "-1";
