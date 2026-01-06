@@ -1,6 +1,13 @@
 # About the game
 *Humouristic terminal-based game about capitalism*
 
+**V2.9 Stable**
+
+- Started to implement the ethic stuff
+- Bug fixes
+
+
+
 **V2.8 Stable**
 
 - Fixed saving issue

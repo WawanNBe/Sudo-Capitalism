@@ -10,4 +10,6 @@ class Entreprise{
     int niveauProduction; // par défaut la production peut etre améliorée jusqu'au niveau 10
     int productionJournaliere;
     int demandeActuelle;
+
+    int scoreEthique; // le score d'éthique du joueur à 0 au début, en négatif ou positif selon ses choix
 }
