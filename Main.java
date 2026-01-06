@@ -368,7 +368,7 @@ class Main extends Program {
                                         "< Les clients n'y verront que du feu nan ? >",
                                         "< C'est l'inflation, ça choquera personne >"};
 
-        return rgb(0, 200, 0, true) + messageAleatoire(phrases) + RESET;
+        return "\u001B[3m" + rgb(100, 100, 200, true) + messageAleatoire(phrases) + RESET;
     }
 
     // Tests de la fonction qui augmente les prix
@@ -396,7 +396,7 @@ class Main extends Program {
                                             "< + " + montant + "$ ?? Sérieux ? Et la marge alors ! >",
                                             "< Euh... c'est pas ça qui va payer les vacances aux Bahamas >"};
 
-            return rgb(200, 200, 0, true) + messageAleatoire(phrases) + RESET;
+            return "\u001B[3m" + rgb(100, 100, 200, true) + messageAleatoire(phrases) + RESET;
         }
         
         entreprise.prixDeVente = entreprise.prixDeVente - montant; // sinon on actualise juste le prix
@@ -405,7 +405,7 @@ class Main extends Program {
                                         "< C'est les soldes. Émeute dans le rayon 4. >",
                                         "< Dumping commercial activé. >"};
 
-        return rgb(200, 0, 0, true) + messageAleatoire(phrases) + RESET;
+        return "\u001B[3m" + rgb(100, 100, 200, true) + messageAleatoire(phrases) + RESET;
     }
 
     void test_baisserPrix() {
@@ -428,10 +428,10 @@ class Main extends Program {
         int chargesFutures = entreprise.charges + SALAIRE_STANDARD; // on fait une prévision des charges pour voir si le budget le permet
 
         if (chargesFutures * 2 > budgetDebutSemaine) { // les charges futures ne doivent pas dépasser 50% du budget au début de la semaine
-            return rgb(200, 0, 0, true) + "< Trésorerie insuffisante ! Si on embauche quelqu'un de plus, on est dans le rouge la semaine prochaine ! >" + RESET;
+            return "\u001B[3m" + rgb(100, 100, 200, true) + "< Trésorerie insuffisante ! Si on embauche quelqu'un de plus, on est dans le rouge la semaine prochaine ! >" + RESET;
 
         } else if (entreprise.budget < COUT_RECRUTEMENT) { // on vérifie que l'on dispose des fonds nécéssaires au recrutement
-            return rgb(200, 200, 0, true) + "< Fonds insuffisants pour embaucher un nouvel employé ! >" + RESET;
+            return "\u001B[3m" + rgb(100, 100, 200, true) + "< Fonds insuffisants pour embaucher un nouvel employé ! >" + RESET;
         }
 
         // si le recrutement est possible
@@ -457,10 +457,10 @@ class Main extends Program {
                                             "< Nouvelle recrue : " + entreprise.listeEmployes[idx].prenom + ". Espérance de vie dans la boîte : 3 mois. >",
                                             "< " + entreprise.listeEmployes[idx].prenom + " a signé. Il n'a pas lu les petites lignes. >"};
 
-            return rgb(0, 200, 0, true) + messageAleatoire(phrases) + RESET;
+            return "\u001B[3m" + rgb(100, 100, 200, true) + messageAleatoire(phrases) + RESET;
 
         } else { // si il n'y a plus de candidats disponibles
-            return rgb(200, 200, 0, true) + "< Le marché du travail est vide ! >" + RESET;
+            return "\u001B[3m" + rgb(100, 100, 200, true) + "< Le marché du travail est vide ! >" + RESET;
         }
     }
 
@@ -481,10 +481,10 @@ class Main extends Program {
     String virerEmploye(Entreprise entreprise) {
 
         if (entreprise.nbEmployes <= 1) { // si il ne reste qu'un seul employé
-            return rgb(200, 200, 0, true) + "< Vous ne pouvez pas virer le dernier employé ! >" + RESET;
+            return "\u001B[3m" + rgb(100, 100, 200, true) + "< Vous ne pouvez pas virer le dernier employé ! >" + RESET;
 
         } else if (entreprise.budget < COUT_LICENCIEMENT) { // si l'entreprise ne dispose pas d'assez de fonds pour payer le licenciement
-            return rgb(200, 200, 0, true) + "< Pas assez d'argent pour payer les indemnités (" + COUT_LICENCIEMENT + "$) ! >" + RESET;
+            return "\u001B[3m" + rgb(100, 100, 200, true) + "< Pas assez d'argent pour payer les indemnités (" + COUT_LICENCIEMENT + "$) ! >" + RESET;
         }
 
         // si le licenciement est possible
@@ -526,7 +526,7 @@ class Main extends Program {
                                             "< " + entreprise.listeEmployes[idx].prenom + " nous quitte. On a gardé son stylo. >",
                                             "< " + entreprise.listeEmployes[idx].prenom + " n'a pas tenu le rythme'. >"};
 
-            return rgb(200, 0, 0, true) + messageAleatoire(phrases) + RESET;
+            return "\u001B[3m" + rgb(100, 100, 200, true) + messageAleatoire(phrases) + RESET;
         }
         return "Erreur";
     }
@@ -551,10 +551,10 @@ class Main extends Program {
         int chargesFutures = entreprise.charges + SALAIRE_EXPLOITE; // on simule si l'entreprise possède les fonds nécessaires
 
         if (chargesFutures * 2 > budgetDebutSemaine) { // si l'entreprise ne possède pas assez
-             return rgb(200, 100, 0, true) + "< Trésorerie trop fragile pour recruter ! >" + RESET;
+             return "\u001B[3m" + rgb(100, 100, 200, true) + "< Trésorerie trop fragile pour recruter ! >" + RESET;
 
         } else if (entreprise.budget < COUT_CORRUPTION) { // si l'entreprise ne possède pas assez de fonds pour corrompre les RH
-            return rgb(200, 200, 0, true) + "< Fonds insuffisants (" + COUT_CORRUPTION + "$) pour corrompre les RH ! >" + RESET;
+            return "\u001B[3m" + rgb(100, 100, 200, true) + "< Fonds insuffisants (" + COUT_CORRUPTION + "$) pour corrompre les RH ! >" + RESET;
         } 
         
         // si on peut sous payer un employé
@@ -584,10 +584,10 @@ class Main extends Program {
                                             "< Main d'oeuvre pas chère trouvée (" + entreprise.listeEmployes[idx].prenom + "). >",
                                             "< Vous avez graiddé la patte des RH.. >"};
 
-            return rgb(200, 0, 0, true) + messageAleatoire(phrases) + RESET;
+            return "\u001B[3m" + rgb(100, 100, 200, true) + messageAleatoire(phrases) + RESET;
 
         } else {
-            return "< Personne n'est disponible sur le marché du travail >";
+            return "\u001B[3m" + rgb(100, 100, 200, true) + "< Personne n'est disponible sur le marché du travail >";
         }
     }
 
@@ -609,7 +609,7 @@ class Main extends Program {
         int reduction = 50 * entreprise.nbEmployes; // on baisse les salaires de tous les employés de 50$
 
         if (entreprise.charges <= 50 * entreprise.nbEmployes) { // si on a déjà atteint le salaire minimal par employé
-            return rgb(200, 200, 0, true) + "< Salaire minimum déjà atteint ! >" + RESET;
+            return "\u001B[3m" + rgb(100, 100, 200, true) + "< Salaire minimum déjà atteint ! >" + RESET;
 
         } else { // sinon on applique la baisse de salaires
             entreprise.charges = entreprise.charges - reduction; // on met à jour les charges
@@ -624,7 +624,7 @@ class Main extends Program {
                                             "< Vous avez rogné sur la paye. Tant pis, ls mangeront des pâtes. >",
                                             "< Économies réalisées sur le dos des employés, les actionnaires vous félicitent ! >"};
 
-            return rgb(200, 200, 0, true) + messageAleatoire(phrases) + RESET;
+            return "\u001B[3m" + rgb(100, 100, 200, true) + messageAleatoire(phrases) + RESET;
         }
     }
 
@@ -648,10 +648,10 @@ class Main extends Program {
     String ameliorerProduction(Entreprise entreprise) {
     
         if (entreprise.budget < 1000) { // si l'entreprise ne possède pas les fonds nécessaires
-            return rgb(200, 200, 0, true) + "< Pas assez d'argent (1000$) ! >" + RESET;
+            return "\u001B[3m" + rgb(100, 100, 200, true) + "< Pas assez d'argent (1000$) ! >" + RESET;
 
         } else if (entreprise.niveauProduction >= 10) { // si l'entreprise a déjà atteint le niveau max
-            return rgb(200, 200, 0, true) + "< Nous avons atteint le niveau de production maximum ! >" + RESET;
+            return "\u001B[3m" + rgb(100, 100, 200, true) + "< Nous avons atteint le niveau de production maximum ! >" + RESET;
         }
 
         entreprise.budget = entreprise.budget - 1000; // on met à jour le budget de l'entreprise
@@ -662,7 +662,7 @@ class Main extends Program {
                                         "< Investissement technologique. Skynet approche. >",
                                         "< La production va s'accélérer (et le bruit aussi). >"};
 
-        return rgb(0, 200, 0, true) + messageAleatoire(phrases) + RESET;
+        return "\u001B[3m" + rgb(100, 100, 200, true) + messageAleatoire(phrases) + RESET;
     }
 
     // Tests de la fonction qui gère l'amélioration de la production
@@ -681,7 +681,7 @@ class Main extends Program {
     String acheterContrefacon(Entreprise entreprise) {
 
         if (entreprise.budget < 200) { // si l'entreprise ne dispose pas des fonds nécessaires
-            return rgb(200, 200, 0, true) + "< Vous avez besoin d'au moins 200$ ! >" + RESET;
+            return "\u001B[3m" + rgb(100, 100, 200, true) + "< Vous avez besoin d'au moins 200$ ! >" + RESET;
         }
 
         entreprise.budget = entreprise.budget - 200; // on met à jour le budget
@@ -692,7 +692,7 @@ class Main extends Program {
                                         "< Qualité minimale. Marge maximale. >",
                                         "< C'est du plastique, mais on vendra ça comme du cuir. >"};
 
-        return rgb(200, 200, 0, true) + messageAleatoire(phrases) + RESET;
+        return "\u001B[3m" + rgb(100, 100, 200, true) + messageAleatoire(phrases) + RESET;
     }
 
     // Tests de la fonction d'achat de contrefaçons
@@ -712,7 +712,7 @@ class Main extends Program {
     String snifferCoke(Entreprise entreprise) {
 
         if (entreprise.budget < 450) {
-            return rgb(200, 200, 0, true) + "< Désolé, votre dealer n'accepte pas le crédit... >" + RESET;
+            return "\u001B[3m" + rgb(100, 100, 200, true) + "< Désolé, votre dealer n'accepte pas le crédit... >" + RESET;
         }
 
         entreprise.budget = entreprise.budget - 450; // on met à jour le budget de l'entreprise
@@ -725,7 +725,7 @@ class Main extends Program {
                                         "< La poudre blanche coule à flot ! >",
                                         "< Les employés battent tous les records ! >"};
 
-        return rgb(200, 0, 0, true) + messageAleatoire(phrases) + RESET;
+        return "\u001B[3m" + rgb(100, 100, 200, true) + messageAleatoire(phrases) + RESET;
     }
 
     // Tests de la fonction de prise de coke
@@ -795,7 +795,7 @@ class Main extends Program {
     String loadGame(Entreprise entreprise, Date date) {
 
         if (rowCount(save) < 2) { // si il n'y a pas de sauvegarde
-            return rgb(200, 0, 0, true) + "< Sauvegarde vide >" + RESET;
+            return "\u001B[3m" + rgb(200, 0, 0, true) + "< Sauvegarde vide >" + RESET;
         }
 
         // on charge la date
@@ -817,7 +817,7 @@ class Main extends Program {
             entreprise.listeEmployes[idx].salarie = true;
         }
         
-        return rgb(0, 200, 0, true) + "< Partie chargée ! >" + RESET;
+        return "\u001B[3m" + rgb(100, 100, 200, true) + "< Partie chargée ! >" + RESET;
     }
 
 
@@ -891,16 +891,16 @@ class Main extends Program {
     // Fonction qui genere un message à afficher sur l'écran des résultats en fonction des performances de l'entreprise
     String genererMessageFinancier(Entreprise entreprise) {
         if (entreprise.budget < 0) {
-            return rgb(200, 0, 0, true) + "< La banque vous a mis dans le rouge. Ils menacent de saisir la machine à café ! >" + RESET;
+            return "\u001B[3m" + rgb(100, 100, 200, true) + "< La banque vous a mis dans le rouge. Ils menacent de saisir la machine à café ! >" + RESET;
 
         } else if (entreprise.budget > 7500  && entreprise.budget < 15000) {
-            return rgb(0, 200, 0, true) + "< Semaine largement rentable. Votre banquier vous envoie des bisous. >" + RESET;
+            return "\u001B[3m" + rgb(100, 100, 200, true) + "< Semaine largement rentable. Votre banquier vous envoie des bisous. >" + RESET;
 
         } else if (entreprise.budget > 15000 ) {
-            return rgb(0, 200, 0, true) + "< L'argent coule à flots. Les actionnaires demandent du champagne ! >" + RESET;
+            return "\u001B[3m" + rgb(100, 100, 200, true) + "< L'argent coule à flots. Les actionnaires demandent du champagne ! >" + RESET;
 
         } else {
-            return rgb(0, 200, 0, true) + "< Semaine terminée. Les comptes sont stables. >" + RESET;
+            return "\u001B[3m" + rgb(100, 100, 200, true) + "< Semaine terminée. Les comptes sont stables. >" + RESET;
         }
     }
 
@@ -951,12 +951,12 @@ class Main extends Program {
                 resultat = resultat + rgb(100, 100, 200, true) + listeEmployesToString(entreprise.listeEmployes) + RESET; // on ajoute la liste au format String en couleur
                 idx += 2; // on incrémente de 2 pour skip le placeholder
 
-            } else if (charAt(affichage, idx) == '%' && charAt(affichage, idx +1) == 'O') { // si le placeholder concerne la liste des employés
+            } else if (charAt(affichage, idx) == '%' && charAt(affichage, idx +1) == 'O') { // si le placeholder concerne l'objectif
                 resultat = resultat + rgb(100, 100, 200, true) + objectif + RESET; // on ajoute la liste au format String en couleur
                 idx += 2; // on incrémente de 2 pour skip le placeholder
 
             } else {
-                resultat = resultat + rgb(128, 128, 128, true) + charAt(affichage, idx) + RESET; // sinon on ajoute les caractères à la suite
+                resultat = resultat + rgb(190, 0, 50, true) + charAt(affichage, idx) + RESET; // sinon on ajoute les caractères à la suite
                 idx ++; // on incrémente de 1
             }
         }
@@ -971,7 +971,7 @@ class Main extends Program {
         // on parcours la liste des employés
         for (int idx = 0; idx < length(listeEmployes); idx++) {
             if (listeEmployes[idx].salarie) { // si lemployé est salarié
-                affichage = affichage + " ▸ " + listeEmployes[idx].prenom + " " + listeEmployes[idx].nom + '\n'; // on l'ajoute à la liste avec un formatage
+                affichage = affichage + " ► " + listeEmployes[idx].prenom + " " + listeEmployes[idx].nom + '\n'; // on l'ajoute à la liste avec un formatage
             }
         }
         return affichage;
@@ -1120,6 +1120,7 @@ class Main extends Program {
             } else if (equals(choix, "2")) { // si le joueur a choisi de charger sa partie
 
                 notification = loadGame(entreprise, date); // on affiche un message et on charge la partie
+                sleep(100);
                 budgetDebutSemaine = entreprise.budget; // on met à jour le budget hebdomadaire de l'entreprise
                 choix = "1";
 
