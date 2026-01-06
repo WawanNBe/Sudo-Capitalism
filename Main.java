@@ -228,6 +228,8 @@ class Main extends Program {
         entreprise.productionJournaliere = (int) ((entreprise.nbEmployes * 15) * (entreprise.niveauProduction + 0.5));
         entreprise.demandeActuelle = 150; // demande par défaut TODO: verif que c'est ok
 
+        entreprise.scoreEthique = 0; // par défaut l'entreprise possède une éthique de 0, elle varie entre positif et négatif au cours du jeu
+
         return entreprise;
     }
 
@@ -481,6 +483,8 @@ class Main extends Program {
         // si le licenciement est possible
         int idx = -1;
 
+        entreprise.scoreEthique -= 1; // on baisse le score d'éthique
+
         for(int i = length(entreprise.listeEmployes) - 1; i >= 0; i--) { // on cherche le dernier employé embauché
             if (entreprise.listeEmployes[i].salarie) {
                 idx = i;
@@ -549,6 +553,8 @@ class Main extends Program {
         // si on peut sous payer un employé
         int idx = -1;
 
+        entreprise.scoreEthique -= 1; // on baisse le score d'éthique
+
         for(int i = 0; i < length(entreprise.listeEmployes); i++) { // on cherche le premier employé non salarié
 
             if (!entreprise.listeEmployes[i].salarie) {
@@ -600,6 +606,7 @@ class Main extends Program {
 
         } else { // sinon on applique la baisse de salaires
             entreprise.charges = entreprise.charges - reduction; // on met à jour les charges
+            entreprise.scoreEthique -= 1; // on baisse le score d'éthique
 
             if (entreprise.charges < 0) { // si les charges passent dans le négatif on les normalise à 0
                 entreprise.charges = 0;
@@ -702,6 +709,7 @@ class Main extends Program {
 
         entreprise.budget = entreprise.budget - 450; // on met à jour le budget de l'entreprise
         entreprise.niveauProduction = entreprise.niveauProduction + 1; // on augmente le niveau de production
+        entreprise.scoreEthique -= 1; // on baisse le score d'éthique
         
         // phrases aléatoires
         String[] phrases = new String[]{"< Productivité boostée ! Les employés voient les sons et entendent les couleurs ! >",
