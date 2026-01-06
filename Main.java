@@ -277,43 +277,50 @@ class Main extends Program {
 
     // Fonction qui calcule l'impact de l'entreprise sur la demande
     int calculerImpactDemande(double diffPourcentage, int demandeDeBase) {
-        int impact = 0; // impact du prix sur la demande
+    int impact = 0; // impact du prix sur la demande
 
-        if (diffPourcentage >= 0) { // si le prix est supérieur ou égal à celui du marché
 
-            if (diffPourcentage > 75) { // si le prix de vente est supérieur à 1.75x celui du marché
-                impact = -(int)(demandeDeBase * 0.98);
+    // --- PRIX PLUS CHER ---
+    if (diffPourcentage >= 0) { // si le prix est supérieur ou égal à celui du marché
 
-            } else if (diffPourcentage > 50) { // si le prix de vente est supérieur à 1.50x celui du marché
-                impact = -(int)(demandeDeBase * 0.65);
+        if (diffPourcentage >= 150) { // si le prix de vente est supérieur à 2.5x de celui du marché
+            impact = -(int)(demandeDeBase * 1); 
 
-            } else if (diffPourcentage > 25) { // si le prix de vente est supérieur à 1.25x celui du marché
-                impact = -(int)(demandeDeBase * 0.4);
+        } else if (diffPourcentage > 70) { // si le prix de vente est supérieur à 1.75x de celui du marché
+            impact = -(int)(demandeDeBase * 0.98);
 
-            } else if (diffPourcentage > 10) { // si le prix de vente est supérieur à 1.10x celui du marché
-                impact = -(int)(demandeDeBase * 0.15);
+        } else if (diffPourcentage > 45) { // si le prix de vente est supérieur à 1.50x de celui du marché
+            impact = -(int)(demandeDeBase * 0.65);
 
-            } else { // sinon le prix n'impacte pas la demande
-                impact = 0;
-            }
+        } else if (diffPourcentage > 25) { // si le prix de vente est supérieur à 1.25x de celui du marché
+            impact = -(int)(demandeDeBase * 0.3);
 
-        } else { // si le prix est inférieur à celui du marché
+        } else if (diffPourcentage > 10) { // si le prix de vente est supérieur à 1.10x de celui du marché
+            impact = -(int)(demandeDeBase * 0.1);
 
-            if (diffPourcentage < -75) { // si le prix est inférieur ou égal à 0.25x de celui du marché
-                impact = -demandeDeBase;
+        } else { // sinon le prix n'impacte pas la demande
+            impact = 0;
+        }
+    
+    // --- PRIX MOINS CHER ---
 
-            } else if (diffPourcentage < -50) { // si le prix est inférieur ou égal à 0.50x de celui du marché
-                impact = (int)(demandeDeBase * 0.80);
+    } else { // si le prix est inférieur à celui du marché
 
-            } else if (diffPourcentage < -25) { // si le prix est inférieur ou égal à 0.75x de celui du marché
-                impact = (int)(demandeDeBase * 0.50);
-            }
-            else if (diffPourcentage < -10) { // si le prix est inférieur ou égal à 0.90x de celui du marché
-                impact = (int)(demandeDeBase * 0.20);
+        if (diffPourcentage < -75) { // si le prix est inférieur ou égal à 0.25x de celui du marché
+            impact = -demandeDeBase;
 
-            } else { // si le prix est légèrement inférieur à celui du marché
-                impact = (int)(demandeDeBase * 0.05);
-            }
+        } else if (diffPourcentage < -50) { // si le prix est inférieur ou égal à 0.50x de celui du marché
+            impact = (int)(demandeDeBase * 0.80);
+
+        } else if (diffPourcentage < -25) { // si le prix est inférieur ou égal à 0.75x de celui du marché
+            impact = (int)(demandeDeBase * 0.50);
+
+        } else if (diffPourcentage < -10) { // si le prix est inférieur ou égal à 0.90x de celui du marché
+            impact = (int)(demandeDeBase * 0.20);
+
+        } else { // si le prix est légèrement inférieur à celui du marché
+            impact = (int)(demandeDeBase * 0.05);
+        }
         }
         return impact;
     }
@@ -679,6 +686,7 @@ class Main extends Program {
 
         entreprise.budget = entreprise.budget - 200; // on met à jour le budget
         entreprise.stocks = entreprise.stocks + 50; // on ajoute les contrefaçons aux stocks
+        entreprise.scoreEthique -= 1; // on baisse le score d'éthique
         
         String[] phrases = new String[]{"< Stock de 'Adibas' reçu. Personne ne verra la différence. >",
                                         "< Qualité minimale. Marge maximale. >",
