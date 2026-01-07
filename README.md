@@ -1,6 +1,13 @@
 # About the game
 *Humouristic terminal-based game about capitalism*
 
+**V3.0 Stable**
+
+- An event has been added to the game with all its mechanics
+- Various bugs fixed
+
+
+
 **V2.9 Stable**
 
 - Started to implement the ethic stuff

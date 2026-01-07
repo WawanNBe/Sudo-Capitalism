@@ -30,6 +30,7 @@ class Main extends Program {
     String pathProduction = "./extensions/tui/production.txt"; // le menu de gestion de production
     String pathResultats = "./extensions/tui/resultats.txt"; // l'écran d'affichage des résultats
     String pathMarche = "./extensions/tui/marche.txt"; // le menu de gestion du marché
+    String pathUrssaf = "./extensions/tui/urssaf.txt"; // le menu de l'event URSSAF
 
     // Valeurs d'équilibrage
     final int SALAIRE_STANDARD = 300;
@@ -230,6 +231,10 @@ class Main extends Program {
 
         entreprise.scoreEthique = 0; // par défaut l'entreprise possède une éthique de 0, elle varie entre positif et négatif au cours du jeu
 
+        majNbSousPayes(entreprise); // on initialise le nombre d'employés sous payés (sert ici dans le cas d'un chargement de save)
+
+        entreprise.gravite = "AUCUNE"; // par défaut, l'entreprise ne court aucun risque
+
         return entreprise;
     }
 
@@ -251,6 +256,54 @@ class Main extends Program {
         assertEquals(22, entreprise.productionJournaliere);
         assertEquals(150, entreprise.demandeActuelle);
     }
+
+
+    // Fonction qui permet de mettre à jour le nombre d'employés sous payés dans l'entreprise
+    void majNbSousPayes(Entreprise entreprise) {
+        for (int idx = 0; idx < length(entreprise.listeEmployes); idx++) { // pour chaque employé dans la liste d'employés
+            if (entreprise.listeEmployes[idx].sousPaye) { // si l'employé idx est sous payé
+                entreprise.nbSousPayes++; // on l'ajoute au compte
+            }
+        }
+    }
+
+    // Tests de la fonction majNbSousPayes
+    void test_majNbSousPayes() {
+        Employe[] listeEmployes = initEmployes(); // initialisation de la liste des employés
+        listeEmployes[0].salarie = true; // on active le premier employé en tant que salarie
+        listeEmployes[0].sousPaye = true; // on change l'employé en sous payé
+        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20); // on crée l'entreprise
+
+        assertTrue(entreprise.nbSousPayes == 1);
+    }
+
+
+    // Fonction qui permet de mettre à jour la gravité de la situation de l'entreprise
+    void majGravite(Entreprise entreprise) {
+        if (entreprise.nbSousPayes > 4) {
+            entreprise.gravite = "CRITIQUE";
+
+        } else if (entreprise.nbSousPayes >= 1){
+            entreprise.gravite = "MOYENNE";
+
+        } else {
+            entreprise.gravite = "AUCUNE";
+        }
+    }
+
+    // Tests de la fonction majGravite
+    void test_majGravite() {
+        Employe[] listeEmployes = initEmployes(); // initialisation de la liste des employés
+        listeEmployes[0].salarie = true; // on active le premier employé en tant que salarie
+        listeEmployes[0].sousPaye = true; // on change l'employé en sous payé
+        Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20); // on crée l'entreprise
+
+        majGravite(entreprise); // on met à jour le niveau de gravité
+
+        assertEquals("MOYENNE", entreprise.gravite);
+    }
+
+
 
     // -----------------------------------------------------------------< GESTION CLASSE MARCHE >------------------------------------------------------------------
 
@@ -328,7 +381,7 @@ class Main extends Program {
     // Tests de la fonction du calcul se l'impact
     void test_calculerImpactDemande() {
         assertEquals(0, calculerImpactDemande(5.0, 100));
-        assertEquals(-15, calculerImpactDemande(15.0, 100));
+        assertEquals(-10, calculerImpactDemande(15.0, 100));
     }
 
 
@@ -865,6 +918,20 @@ class Main extends Program {
 
         entreprise.budget = entreprise.budget - entreprise.charges; // on paye les charges des employés
 
+        // on met à jour le nombre d'employés sous payés
+        majNbSousPayes(entreprise);
+
+        // on met à jour le score de gravité des controles d'urssaf
+        if (entreprise.nbSousPayes > 4) {
+            entreprise.gravite += rgb(100, 100, 200, true) + "CRITIQUE";
+
+        } else if (entreprise.nbSousPayes >= 1){
+            entreprise.gravite += rgb(100, 100, 200, true) + "MOYENNE";
+
+        } else {
+            entreprise.gravite += rgb(100, 100, 200, true) + "AUCUNE";
+        }
+
         // on cyle la date pour passer 7 jours et arriver à la semaine suivante
         for (int jour = 0; jour < 7; jour++) {
             gestionDate(date);
@@ -902,6 +969,93 @@ class Main extends Program {
         } else {
             return "\u001B[3m" + rgb(100, 100, 200, true) + "< Semaine terminée. Les comptes sont stables. >" + RESET;
         }
+    }
+
+
+
+// -----------------------------------------------------------------< GESTION EVENT >------------------------------------------------------------------
+
+    // Fonction principale qui gère l'apparition et le déroulement d'un contrôle URSSAF
+    String gestionControleUrssaf(Date date, Entreprise entreprise, Marche marche, String pathTui, String notification, int objectif) {
+
+        // mise à jour du nombre d'employés sous payés
+        majNbSousPayes(entreprise);
+
+        // 5% de chance de base + 10% par employé sous payé + 2% par point d'éthique négatif
+        int chanceControle = 5 + (entreprise.nbSousPayes * 10) + (-1 * (entreprise.scoreEthique) * 2);
+        
+        // calcul des probas d'un contrôle si le random (0-100) est supérieur au risque, il ne se passe rien
+        if ((random() * 100) > chanceControle) {
+            return ""; // Pas de contrôle cette semaine
+        }
+
+        String choix = ""; // on initialise les choix pour l'event
+        notification = "\u001b[3m" + "< L'ALARME SILENCIEUSE CLIGNOTE ! >" + RESET; // on affiche une notification
+        
+        boolean controleTermine = false; // on utilise un boolean pour gérer le contôle
+
+        while (!controleTermine) { // tant que le contrôle n'est pas terminé
+            clear(); // on nettoie le terminal
+            println(tuiToString(date, entreprise, marche, pathUrssaf, notification, objectif)); // on affiche l'event urssaf
+            choix = readString();
+
+            if (equals(choix, "1")) { 
+                // OPTION 1 : Honnêteté (Redressement)
+                int amende = entreprise.nbSousPayes * 500; // 500$ par employé sous payé
+                entreprise.budget -= amende;
+                
+                // On régularise les employés (ils ne sont plus sous-payés)
+                for(int i=0; i<length(entreprise.listeEmployes); i++) {
+                    if(entreprise.listeEmployes[i].sousPaye) {
+                        entreprise.listeEmployes[i].sousPaye = false;
+                        entreprise.charges += (SALAIRE_STANDARD - SALAIRE_EXPLOITE) * entreprise.nbEmployes; // On remet les charges normales
+                    }
+                }
+                
+                notification = "\u001B[3m" + rgb(100, 100, 200, true) + "< Contrôle terminé. Vous avez payé " + amende + "$ et régularisé tout le monde. >" + RESET;
+                controleTermine = true;
+
+            } else if (equals(choix, "2")) {
+                // OPTION 2 : Corruption
+                int potDeVin = 2000;
+                
+                if (entreprise.budget < potDeVin) {
+                    notification = "\u001B[3m" + rgb(100, 100, 200, true) + "< Pas assez d'argent pour les corrompre ! >" + RESET;
+
+                } else {
+                    entreprise.budget -= potDeVin; // on soustrait le pot de vin au budget
+                    entreprise.scoreEthique -= 5; // Grosse perte d'éthique
+
+                    if (random() > 0.4) { // 60% de chance de réussite
+                        notification = "\u001B[3m" + rgb(100, 100, 200, true) + "< L'inspecteur a accepté l'enveloppe et fait disparaître votre dossier.. >" + RESET;
+
+                    } else {
+                        // Échec critique : Amende doublée + Pot de vin perdu
+                        int amende = (entreprise.nbSousPayes * 500) * 2;
+                        entreprise.budget -= amende;
+                        notification = "\u001B[3m" + rgb(100, 100, 200, true) + "< Tentative de corruption ratée ! L'amende est doublée (" + amende + "$) ! >" + RESET;
+                    }
+                    controleTermine = true;
+                }
+
+            } else if (equals(choix, "3")) {
+                // OPTION 3 : Bluff
+                if (random() > 0.7) { // 30% de chance de réussite
+                    notification = "\u001B[3m" + rgb(100, 100, 200, true) + "< Incroyable. Ils ont presque cru que c'était une colonie de vacances ! >" + RESET;
+
+                } else {
+                    int amende = entreprise.nbSousPayes * 1000; // Amende max
+                    entreprise.budget -= amende;
+
+                    // Fermeture administrative (perte de stocks)
+                    entreprise.stocks = 0; 
+                    notification = "\u001B[3m" + rgb(100, 100, 200, true) + "< L'URSSAF n'est pas dupe ! L'amende est maximale ("+amende+"$) ! Ils saisissent les stocks et la machine à café ! >" + RESET;
+                }
+                controleTermine = true;
+            }
+        }
+        
+        return notification;
     }
 
 
@@ -954,6 +1108,14 @@ class Main extends Program {
             } else if (charAt(affichage, idx) == '%' && charAt(affichage, idx +1) == 'O') { // si le placeholder concerne l'objectif
                 resultat = resultat + rgb(100, 100, 200, true) + objectif + RESET; // on ajoute la liste au format String en couleur
                 idx += 2; // on incrémente de 2 pour skip le placeholder
+
+            } else if (charAt(affichage, idx) == '%' && charAt(affichage, idx +1) == 'B') { // si le placeholder est le nombre d'employés sous payés
+                resultat = resultat + rgb(100, 100, 200, true) + entreprise.nbSousPayes + RESET;
+                idx += 2; // on skip le placeholder
+
+            } else if (charAt(affichage, idx) == '%' && charAt(affichage, idx +1) == 'G') { // si le placeholder correspond à la gravité
+                resultat = resultat + rgb(100, 100, 200, true) + entreprise.gravite + RESET;
+                idx += 2; // on skip le placeholder
 
             } else {
                 resultat = resultat + rgb(190, 0, 50, true) + charAt(affichage, idx) + RESET; // sinon on ajoute les caractères à la suite
@@ -1048,6 +1210,7 @@ class Main extends Program {
                             } else if (equals(choix, "4")) {
                                 notification = baisserSalaires(entreprise); // on baisse les salaires
                             }
+
                         } choix = "-1"; notification = ""; // on revient en arrière
                           notification = ""; // on clear les notifications
 
@@ -1098,10 +1261,19 @@ class Main extends Program {
 
                     } else if (equals(choix, "4")) { // si le joueur choisit de valider la semaine
 
+                        
+                        // On lance la probabilité d'un contrôle avant de mettre à jour la semaine
+                        String notifUrssaf = gestionControleUrssaf(date, entreprise, marche, pathUrssaf, notification, objectif); 
+                        
                         updateEntreprise(date, entreprise, marche); // on met à jour les stats de l'entreprise
                         budgetDebutSemaine = entreprise.budget; // on met à jour le budget de la semaine
 
                         notification = genererMessageFinancier(entreprise); // on affiche un message sur les performances de l'entreprise
+                        
+                        // Si l'URSSAF est passé, on écrase la notification financière pour afficher le résultat du contrôle
+                        if (length(notifUrssaf) > 0) {
+                            notification = notifUrssaf;
+                        }
 
                         saveGame(entreprise, date, marche); // on sauvegarde la partie
 

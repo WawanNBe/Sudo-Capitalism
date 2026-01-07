@@ -12,4 +12,6 @@ class Entreprise{
     int demandeActuelle;
 
     int scoreEthique; // le score d'éthique du joueur à 0 au début, en négatif ou positif selon ses choix
+    int nbSousPayes; // le nombre d'employés sous payés
+    String gravite; // la gravité lors des contrôles d'urssaf
 }
