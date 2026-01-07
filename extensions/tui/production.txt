@@ -21,13 +21,16 @@
 
 ┌──────────────────────────────────────────────── DONNEES OPERATIONNELLES ──────────────────────────────────────────────┐
   Employés      ► %2
+  Niv. Production ► %5/10
+
+  Beoins        ► %8/semaine à %4 $ l’unité
   Stocks        ► %3 unités
   Production journalière  ► %6 unités
 └───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
 
 ┌──────────────────────────────────────────────── ACTIONS POSSIBLES ────────────────────────────────────────────────────┐
-  [1] ►  Améliorer la production                                                                 ▲ Production | -1000$
+  [1] ►  Améliorer la production                                                                ▲ Production | -1000$
   [2] ►  Acheter des contrefaçons en chine                                                           ▲ stocks | -200$
   [3] ►  Passer les employés sous coke                                                           ▲ Production | -450$
 └───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘

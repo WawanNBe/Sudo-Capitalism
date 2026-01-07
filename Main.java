@@ -31,6 +31,9 @@ class Main extends Program {
     String pathResultats = "./extensions/tui/resultats.txt"; // l'écran d'affichage des résultats
     String pathMarche = "./extensions/tui/marche.txt"; // le menu de gestion du marché
     String pathUrssaf = "./extensions/tui/urssaf.txt"; // le menu de l'event URSSAF
+    String pathFaillite = "./extensions/tui/faillite.txt"; // le menu de l'event URSSAF
+    String pathFinAnnee = "./extensions/tui/finAnnee.txt"; // le menu de l'event URSSAF
+    String pathObjectifAtteint = "./extensions/tui/objectifAtteint.txt"; // le menu de l'event URSSAF
 
     // Valeurs d'équilibrage
     final int SALAIRE_STANDARD = 300;
@@ -38,6 +41,8 @@ class Main extends Program {
     final int COUT_RECRUTEMENT = 300;
     final int COUT_LICENCIEMENT = 500;
     final int COUT_CORRUPTION = 50;
+
+
 
     // ------------------------------------------------< IMPLEMENTATION DES FONCTIONS SUIVIES DE LEURS TESTS RESPECTIFS >---------------------------------------
 
@@ -88,6 +93,7 @@ class Main extends Program {
         assertEquals(1, premierJanvier.mois);
     }
 
+
     // Conversion d'une date donnée en paramètres en String
     String dateToString(Date date) {
         // on utilise un tableau de mois qui utilise l'indice le numéro de mois -1 comme indice
@@ -105,6 +111,7 @@ class Main extends Program {
         assertEquals("2 Decembre", dateToString(deuxDecembre));
     }
 
+
     // Fonction qui permet la gestion de la date en fonction du jour/mois
     void gestionDate(Date date) {
         int[] mois = new int[] {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}; // les nombres de jours pour chaque mois
@@ -118,7 +125,7 @@ class Main extends Program {
         }
     }
 
-    // tests de la fonction gestionDate
+    // Tests de la fonction gestionDate
     void test_gestionDate() {
         // test du passage d'un jour normal
         Date premierJanvier = newDate(1,1);
@@ -134,6 +141,8 @@ class Main extends Program {
         assertEquals(1, changementMois.jour);
         assertEquals(2, changementMois.mois);
     }
+
+
 
     // -----------------------------------------------------------------< GESTION CLASSE EMPLOYE >------------------------------------------------------------------
 
@@ -162,6 +171,7 @@ class Main extends Program {
 
         assertTrue(employe.nivSatisfaction >= 1 && employe.nivSatisfaction <= 10);
     }
+
 
     // Fonction initEmployesSalaries qui initialise la liste des employés
     Employe[] initEmployes() {
@@ -226,8 +236,8 @@ class Main extends Program {
         entreprise.prixDeVente = prixDeVente; // prix de vente initial
 
         entreprise.niveauProduction = 1; // par défaut l'entreprise commence au niveau 1
-        entreprise.productionJournaliere = (int) ((entreprise.nbEmployes * 15) * (entreprise.niveauProduction + 0.5));
-        entreprise.demandeActuelle = 150; // demande par défaut TODO: verif que c'est ok
+        entreprise.productionJournaliere = (int) ((entreprise.nbEmployes * 12) * (entreprise.niveauProduction + 0.5));
+        entreprise.demandeActuelle = 150; // demande par défaut
 
         entreprise.scoreEthique = 0; // par défaut l'entreprise possède une éthique de 0, elle varie entre positif et négatif au cours du jeu
 
@@ -332,55 +342,55 @@ class Main extends Program {
 
     // Fonction qui calcule l'impact de l'entreprise sur la demande
     int calculerImpactDemande(double diffPourcentage, int demandeDeBase) {
-    int impact = 0; // impact du prix sur la demande
+        int impact = 0; // impact du prix sur la demande
 
 
-    // --- PRIX PLUS CHER ---
-    if (diffPourcentage >= 0) { // si le prix est supérieur ou égal à celui du marché
+        // --- PRIX PLUS CHER ---
+        if (diffPourcentage >= 0) { // si le prix est supérieur ou égal à celui du marché
 
-        if (diffPourcentage >= 150) { // si le prix de vente est supérieur à 2.5x de celui du marché
-            impact = -(int)(demandeDeBase * 1); 
+            if (diffPourcentage >= 150) { // si le prix de vente est supérieur à 2.5x de celui du marché
+                impact = -(int)(demandeDeBase * 1); 
 
-        } else if (diffPourcentage > 70) { // si le prix de vente est supérieur à 1.75x de celui du marché
-            impact = -(int)(demandeDeBase * 0.98);
+            } else if (diffPourcentage > 70) { // si le prix de vente est supérieur à 1.75x de celui du marché
+                impact = -(int)(demandeDeBase * 0.98);
 
-        } else if (diffPourcentage > 45) { // si le prix de vente est supérieur à 1.50x de celui du marché
-            impact = -(int)(demandeDeBase * 0.65);
+            } else if (diffPourcentage > 45) { // si le prix de vente est supérieur à 1.50x de celui du marché
+                impact = -(int)(demandeDeBase * 0.65);
 
-        } else if (diffPourcentage > 25) { // si le prix de vente est supérieur à 1.25x de celui du marché
-            impact = -(int)(demandeDeBase * 0.3);
+            } else if (diffPourcentage > 25) { // si le prix de vente est supérieur à 1.25x de celui du marché
+                impact = -(int)(demandeDeBase * 0.3);
 
-        } else if (diffPourcentage > 10) { // si le prix de vente est supérieur à 1.10x de celui du marché
-            impact = -(int)(demandeDeBase * 0.1);
+            } else if (diffPourcentage > 10) { // si le prix de vente est supérieur à 1.10x de celui du marché
+                impact = -(int)(demandeDeBase * 0.1);
 
-        } else { // sinon le prix n'impacte pas la demande
-            impact = 0;
-        }
-    
-    // --- PRIX MOINS CHER ---
+            } else { // sinon le prix n'impacte pas la demande
+                impact = 0;
+            }
+        
+        // --- PRIX MOINS CHER ---
 
-    } else { // si le prix est inférieur à celui du marché
+        } else { // si le prix est inférieur à celui du marché
 
-        if (diffPourcentage < -75) { // si le prix est inférieur ou égal à 0.25x de celui du marché
-            impact = -demandeDeBase;
+            if (diffPourcentage < -75) { // si le prix est inférieur ou égal à 0.25x de celui du marché
+                impact = -demandeDeBase;
 
-        } else if (diffPourcentage < -50) { // si le prix est inférieur ou égal à 0.50x de celui du marché
-            impact = (int)(demandeDeBase * 0.80);
+            } else if (diffPourcentage < -50) { // si le prix est inférieur ou égal à 0.50x de celui du marché
+                impact = (int)(demandeDeBase * 0.80);
 
-        } else if (diffPourcentage < -25) { // si le prix est inférieur ou égal à 0.75x de celui du marché
-            impact = (int)(demandeDeBase * 0.50);
+            } else if (diffPourcentage < -25) { // si le prix est inférieur ou égal à 0.75x de celui du marché
+                impact = (int)(demandeDeBase * 0.50);
 
-        } else if (diffPourcentage < -10) { // si le prix est inférieur ou égal à 0.90x de celui du marché
-            impact = (int)(demandeDeBase * 0.20);
+            } else if (diffPourcentage < -10) { // si le prix est inférieur ou égal à 0.90x de celui du marché
+                impact = (int)(demandeDeBase * 0.20);
 
-        } else { // si le prix est légèrement inférieur à celui du marché
-            impact = (int)(demandeDeBase * 0.05);
-        }
+            } else { // si le prix est légèrement inférieur à celui du marché
+                impact = (int)(demandeDeBase * 0.05);
+            }
         }
         return impact;
     }
 
-    // Tests de la fonction du calcul se l'impact
+    // Tests de la fonction du calcule l'impact
     void test_calculerImpactDemande() {
         assertEquals(0, calculerImpactDemande(5.0, 100));
         assertEquals(-10, calculerImpactDemande(15.0, 100));
@@ -448,7 +458,7 @@ class Main extends Program {
             // phrases retournées aléatoirement
             String[] phrases = new String[]{"< Prix minimum atteint (1$) ! On ne donne pas encore les produits ! >",
                                             "< Eh c'est pas la charité non plus ici ! >",
-                                            "< + " + montant + "$ ?? Sérieux ? Et la marge alors ! >",
+                                            "< Sérieux ? Un prix si bas ?? Et la marge alors ! >",
                                             "< Euh... c'est pas ça qui va payer les vacances aux Bahamas >"};
 
             return "\u001B[3m" + rgb(100, 100, 200, true) + messageAleatoire(phrases) + RESET;
@@ -531,6 +541,7 @@ class Main extends Program {
         assertEquals(600, entreprise.charges);
         assertEquals(1700, entreprise.budget);
     }
+
 
     // Fonction qui gère le licenciement
     String virerEmploye(Entreprise entreprise) {
@@ -659,6 +670,7 @@ class Main extends Program {
         assertEquals(1950, entreprise.budget);
     }
 
+
     // Fonction qui gère la baisse des salaires
     String baisserSalaires(Entreprise entreprise) {
         int reduction = 50 * entreprise.nbEmployes; // on baisse les salaires de tous les employés de 50$
@@ -731,6 +743,7 @@ class Main extends Program {
         assertEquals(1000, entreprise.budget);
         assertEquals(2, entreprise.niveauProduction);
     }
+
 
     // Fonction qui gère l'achat de contrefaçons
     String acheterContrefacon(Entreprise entreprise) {
@@ -827,6 +840,7 @@ class Main extends Program {
         assertTrue(finDePartie(entreprisePerd, dateLambda, objectif));
     }
 
+
     // Fonction qui gère la sauvegarde des donnés du jeu
     void saveGame(Entreprise entreprise, Date date, Marche marche) {
 
@@ -852,6 +866,7 @@ class Main extends Program {
 
         saveCSV(sauvegarde, "./extensions/config/save.csv"); // on sauvegarde dans le CSV
     }
+
 
     // Fonction qui gère le chargement des donnés du jeu
     String loadGame(Entreprise entreprise, Date date, Marche marche) {
@@ -900,7 +915,7 @@ class Main extends Program {
         int coutMatierePremiere = 2; // on initialise le coût des matières premières
         
         for(int i = 0; i < 5; i++) {
-            entreprise.productionJournaliere = (int) ((entreprise.nbEmployes * 15) * (entreprise.niveauProduction + 0.5)); // on met à jour la production
+            entreprise.productionJournaliere = (int) ((entreprise.nbEmployes * 12) * (entreprise.niveauProduction + 0.5)); // on met à jour la production
             
             int productionPossible = entreprise.productionJournaliere; // on initialise la production possible
             int coutProductionJour = productionPossible * coutMatierePremiere; // on crée le coût de la production
@@ -999,7 +1014,7 @@ class Main extends Program {
         int chanceControle = 5 + (entreprise.nbSousPayes * 10) + (-1 * (entreprise.scoreEthique) * 2);
         
         // calcul des probas d'un contrôle si le random (0-100) est supérieur au risque, il ne se passe rien
-        if (entreprise.nbSousPayes == 0 || ((random() * 100) > chanceControle)) {
+        if (entreprise.nbSousPayes == 0 || ((random() * 100) > chanceControle) || entreprise.charges > SALAIRE_STANDARD * entreprise.nbEmployes) {
             return ""; // Pas de contrôle cette semaine
         }
 
@@ -1193,14 +1208,14 @@ class Main extends Program {
 
         // -----------< Boucle de jeu >-----------
 
-        while (!finDePartie(entreprise, date, objectif) && !equals(choix, "stop")) { // tant que la fon de partie n'est pas activée ou que l'on ne saisit pas le mot stop (sert uniquement pour la possibilité de quitter le jeu)
+        while (!equals(choix, "stop")) { // tant que la fon de partie n'est pas activée ou que l'on ne saisit pas le mot stop (sert uniquement pour la possibilité de quitter le jeu)
             clear(); // on nettoie le terminal
             println(tuiToString(date, entreprise, marche, pathAccueil, notification, objectif)); // on affiche l'accueil du jeu
             choix = readString(); // on propose au joueur de choisir entre jouer, importer une sauvegarde, lire les règles du jeu ou quitter
             
             if (equals(choix, "1")) { // si le joueur choisit de lancer la partie 
 
-                while (!equals(choix, "5")){ // tant que le joueur ne choisit pas de quitter
+                while (!finDePartie(entreprise, date, objectif) && !equals(choix, "5")){ // tant que le joueur ne choisit pas de quitter
                     clear();
                     println(tuiToString(date, entreprise, marche, pathTabDeBord, notification, objectif)); // on affiche le tableau de bord
                     choix = readString(); // on propose au joueur de choisir entre gérer les employés, gérer la production, gérer le marché et valider la semaine
@@ -1302,6 +1317,28 @@ class Main extends Program {
                           notification = "";
                     }
                 } choix = "1";
+
+                // si la partie est terminée (cela évite de tout comparer si le jeu est terminé)
+                if (finDePartie(entreprise, date, objectif)) {
+
+                    while (!equals(choix, "0")) {
+                        if (entreprise.budget <= 0) { // si l'entreprise fait faillite
+                            clear();
+                            println(tuiToString(date, entreprise, marche, pathFaillite, notification, objectif)); // on affiche le TUI de faillite
+                            choix = readString(); // on propose au joueur de revenir au menu
+
+                        } else if (date.jour == 31 && date.mois == 12) { // si la fin de l'année est atteinte
+                            clear();
+                            println(tuiToString(date, entreprise, marche, pathFinAnnee, notification, objectif)); // on affiche le TUI de fin d'année
+                            choix = readString(); // on propose au joueur de revenir au menu
+
+                        } else { // sinon le jeu est gagné
+                            clear();
+                            println(tuiToString(date, entreprise, marche, pathObjectifAtteint, notification, objectif)); // on affiche le TUI de victoire
+                            choix = readString(); // on propose au joueur de revenir au menu
+                        }
+                    }
+                }
                 
             } else if (equals(choix, "2")) { // si le joueur a choisi de charger sa partie
 
@@ -1320,7 +1357,7 @@ class Main extends Program {
                 } choix = "-1";
                   notification = "";
 
-            } else { // si le joueur choisit de quitter le jeu
+            } else if (equals(choix, "4")) { // si le joueur choisit de quitter le jeu
                 choix = "stop"; // on met le choix à stop pour arrêter la boucle
             }
         }
