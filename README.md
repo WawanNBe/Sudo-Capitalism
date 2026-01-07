@@ -1,6 +1,13 @@
 # About the game
 *Humouristic terminal-based game about capitalism*
 
+**V3.1 Stable**
+
+- The save/load functions are now fully working and stable
+- The game is basically finished
+
+
+
 **V3.0 Stable**
 
 - An event has been added to the game with all its mechanics
@@ -91,8 +98,6 @@
 *Other stuff to maybe do*
 - ~~Create an Employee type to add more depth to the gameplay~~
 - ~~Set xx/objective~~
-- Choices have an impact on the employees (can be sick/die/quit the job)
-- Add the ability to choose whether or not to declare revenues
-- Add an external file with random events
-- Make the unethical choices having an impact on the risks of an event
-- Add a level limit for the production or employees satisfaction
+- ~~Add an external file with random events~~
+- ~~Make the unethical choices having an impact on the risks of an event~~
+- ~~Add a level limit for the production~~
