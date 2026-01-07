@@ -89,7 +89,7 @@
 
 *Most important features*
 - ~~Put the market config in the config.csv~~
-- Save properly the employee's list
+- ~~Save properly the employee's list~~
 - ~~Add the ability to save the current game~~
 - ~~Create a function do manage the end of the game using booleans~~
 - ~~Complete the results TUI to display the changes from the previous week~~
