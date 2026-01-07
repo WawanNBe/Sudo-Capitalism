@@ -1,2 +1,2 @@
-nbEmployes,budget,charges,stocks,prixDeVente,niveauProduction,productionJournalière,demandeActuelle,jour,mois
-1,5580,300,0,10,1,22,222,8,1
+nbEmployes,budget,charges,stocks,prixDeVente,niveauProduction,productionJournalière,demandeActuelle,scoreEthique,nbSousPayes,gravite,jour,mois,marchePrixDeVente,marcheStocks,marcheDemande
+3,61941,900,772,66,1,67,214,0,0,AUCUNE,12,3,74,50000,25

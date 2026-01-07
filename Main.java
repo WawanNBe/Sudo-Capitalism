@@ -260,6 +260,8 @@ class Main extends Program {
 
     // Fonction qui permet de mettre à jour le nombre d'employés sous payés dans l'entreprise
     void majNbSousPayes(Entreprise entreprise) {
+        entreprise.nbSousPayes = 0; // on réinitialise avant de compter
+
         for (int idx = 0; idx < length(entreprise.listeEmployes); idx++) { // pour chaque employé dans la liste d'employés
             if (entreprise.listeEmployes[idx].sousPaye) { // si l'employé idx est sous payé
                 entreprise.nbSousPayes++; // on l'ajoute au compte
@@ -397,7 +399,7 @@ class Main extends Program {
         int demandeDeBase = 140 + (int)(random() * 60); // on initialise une demande variable sur le marché
         double diffPourcentage = 100.0 * (entreprise.prixDeVente - marche.prixDeVente) / marche.prixDeVente; // on calcule le pourcentage de différence entre les prix de vente
         
-        int impact = calculerImpactDemande(diffPourcentage, demandeDeBase); // on calcule l'impacte que cela a sur le marché
+        int impact = calculerImpactDemande(diffPourcentage, demandeDeBase); // on calcule l'impact que cela a sur le marché
         
         entreprise.demandeActuelle = demandeDeBase + impact; // on actualise la demande de l'entreprise
 
@@ -828,7 +830,7 @@ class Main extends Program {
     // Fonction qui gère la sauvegarde des donnés du jeu
     void saveGame(Entreprise entreprise, Date date, Marche marche) {
 
-        String[][] sauvegarde = {{"nbEmployes", "budget", "charges", "stocks", "prixDeVente", "niveauProduction", "productionJournalière", "demandeActuelle", "jour", "mois"},
+        String[][] sauvegarde = {{"nbEmployes", "budget", "charges", "stocks", "prixDeVente", "niveauProduction", "productionJournalière", "demandeActuelle", "scoreEthique", "nbSousPayes", "gravite", "jour", "mois", "marchePrixDeVente", "marcheStocks", "marcheDemande"},
                                 {intToString(entreprise.nbEmployes), // budget de l'entreprise
                                  intToString(entreprise.budget), // charges
                                  intToString(entreprise.charges), // nombre d'employés
@@ -837,23 +839,26 @@ class Main extends Program {
                                  intToString(entreprise.niveauProduction), // niveau de production
                                  intToString(entreprise.productionJournaliere), // production journalière
                                  intToString(entreprise.demandeActuelle), // demande actuelle
+                                 intToString(entreprise.scoreEthique), // score d'éthique
+                                 intToString(entreprise.nbSousPayes), // nombre d'employés sous payés
+                                             entreprise.gravite, // gravité de la situation de l'entreprise
 
                                  intToString(date.jour), // jour
-                                 intToString(date.mois)}}; // mois
+                                 intToString(date.mois), // mois
+                                 
+                                 intToString(marche.prixDeVente), // prix de vente sur le marche
+                                 intToString(marche.stocks), // stocks sur le marche
+                                 intToString(marche.demande)}}; // demande du marche
 
         saveCSV(sauvegarde, "./extensions/config/save.csv"); // on sauvegarde dans le CSV
     }
 
     // Fonction qui gère le chargement des donnés du jeu
-    String loadGame(Entreprise entreprise, Date date) {
+    String loadGame(Entreprise entreprise, Date date, Marche marche) {
 
         if (rowCount(save) < 2) { // si il n'y a pas de sauvegarde
             return "\u001B[3m" + rgb(200, 0, 0, true) + "< Sauvegarde vide >" + RESET;
         }
-
-        // on charge la date
-        date.jour = stringToInt(getCell(save, 1, 8)); // jour
-        date.mois = stringToInt(getCell(save, 1, 9)); // mois
 
         // on charge les données de l'entreprise
         entreprise.nbEmployes = stringToInt(getCell(save, 1, 0)); // nombre d'employés
@@ -862,14 +867,30 @@ class Main extends Program {
         entreprise.stocks = stringToInt(getCell(save, 1, 3)); // stocks
         entreprise.prixDeVente = stringToInt(getCell(save, 1, 4)); // prix de vente
         entreprise.niveauProduction = stringToInt(getCell(save, 1, 5)); // niveau de production
-        entreprise.productionJournaliere = stringToInt(getCell(save, 1, 5)); // production journalière
-        entreprise.demandeActuelle = stringToInt(getCell(save, 1, 5)); // demande actuelle
+        entreprise.productionJournaliere = stringToInt(getCell(save, 1, 6)); // production journalière
+        entreprise.demandeActuelle = stringToInt(getCell(save, 1, 7)); // demande actuelle
+        entreprise.scoreEthique = stringToInt(getCell(save, 1, 8)); // score d'éthique
+        entreprise.nbSousPayes = stringToInt(getCell(save, 1, 9)); // nombre d'employés sous payés
+        entreprise.gravite = getCell(save, 1, 10); // niveau de gravite de l'entreprise
 
         entreprise.listeEmployes = initEmployes(); // on restaure la liste des employés
         for (int idx = 0; idx < entreprise.nbEmployes; idx ++) {
             entreprise.listeEmployes[idx].salarie = true;
         }
+
+        for (int idx = 1; idx < entreprise.nbSousPayes; idx ++) {
+            entreprise.listeEmployes[idx].sousPaye = true;
+        }
         
+        // on charge la date
+        date.jour = stringToInt(getCell(save, 1, 11)); // jour
+        date.mois = stringToInt(getCell(save, 1, 12)); // mois
+
+        // on charge les données du marche
+        marche.prixDeVente = stringToInt(getCell(save, 1, 13)); // prix de vente sur le marche
+        marche.stocks = stringToInt(getCell(save, 1, 14)); // stocks sur le marche
+        marche.demande = stringToInt(getCell(save, 1, 15)); // demande sur le marche
+
         return "\u001B[3m" + rgb(100, 100, 200, true) + "< Partie chargée ! >" + RESET;
     }
 
@@ -922,15 +943,7 @@ class Main extends Program {
         majNbSousPayes(entreprise);
 
         // on met à jour le score de gravité des controles d'urssaf
-        if (entreprise.nbSousPayes > 4) {
-            entreprise.gravite += rgb(100, 100, 200, true) + "CRITIQUE";
-
-        } else if (entreprise.nbSousPayes >= 1){
-            entreprise.gravite += rgb(100, 100, 200, true) + "MOYENNE";
-
-        } else {
-            entreprise.gravite += rgb(100, 100, 200, true) + "AUCUNE";
-        }
+        majGravite(entreprise);
 
         // on cyle la date pour passer 7 jours et arriver à la semaine suivante
         for (int jour = 0; jour < 7; jour++) {
@@ -949,7 +962,8 @@ class Main extends Program {
         assertTrue(entreprise.budget != 2000);
         assertTrue(entreprise.stocks != 30);
 
-        assertTrue(date.jour == 8);
+        assertEquals(8, date.jour);
+        assertEquals(1, date.mois);
 
         assertTrue(marche.prixDeVente != 15);
     }
@@ -985,12 +999,12 @@ class Main extends Program {
         int chanceControle = 5 + (entreprise.nbSousPayes * 10) + (-1 * (entreprise.scoreEthique) * 2);
         
         // calcul des probas d'un contrôle si le random (0-100) est supérieur au risque, il ne se passe rien
-        if ((random() * 100) > chanceControle) {
+        if (entreprise.nbSousPayes == 0 || ((random() * 100) > chanceControle)) {
             return ""; // Pas de contrôle cette semaine
         }
 
         String choix = ""; // on initialise les choix pour l'event
-        notification = "\u001b[3m" + "< L'ALARME SILENCIEUSE CLIGNOTE ! >" + RESET; // on affiche une notification
+        notification = "\u001b[3m" + "< Christine de la compta vous previent que l'URSSAF arrive ! >" + RESET; // on affiche une notification
         
         boolean controleTermine = false; // on utilise un boolean pour gérer le contôle
 
@@ -1008,7 +1022,7 @@ class Main extends Program {
                 for(int i=0; i<length(entreprise.listeEmployes); i++) {
                     if(entreprise.listeEmployes[i].sousPaye) {
                         entreprise.listeEmployes[i].sousPaye = false;
-                        entreprise.charges += (SALAIRE_STANDARD - SALAIRE_EXPLOITE) * entreprise.nbEmployes; // On remet les charges normales
+                        entreprise.charges = SALAIRE_STANDARD * entreprise.nbEmployes; // On remet les charges normales
                     }
                 }
                 
@@ -1291,7 +1305,7 @@ class Main extends Program {
                 
             } else if (equals(choix, "2")) { // si le joueur a choisi de charger sa partie
 
-                notification = loadGame(entreprise, date); // on affiche un message et on charge la partie
+                notification = loadGame(entreprise, date, marche); // on affiche un message et on charge la partie
                 sleep(100);
                 budgetDebutSemaine = entreprise.budget; // on met à jour le budget hebdomadaire de l'entreprise
                 choix = "1";

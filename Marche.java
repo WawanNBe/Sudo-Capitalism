@@ -4,4 +4,4 @@ class Marche {
     int demande; // demande actuelle pour le produit
 }
 
-// les trois param varient aléatoirment (demande et stocks un peu tous les jours) prix de vente toute les semaines un peu
+// les trois paramètres varient aléatoirment (demande et stocks un peu tous les jours) prix de vente toute les semaines un peu
