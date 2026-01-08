@@ -1,6 +1,12 @@
 # About the game
 *Humouristic terminal-based game about capitalism*
 
+**V3.2 Stable**
+
+- The game is finished. More stuff can be added but yet the game reached what we wanted
+
+
+
 **V3.1 Stable**
 
 - The save/load functions are now fully working and stable

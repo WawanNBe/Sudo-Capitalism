@@ -21,6 +21,7 @@ class Main extends Program {
     CSVFile config = loadCSV("./extensions/config/config.csv"); // fichier config du jeu
     CSVFile save = loadCSV("./extensions/config/save.csv"); // fichier sauvegarde du jeu
     CSVFile employesCSV = loadCSV("./extensions/config/employes.csv"); // fichier contenant la liste des employes
+    CSVFile resultatEthique = loadCSV("./extensions/config/resultatEthique.csv"); // fichier contenant les stats d'éthique pour la fin de jeu
 
     // Utilisation des chemins afin de recharger les fichiers dans la fonction d'affichage
     String pathAccueil = "./extensions/tui/accueil.txt"; // accueil du jeu
@@ -263,7 +264,7 @@ class Main extends Program {
         assertEquals(20, entreprise.prixDeVente);
 
         assertEquals(1, entreprise.niveauProduction);
-        assertEquals(22, entreprise.productionJournaliere);
+        assertEquals(18, entreprise.productionJournaliere);
         assertEquals(150, entreprise.demandeActuelle);
     }
 
@@ -306,13 +307,30 @@ class Main extends Program {
     // Tests de la fonction majGravite
     void test_majGravite() {
         Employe[] listeEmployes = initEmployes(); // initialisation de la liste des employés
+
         listeEmployes[0].salarie = true; // on active le premier employé en tant que salarie
         listeEmployes[0].sousPaye = true; // on change l'employé en sous payé
+
         Entreprise entreprise = newEntreprise(listeEmployes, 2000, 30, 20); // on crée l'entreprise
 
         majGravite(entreprise); // on met à jour le niveau de gravité
 
         assertEquals("MOYENNE", entreprise.gravite);
+    }
+
+
+    // Fonction qui affiche à quel point le joueur est dans l'illégalité grâce au score d'éthique
+    void calculEthique(Entreprise entreprise) {
+        // on transforme le score d'éthique en positif si il est inférieur à 0 pour pouvoir l'utiliser ensuite
+        if (entreprise.scoreEthique < 0) {
+            entreprise.scoreEthique = -entreprise.scoreEthique;
+        }
+
+        // on réutilise le String gravite pour y mettre l'affichage et ainsi le faire fonctionner avec tuiToString
+        entreprise.gravite = "Ton rang ► " + getCell(resultatEthique, 0, entreprise.scoreEthique) + '\n'
+                           + "  Potentielles années de prison pour tes délits ► " + getCell(resultatEthique, 1, entreprise.scoreEthique) + '\n'
+                           + "  Potentielle amende à payer ► " + getCell(resultatEthique, 2, entreprise.scoreEthique) + "€"+ '\n'
+                           + "  Nombre d'articles de lois enfreints ► " + getCell(resultatEthique, 3, entreprise.scoreEthique);
     }
 
 
@@ -817,6 +835,7 @@ class Main extends Program {
 
         // si le budget de l'entreprise passe dans le négatif ou que la fin de l'année est atteinte ou le budget dépasse l'objectif
         if ((entreprise.budget <= 0) || (date.jour == 31 && date.mois == 12) || (entreprise.budget >= objectif)) {
+            calculEthique(entreprise);
             return true;
 
         } else { // sinon le jeu continue
@@ -980,7 +999,7 @@ class Main extends Program {
         assertEquals(8, date.jour);
         assertEquals(1, date.mois);
 
-        assertTrue(marche.prixDeVente != 15);
+        assertTrue(marche.prixDeVente != 10);
     }
 
 

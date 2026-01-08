@@ -9,10 +9,20 @@
                                ░ ░     ░   ▒    ▒ ░  ░ ░     ░ ░    ▒ ░  ░         ░   
                                            ░  ░ ░      ░  ░    ░  ░ ░              ░  ░
 
-┌─────────────────────────────────────────────────── RECAP DE FIN ───────────────────────────────────────────────────────┐
+┌──────────────────────────────────────────────── RECAP DE FIN ──────────────────────────────────────────────────────────┐
   Oups, tu as fait faillite !
 
   Ta gestion de budget n'était peut être pas idéale..
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────── SCORE D'ÉTHIQUE ───────────────────────────────────────────────────────┐
+  Eh oui, pendannt cette simulation, chacun de tes choix a eu un impact sur l'éthique de ton entreprise.
+
+  Bien qu'il soit totalement possible de remporter la partie sans effectuer aucun choix illicite, beaucoup d'entreprises
+  ont malheuresement recours à des moyens immoraux ou illégaux pour maximiser leur profit.
+
+  Stats d'ethique :
+  %G
 └────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────── ACTIONS POSSIBLES ─────────────────────────────────────────────────────┐
