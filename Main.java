@@ -37,11 +37,11 @@ class Main extends Program {
     String pathObjectifAtteint = "./extensions/tui/objectifAtteint.txt"; // le menu de l'event URSSAF
 
     // Valeurs d'équilibrage
-    final int SALAIRE_STANDARD = 300;
-    final int SALAIRE_EXPLOITE = 100;
-    final int COUT_RECRUTEMENT = 300;
-    final int COUT_LICENCIEMENT = 500;
-    final int COUT_CORRUPTION = 50;
+    final int SALAIRE_STANDARD = 300; // le salaire normal
+    final int SALAIRE_EXPLOITE = 100; // le salaire d'une personne sous payée
+    final int COUT_RECRUTEMENT = 300; // le coût de recrutement d'un employé
+    final int COUT_LICENCIEMENT = 500; // le coût de de licenciement d'un employé
+    final int COUT_CORRUPTION = 50; // le coût de la corruption des RH
 
 
 
@@ -52,15 +52,23 @@ class Main extends Program {
 
     // Fonction pour choisir un message aléatoire dans une liste 
     String messageAleatoire(String[] choix) {
-        int index = (int)(random() * length(choix));
+        int index = (int)(random() * length(choix)); // on prend un indice aléatoire
         
         return choix[index];
+    }
+
+    // Tests de la fonction messageAleatoire
+    void test_messageAleatoire() {
+        String[] string = new String[] {"a", "b", "c"};
+
+        assertTrue(messageAleatoire(string) == "a" // on teste que le message correspond bien à l'un des messages
+                || messageAleatoire(string) == "b" 
+                || messageAleatoire(string) == "c");
     }
 
 
     // Conversion d'un entier en String
     String intToString(int entier) {
-
         return "" + entier;
     }
 
@@ -176,10 +184,10 @@ class Main extends Program {
 
     // Fonction initEmployesSalaries qui initialise la liste des employés
     Employe[] initEmployes() {
-        Employe[] listeEmployes = new Employe[rowCount(employesCSV) -1]; // on crée un tableau qui contient autant d'employés que de lignes (-1 pour les titres) dans le csv employes
+        Employe[] listeEmployes = new Employe[rowCount(employesCSV) -1]; // on crée un tableau qui contient autant d'employés que de lignes (-1 pour les titres) dans le CSV employes
 
         for (int idx = 1; idx < rowCount(employesCSV); idx++) {
-            Employe employe; // on initialise chaque personne
+            Employe employe; // on initialise chaque personne en récupèrant les valeurs dans le CSV
             listeEmployes[idx -1] = newEmploye(getCell(employesCSV, idx, 0), getCell(employesCSV, idx, 1));
         }
 
@@ -266,6 +274,10 @@ class Main extends Program {
         assertEquals(1, entreprise.niveauProduction);
         assertEquals(18, entreprise.productionJournaliere);
         assertEquals(150, entreprise.demandeActuelle);
+
+        assertEquals(0, entreprise.scoreEthique);
+        assertEquals(0, entreprise.nbSousPayes);
+        assertEquals("AUCUNE", entreprise.gravite);
     }
 
 
@@ -1050,13 +1062,19 @@ class Main extends Program {
             if (equals(choix, "1")) { 
                 // OPTION 1 : Honnêteté (Redressement)
                 int amende = entreprise.nbSousPayes * 500; // 500$ par employé sous payé
-                entreprise.budget -= amende;
-                
-                // On régularise les employés (ils ne sont plus sous-payés)
-                for(int i=0; i<length(entreprise.listeEmployes); i++) {
-                    if(entreprise.listeEmployes[i].sousPaye) {
-                        entreprise.listeEmployes[i].sousPaye = false;
-                        entreprise.charges = SALAIRE_STANDARD * entreprise.nbEmployes; // On remet les charges normales
+
+                if (entreprise.budget < amende) {
+                    notification = "\u001B[3m" + rgb(100, 100, 200, true) + "< Pas assez d'argent pour payer l'amende ! >" + RESET;
+
+                } else {
+                    entreprise.budget -= amende;
+
+                    // On régularise les employés (ils ne sont plus sous-payés)
+                    for(int i=0; i<length(entreprise.listeEmployes); i++) {
+                        if(entreprise.listeEmployes[i].sousPaye) {
+                            entreprise.listeEmployes[i].sousPaye = false;
+                            entreprise.charges = SALAIRE_STANDARD * entreprise.nbEmployes; // On remet les charges normales
+                        }
                     }
                 }
                 
