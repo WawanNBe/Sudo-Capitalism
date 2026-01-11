@@ -811,6 +811,9 @@ class Main extends Program {
 
         if (entreprise.budget < 450) {
             return "\u001B[3m" + rgb(100, 100, 200, true) + "< Désolé, votre dealer n'accepte pas le crédit... >" + RESET;
+
+        } else if (entreprise.niveauProduction == 10) {
+            return "\u001B[3m" + rgb(100, 100, 200, true) + "< Pas assez de coke en stock... >" + RESET;
         }
 
         entreprise.budget = entreprise.budget - 450; // on met à jour le budget de l'entreprise
