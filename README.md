@@ -5,17 +5,16 @@
 ```
 Sudo Capitalism
 ├─ src
-├─ config.csv
-│  │  ├─ Date.class
-│  │  ├─ Date.java
-│  │  ├─ Employe.class
-│  │  ├─ Employe.java
-│  │  ├─ Entreprise.class
-│  │  ├─ Entreprise.java
-│  │  ├─ Main.class
-│  │  ├─ Main.java
-│  │  ├─ Marche.class
-│  │  └─ Marche.java
+│  ├─ Date.class
+│  ├─ Date.java
+│  ├─ Employe.class
+│  ├─ Employe.java
+│  ├─ Entreprise.class
+│  ├─ Entreprise.java
+│  ├─ Main.class
+│  ├─ Main.java
+│  ├─ Marche.class
+│  └─ Marche.java
 ├─ extensions
 │  ├─ config
 │  │  ├─ config.csv
