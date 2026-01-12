@@ -18,23 +18,23 @@ class Main extends Program {
 
     // -----------------------------------------------------------------< VARIABLES GLOBALES >------------------------------------------------------------------
 
-    CSVFile config = loadCSV("./extensions/config/config.csv"); // fichier config du jeu
-    CSVFile save = loadCSV("./extensions/config/save.csv"); // fichier sauvegarde du jeu
-    CSVFile employesCSV = loadCSV("./extensions/config/employes.csv"); // fichier contenant la liste des employes
-    CSVFile resultatEthique = loadCSV("./extensions/config/resultatEthique.csv"); // fichier contenant les stats d'éthique pour la fin de jeu
+    CSVFile config = loadCSV("../extensions/config/config.csv"); // fichier config du jeu
+    CSVFile save = loadCSV("../extensions/config/save.csv"); // fichier sauvegarde du jeu
+    CSVFile employesCSV = loadCSV("../extensions/config/employes.csv"); // fichier contenant la liste des employes
+    CSVFile resultatEthique = loadCSV("../extensions/config/resultatEthique.csv"); // fichier contenant les stats d'éthique pour la fin de jeu
 
     // Utilisation des chemins afin de recharger les fichiers dans la fonction d'affichage
-    String pathAccueil = "./extensions/tui/accueil.txt"; // accueil du jeu
-    String pathButDuJeu = "./extensions/tui/butDuJeu.txt"; // règles du jeu
-    String pathTabDeBord = "./extensions/tui/tabDeBord.txt"; // le tableau de bord
-    String pathEmployes = "./extensions/tui/employes.txt"; // le menu des employés
-    String pathProduction = "./extensions/tui/production.txt"; // le menu de gestion de production
-    String pathResultats = "./extensions/tui/resultats.txt"; // l'écran d'affichage des résultats
-    String pathMarche = "./extensions/tui/marche.txt"; // le menu de gestion du marché
-    String pathUrssaf = "./extensions/tui/urssaf.txt"; // le menu de l'event URSSAF
-    String pathFaillite = "./extensions/tui/faillite.txt"; // le menu de l'event URSSAF
-    String pathFinAnnee = "./extensions/tui/finAnnee.txt"; // le menu de l'event URSSAF
-    String pathObjectifAtteint = "./extensions/tui/objectifAtteint.txt"; // le menu de l'event URSSAF
+    String pathAccueil = "../extensions/tui/accueil.txt"; // accueil du jeu
+    String pathButDuJeu = "../extensions/tui/butDuJeu.txt"; // règles du jeu
+    String pathTabDeBord = "../extensions/tui/tabDeBord.txt"; // le tableau de bord
+    String pathEmployes = "../extensions/tui/employes.txt"; // le menu des employés
+    String pathProduction = "../extensions/tui/production.txt"; // le menu de gestion de production
+    String pathResultats = "../extensions/tui/resultats.txt"; // l'écran d'affichage des résultats
+    String pathMarche = "../extensions/tui/marche.txt"; // le menu de gestion du marché
+    String pathUrssaf = "../extensions/tui/urssaf.txt"; // le menu de l'event URSSAF
+    String pathFaillite = "../extensions/tui/faillite.txt"; // le menu de l'event URSSAF
+    String pathFinAnnee = "../extensions/tui/finAnnee.txt"; // le menu de l'event URSSAF
+    String pathObjectifAtteint = "../extensions/tui/objectifAtteint.txt"; // le menu de l'event URSSAF
 
     // Valeurs d'équilibrage
     final int SALAIRE_STANDARD = 300; // le salaire normal

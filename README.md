@@ -1,6 +1,44 @@
 # About the game
 *Humouristic terminal-based game about capitalism*
 
+# Project structure
+```
+Sudo Capitalism
+├─ src
+├─ config.csv
+│  │  ├─ Date.class
+│  │  ├─ Date.java
+│  │  ├─ Employe.class
+│  │  ├─ Employe.java
+│  │  ├─ Entreprise.class
+│  │  ├─ Entreprise.java
+│  │  ├─ Main.class
+│  │  ├─ Main.java
+│  │  ├─ Marche.class
+│  │  └─ Marche.java
+├─ extensions
+│  ├─ config
+│  │  ├─ config.csv
+│  │  ├─ employes.csv
+│  │  ├─ resultatsEthique.csv
+│  │  └─ save.csv
+│  └─ tui
+│     ├─ accueil.txt
+│     ├─ butDuJeu.txt
+│     ├─ employes.txt
+│     ├─ faillite.txt
+│     ├─ finAnnee.txt
+│     ├─ marche.txt
+│     ├─ objectifAtteint.txt
+│     ├─ production.txt
+│     ├─ resultats.txt
+│     ├─ tabDeBord.txt
+│     └─ urssaf.txt
+└─ README.md
+```
+
+#Versions
+
 **V3.2 Stable**
 
 - The game is finished. More stuff can be added but yet the game reached what we wanted
@@ -87,23 +125,3 @@
 
 *The game in this state is full of bugs and broken but basics were needed in order to make any progress.*
 - Basics of the game are implemented
-
-
-
-# List of the features that are still WIP:
-*Listed in order of priority*
-
-*Most important features*
-- ~~Put the market config in the config.csv~~
-- ~~Save properly the employee's list~~
-- ~~Add the ability to save the current game~~
-- ~~Create a function do manage the end of the game using booleans~~
-- ~~Complete the results TUI to display the changes from the previous week~~
-- ~~Externalize the objectives to win the game~~
-
-*Other stuff to maybe do*
-- ~~Create an Employee type to add more depth to the gameplay~~
-- ~~Set xx/objective~~
-- ~~Add an external file with random events~~
-- ~~Make the unethical choices having an impact on the risks of an event~~
-- ~~Add a level limit for the production~~
