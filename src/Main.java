@@ -898,7 +898,7 @@ class Main extends Program {
                                  intToString(marche.stocks), // stocks sur le marche
                                  intToString(marche.demande)}}; // demande du marche
 
-        saveCSV(sauvegarde, "./extensions/config/save.csv"); // on sauvegarde dans le CSV
+        saveCSV(sauvegarde, "../extensions/config/save.csv"); // on sauvegarde dans le CSV
     }
 
 
