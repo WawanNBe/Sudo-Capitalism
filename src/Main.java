@@ -337,6 +337,9 @@ class Main extends Program {
         if (entreprise.scoreEthique < 0) {
             entreprise.scoreEthique = -entreprise.scoreEthique;
         }
+        if (entreprise.scoreEthique >= 19) { // on normalise le score pour qu'il ne dépasse pas la taille du tableau de resultatEthique.csv
+            entreprise.scoreEthique = 19;
+        }
 
         // on réutilise le String gravite pour y mettre l'affichage et ainsi le faire fonctionner avec tuiToString
         entreprise.gravite = "Ton rang ► " + getCell(resultatEthique, 0, entreprise.scoreEthique) + '\n'
